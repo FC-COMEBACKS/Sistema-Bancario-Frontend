@@ -1,19 +1,6 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Componente Select para seleccionar opciones
- * @param {Object} props - Propiedades del componente
- * @param {string} props.id - ID del select
- * @param {string} props.name - Nombre del select
- * @param {string} props.label - Etiqueta del select
- * @param {Array} props.options - Opciones del select
- * @param {string} props.error - Mensaje de error
- * @param {boolean} props.disabled - Si el select está deshabilitado
- * @param {boolean} props.required - Si el select es requerido
- * @param {string} props.className - Clases adicionales
- * @returns {JSX.Element} Componente Select
- */
 const Select = forwardRef(({
   id,
   name,

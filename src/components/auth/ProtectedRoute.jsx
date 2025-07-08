@@ -2,9 +2,6 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-/**
- * A wrapper component to protect routes that require authentication
- */
 const ProtectedRoute = ({ element, redirectTo = '/auth' }) => {
   const isAuthenticated = localStorage.getItem('user') !== null;
   

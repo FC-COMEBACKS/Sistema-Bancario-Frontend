@@ -1,8 +1,3 @@
-/**
- * Validates email format
- * @param {string} email - Email to validate
- * @returns {boolean|string} - True if valid, error message if invalid
- */
 export const validateEmail = (email) => {
   if (!email) return 'El correo electrónico es requerido';
   

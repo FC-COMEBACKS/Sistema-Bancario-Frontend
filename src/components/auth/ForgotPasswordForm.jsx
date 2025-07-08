@@ -24,8 +24,6 @@ const ForgotPasswordForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Aquí iría la llamada a la API para solicitar el restablecimiento de contraseña
-      // Por ahora, simularemos un éxito después de un tiempo
       console.log('Enviando solicitud para:', formData.email);
       await new Promise(resolve => setTimeout(resolve, 1500));
       

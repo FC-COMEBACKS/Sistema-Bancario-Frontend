@@ -1,17 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Componente Table para mostrar datos tabulares
- * @param {Object} props - Propiedades del componente
- * @param {Array} props.columns - Configuración de las columnas
- * @param {Array} props.data - Datos a mostrar
- * @param {boolean} props.isLoading - Si la tabla está cargando
- * @param {string} props.emptyMessage - Mensaje a mostrar cuando no hay datos
- * @param {function} props.onRowClick - Función para manejar el clic en una fila
- * @param {string} props.className - Clases adicionales
- * @returns {JSX.Element} Componente Table
- */
 const Table = ({
   columns = [],
   data = [],

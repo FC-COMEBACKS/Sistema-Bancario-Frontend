@@ -15,7 +15,6 @@ api.interceptors.request.use(
                 const parsedUser = JSON.parse(userDetails);
                 if (parsedUser?.token) {
                     config.headers.Authorization = `Bearer ${parsedUser.token}`;
-                    // console.log("Token agregado al header:", parsedUser.token);
                 }
             } catch (err) {
                 console.warn("Error al leer el token:", err);
@@ -29,17 +28,14 @@ api.interceptors.request.use(
     }
 )
 
-// Interceptor para manejar errores globales
 api.interceptors.response.use(
     (response) => {
         return response;
     },
     (error) => {
-        // Si el error es 401 (no autorizado) y no estamos en login, limpiar localStorage y redirigir
         if (error.response && error.response.status === 401 && !window.location.pathname.includes('/auth')) {
             console.warn('Sesión expirada o inválida');
             localStorage.removeItem('user');
-            // Redirigir a login si no estamos ya en login
             window.location.href = '/auth';
         }
         return Promise.reject(error);
@@ -81,6 +77,3 @@ export const login = async (data) => {
         };
     }
 };
-
-// Exportamos también la instancia de api para uso directo si es necesario
-export { api };

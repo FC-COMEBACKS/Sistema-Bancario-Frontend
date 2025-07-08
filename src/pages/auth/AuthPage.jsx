@@ -7,8 +7,6 @@ const AuthPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeForm, setActiveForm] = useState('login');
-  
-  // Check if we're in a specific sub-route
   React.useEffect(() => {
     if (location.pathname.includes('/register')) {
       setActiveForm('register');
@@ -18,11 +16,8 @@ const AuthPage = () => {
       setActiveForm('login');
     }
   }, [location.pathname]);
-  
   const switchForm = (form) => {
     setActiveForm(form);
-    
-    // Update URL
     if (form === 'register') {
       navigate('/auth/register');
     } else if (form === 'forgotPassword') {

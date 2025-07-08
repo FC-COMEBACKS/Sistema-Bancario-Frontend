@@ -2,14 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './ui/Button.jsx';
 
-/**
- * Botón para editar registros
- * @param {Object} props - Propiedades del componente
- * @param {function} props.onClick - Función para manejar el clic
- * @param {boolean} props.disabled - Si el botón está deshabilitado
- * @param {string} props.className - Clases adicionales
- * @returns {JSX.Element} Componente EditButton
- */
 const EditButton = ({
   onClick,
   disabled = false,

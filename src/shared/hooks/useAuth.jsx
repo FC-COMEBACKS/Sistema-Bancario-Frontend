@@ -1,17 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-/**
- * Hook for managing authentication state
- * @returns {Object} Authentication state and functions
- */
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Check if user is authenticated on mount
   useEffect(() => {
     const checkAuth = () => {
       try {
@@ -43,7 +38,6 @@ export const useAuth = () => {
     checkAuth();
   }, []);
 
-  // Function to require authentication for protected routes
   const requireAuth = useCallback(() => {
     if (!isLoading && !isAuthenticated) {
       navigate('/auth');

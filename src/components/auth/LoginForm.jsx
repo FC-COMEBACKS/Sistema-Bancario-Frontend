@@ -21,7 +21,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data) => {
-    // Usar el hook useLogin para manejar la lógica de inicio de sesión
     await login(data.identifier, data.password);
   };
 
@@ -30,9 +29,7 @@ const LoginForm = () => {
   };
 
   const validateIdentifier = (value) => {
-    // Permitir inicio de sesión con usuario o correo electrónico
     if (!value) return 'Este campo es requerido';
-    // Validar formato si parece un correo electrónico
     if (value.includes('@')) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(value)) return 'Ingresa un correo electrónico válido';

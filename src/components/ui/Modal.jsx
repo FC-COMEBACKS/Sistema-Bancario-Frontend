@@ -1,17 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * Componente Modal para mostrar contenido en ventana modal
- * @param {Object} props - Propiedades del componente
- * @param {boolean} props.isOpen - Estado de apertura del modal
- * @param {function} props.onClose - Función para cerrar el modal
- * @param {React.ReactNode} props.children - Contenido del modal
- * @param {string} props.title - Título del modal
- * @param {string} props.size - Tamaño del modal ('sm', 'md', 'lg', 'xl')
- * @param {string} props.className - Clases adicionales
- * @returns {JSX.Element|null} Componente Modal
- */
 const Modal = ({ 
   isOpen, 
   onClose, 

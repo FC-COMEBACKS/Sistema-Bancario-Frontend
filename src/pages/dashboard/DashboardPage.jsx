@@ -6,13 +6,11 @@ import WelcomeGuest from '../../components/dashboard/WelcomeGuest';
 import './dashboardPage.css';
 
 const DashboardPage = () => {
-    // Eliminamos userRole ya que no se utiliza en el componente
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
         try {
-            // Obtener los datos del usuario almacenados en localStorage
             const userString = localStorage.getItem('user');
             
             if (!userString) {
@@ -22,14 +20,9 @@ const DashboardPage = () => {
             }
             
             const userData = JSON.parse(userString);
-            console.log('User data in dashboard:', userData);
             
-            // Asegurar que el rol se convierta a minúsculas para una comparación consistente
-            // Verificar si el rol está en español (rol) o inglés (role)
             const role = (userData.rol || userData.role || '').toLowerCase();
-            // Ya no necesitamos setUserRole porque hemos eliminado el estado
             
-            // Redirigir según la ruta y el rol
             const path = location.pathname;
             console.log('Current path:', path, 'User role:', role);
             

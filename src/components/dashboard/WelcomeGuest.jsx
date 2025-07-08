@@ -11,7 +11,7 @@ const WelcomeGuest = () => {
           Por favor inicia sesión para acceder a todas las funcionalidades del sistema.
         </p>
         <div className="welcome-actions">
-          <Link to="/auth" className="welcome-button login">
+          <Link to="/auth" className="welcome-button login">//
             Iniciar Sesión
           </Link>
           <Link to="/auth/register" className="welcome-button register">

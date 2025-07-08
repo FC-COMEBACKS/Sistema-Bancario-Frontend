@@ -11,7 +11,6 @@ export const useLogin = () => {
     setIsLoading(true);
     
     try {
-      // Determinar si identifier es un email o nombre de usuario
       const isEmail = identifier.includes('@');
       const loginData = isEmail 
         ? { email: identifier, password } 
@@ -25,28 +24,13 @@ export const useLogin = () => {
         toast.error(response.message || "Error al iniciar sesión");
         return;
       }
-
       toast.success("¡Inicio de sesión exitoso!");
-      
-      // Extraer datos del usuario de la respuesta
-      console.log("Respuesta login:", response);
-      // En el backend, los datos del usuario vienen en response.data.userDetails
-      // Y el token ya viene incluido dentro de userDetails
       const userData = response.data.userDetails || response.data.user || {};
-      
-      // Guardar datos del usuario en localStorage
       localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Disparar un evento personalizado para notificar cambios en localStorage
       const event = new Event('localStorageChange');
       document.dispatchEvent(event);
-      
-      // Verificar si el rol está en español (rol) o inglés (role)
-      // Convertir el rol a minúsculas para comparación insensible a mayúsculas/minúsculas
       const userRole = (userData.rol || userData.role || '').toLowerCase();
       console.log("Rol de usuario detectado:", userData.rol || userData.role, "convertido a:", userRole);
-      
-      // Redireccionar según el rol del usuario
       if (userRole.includes('admin')) {
         navigate('/dashboard/admin');
       } else {

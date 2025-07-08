@@ -12,7 +12,6 @@ function App() {
   return (
     <>
       {isAuthPage ? (
-        // Página de autenticación sin sidebar/topbar
         <div className="login-container">
           <div className="login-header">
             <div className="login-logo">
@@ -33,7 +32,6 @@ function App() {
           </div>
         </div>
       ) : (
-        // Páginas con layout completo
         <div className="app-container">
           <Sidebar />
           <div className="main-content">

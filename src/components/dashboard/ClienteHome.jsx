@@ -2,7 +2,6 @@ import React from 'react';
 import './dashboard.css';
 
 const ClienteHome = () => {
-  // Simulamos datos de usuario - en una aplicación real estos vendrían del estado o contexto
   const userData = JSON.parse(localStorage.getItem('user')) || { nombre: 'Cliente', balance: 0 };
   
   return (

@@ -44,18 +44,14 @@ const RegisterForm = () => {
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    // Eliminar confirmPassword antes de enviar
     const { confirmPassword: _confirmPassword, ...userData } = data;
-    
-    // Asegurarse de que los ingresos mensuales sean numéricos
+  
     if (userData.ingresosMensuales) {
       userData.ingresosMensuales = parseFloat(userData.ingresosMensuales);
     }
     
-    // Asegúrate de que estamos enviando exactamente los campos que espera el backend
     console.log('Datos del formulario para registro:', userData);
     
-    // El hook useRegister ya maneja la navegación después del registro exitoso
     await registerUser(userData);
   };
 

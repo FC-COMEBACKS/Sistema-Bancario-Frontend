@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
-  // Simulación para desarrollo - luego vendrá de autenticación real
   const role = localStorage.getItem('userRole') || 'CLIENTE';
   
   const isActive = (path) => location.pathname === path;
@@ -19,7 +18,6 @@ const Sidebar = () => {
       
       <nav className="sidebar-menu">
         {role === 'ADMIN' ? (
-          // Menú de administrador
           <>
             <Link to="/" className={`sidebar-item ${isActive('/') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#128450;</span>
@@ -43,7 +41,6 @@ const Sidebar = () => {
             </Link>
           </>
         ) : (
-          // Menú de cliente
           <>
             <Link to="/" className={`sidebar-item ${isActive('/') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#127968;</span>
