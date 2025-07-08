@@ -8,4 +8,5 @@ export * from './useMovimiento.jsx';
 export * from './useProductoServicio.jsx';
 export * from './useRegister.jsx';
 export * from './useUser.jsx';
+export * from './useEstadisticas.jsx';
 export * from './useUserDetails.jsx';

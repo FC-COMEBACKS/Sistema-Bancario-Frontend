@@ -21,7 +21,7 @@ export const useLogin = () => {
       setIsLoading(false);
       
       if (response.error) {
-        toast.error(response.message || "Error al iniciar sesión");
+        toast.error("Error al iniciar sesión. Verifica tus credenciales.");
         return;
       }
       toast.success("¡Inicio de sesión exitoso!");

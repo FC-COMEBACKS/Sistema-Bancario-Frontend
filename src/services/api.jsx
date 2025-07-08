@@ -44,36 +44,80 @@ api.interceptors.response.use(
 
 export const register = async (data) => {
     try {
-        console.log('Enviando datos de registro:', data);
-        const response = await api.post("/auth/register", data);
-        console.log('Respuesta de registro:', response.data);
-        return {
-            error: false,
-            data: response.data
-        };
+        return await api.post("/auth/register", data);
     } catch (err) {
-        console.error('Error en registro:', err.response?.data || err);
         return {
             error: true,
-            message: err.response?.data?.message || "Error al registrar usuario",
             err
-        };
+        }
     }
-};
+}
 
 
 export const login = async (data) => {
     try {
-        const response = await api.post("/auth/login", data);
-        return {
-            error: false,
-            data: response.data
-        };
+        return await api.post("/auth/login", data);
     } catch (err) {
         return {
             error: true,
-            message: err.response?.data?.message || "Error al iniciar sesión",
             err
-        };
+        }
     }
 };
+
+// ESTADISTICAS
+export const getEstadisticasGenerales = async () => {
+    try {
+        return await api.get("/estadisticas/estadisticasgenerales");
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getMovimientosRecientes = async (limit = 10) => {
+    try {
+        return await api.get(`/estadisticas/movimientos/recientes?limit=${limit}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getEstadisticasMovimientos = async (periodo = 'mensual') => {
+    try {
+        return await api.get(`/estadisticas/movimientos?periodo=${periodo}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getEstadisticasUsuarios = async () => {
+    try {
+        return await api.get("/estadisticas/usuarios");
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getEstadisticasProductos = async () => {
+    try {
+        return await api.get("/estadisticas/productos");
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+

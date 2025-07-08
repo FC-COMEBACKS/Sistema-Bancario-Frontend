@@ -14,7 +14,7 @@ export const useRegister = () => {
       const response = await registerRequest(formData);
       setIsLoading(false);
       if (response.error) {
-        toast.error(response.message || "Error al registrar tu cuenta");
+        toast.error("Error al registrar tu cuenta. Verifica tus datos.");
         return false;
       }
       toast.success("¡Registro exitoso! Bienvenido a nuestro sistema.");
