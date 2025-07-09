@@ -1,28 +1,41 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const getPageTitle = (pathname) => {
   switch (pathname) {
     case '/': return 'Dashboard';
-    case '/user': return 'Users';
-    case '/cuenta': return 'Accounts';
-    case '/movimiento': return 'Transfers';
-    case '/favorito': return 'Favorites';
-    case '/producto': return 'Products';
-    case '/settings': return 'Settings';
+    case '/usuarios': return 'Usuarios';
+    case '/mi-perfil': return 'Mi Perfil';
+    case '/cuenta': return 'Cuentas';
+    case '/movimiento': return 'Transferencias';
+    case '/favorito': return 'Favoritos';
+    case '/producto': return 'Productos';
+    case '/settings': return 'Configuración';
     default: return 'Dashboard';
   }
 };
 
 const Topbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const pageTitle = getPageTitle(location.pathname);
+  
+  const handleProfileClick = () => {
+    navigate('/mi-perfil');
+  };
   
   return (
     <div className="topbar">
       <h1 className="page-title">{pageTitle}</h1>
       <div className="user-profile">
-        <div className="user-avatar">U</div>
+        <div 
+          className="user-avatar" 
+          onClick={handleProfileClick}
+          style={{ cursor: 'pointer' }}
+          title="Ir a mi perfil"
+        >
+          U
+        </div>
       </div>
     </div>
   );

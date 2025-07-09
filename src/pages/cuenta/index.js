@@ -1,0 +1,1 @@
+export { default as CuentaPage } from './CuentaPage.jsx';

@@ -5,8 +5,7 @@ import {
     getEstadisticasMovimientos as getEstadisticasMovimientosRequest,
     getEstadisticasUsuarios as getEstadisticasUsuariosRequest,
     getEstadisticasProductos as getEstadisticasProductosRequest
-} from '../../services';
-import toast from 'react-hot-toast';
+} from '../../services/api.jsx';
 
 export const useEstadisticas = () => {
     const [estadisticasGenerales, setEstadisticasGenerales] = useState(null);
@@ -15,104 +14,112 @@ export const useEstadisticas = () => {
     const [estadisticasUsuarios, setEstadisticasUsuarios] = useState(null);
     const [estadisticasProductos, setEstadisticasProductos] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasErrors, setHasErrors] = useState(false);
     
     const fetchEstadisticasGenerales = async () => {
-        setIsLoading(true);
         try {
             const response = await getEstadisticasGeneralesRequest();
-            if (response.error) {
-                toast.error("Error al cargar estadísticas generales");
-                setEstadisticasGenerales(null);
+            console.log('Respuesta estadísticas generales:', response);
+            if (response && !response.error) {
+                const estadisticas = response.data?.estadisticas || response.estadisticas || response.data || response;
+                console.log('Estadísticas procesadas:', estadisticas);
+                setEstadisticasGenerales(estadisticas);
             } else {
-                setEstadisticasGenerales(response.data?.estadisticas || response.estadisticas || null);
+                console.error('Error en respuesta:', response.err);
+                setHasErrors(true);
             }
-        } catch (err) {
-            toast.error("Error al cargar estadísticas generales " + err.message);
-            setEstadisticasGenerales(null);
+        } catch (error) {
+            console.error('Error al cargar estadísticas generales:', error);
+            setHasErrors(true);
         }
-        setIsLoading(false);
     };
 
     const fetchMovimientosRecientes = async (limit = 10) => {
-        setIsLoading(true);
         try {
             const response = await getMovimientosRecientesRequest(limit);
             if (response.error) {
-                toast.error("Error al cargar movimientos recientes");
+                console.error('Error al cargar movimientos recientes:', response.err);
                 setMovimientosRecientes([]);
+                setHasErrors(true);
             } else {
                 setMovimientosRecientes(response.data?.movimientos || response.movimientos || []);
             }
-        } catch (err) {
-            toast.error("Error al cargar movimientos recientes " + err.message);
+        } catch {
+            console.error('Error al cargar movimientos recientes');
             setMovimientosRecientes([]);
+            setHasErrors(true);
         }
-        setIsLoading(false);
     };
 
     const fetchEstadisticasMovimientos = async (periodo = 'mensual') => {
-        setIsLoading(true);
         try {
             const response = await getEstadisticasMovimientosRequest(periodo);
             if (response.error) {
-                toast.error("Error al cargar estadísticas de movimientos");
+                console.error('Error al cargar estadísticas de movimientos:', response.err);
                 setEstadisticasMovimientos(null);
+                setHasErrors(true);
             } else {
                 setEstadisticasMovimientos(response.data?.estadisticas || response.estadisticas || null);
             }
-        } catch (err) {
-            toast.error("Error al cargar estadísticas de movimientos " + err.message);
+        } catch {
+            console.error('Error al cargar estadísticas de movimientos');
             setEstadisticasMovimientos(null);
+            setHasErrors(true);
         }
-        setIsLoading(false);
     };
 
     const fetchEstadisticasUsuarios = async () => {
-        setIsLoading(true);
         try {
             const response = await getEstadisticasUsuariosRequest();
             if (response.error) {
-                toast.error("Error al cargar estadísticas de usuarios");
+                console.error('Error al cargar estadísticas de usuarios:', response.err);
                 setEstadisticasUsuarios(null);
+                setHasErrors(true);
             } else {
                 setEstadisticasUsuarios(response.data?.estadisticas || response.estadisticas || null);
             }
-        } catch (err) {
-            toast.error("Error al cargar estadísticas de usuarios " + err.message);
+        } catch {
+            console.error('Error al cargar estadísticas de usuarios');
             setEstadisticasUsuarios(null);
+            setHasErrors(true);
         }
-        setIsLoading(false);
     };
 
     const fetchEstadisticasProductos = async () => {
-        setIsLoading(true);
         try {
             const response = await getEstadisticasProductosRequest();
             if (response.error) {
-                toast.error("Error al cargar estadísticas de productos");
+                console.error('Error al cargar estadísticas de productos:', response.err);
                 setEstadisticasProductos(null);
+                setHasErrors(true);
             } else {
                 setEstadisticasProductos(response.data?.estadisticas || response.estadisticas || null);
             }
-        } catch (err) {
-            toast.error("Error al cargar estadísticas de productos " + err.message);
+        } catch {
+            console.error('Error al cargar estadísticas de productos');
             setEstadisticasProductos(null);
+            setHasErrors(true);
         }
-        setIsLoading(false);
     };
 
     useEffect(() => {
         const loadAllStats = async () => {
             setIsLoading(true);
-            await Promise.all([
-                fetchEstadisticasGenerales(),
-                fetchMovimientosRecientes(),
-                fetchEstadisticasMovimientos()
-            ]);
+            setHasErrors(false);
+            
+            try {
+                await fetchEstadisticasGenerales();
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+                setHasErrors(true);
+            }
+            
             setIsLoading(false);
         };
+    
+        const timeoutId = setTimeout(loadAllStats, 500);
         
-        loadAllStats();
+        return () => clearTimeout(timeoutId);
     }, []);
 
     return {
@@ -122,6 +129,7 @@ export const useEstadisticas = () => {
         estadisticasUsuarios,
         estadisticasProductos,
         isLoading,
+        hasErrors,
         fetchEstadisticasGenerales,
         fetchMovimientosRecientes,
         fetchEstadisticasMovimientos,

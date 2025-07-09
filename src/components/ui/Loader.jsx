@@ -1,13 +1,5 @@
 import React from 'react';
 
-/**
- * Componente Loader para mostrar un indicador de carga
- * @param {Object} props - Propiedades del componente
- * @param {string} props.size - Tamaño del loader ('sm', 'md', 'lg')
- * @param {string} props.color - Color del loader
- * @param {string} props.className - Clases adicionales
- * @returns {JSX.Element} Componente Loader
- */
 const Loader = ({ 
   size = 'md', 
   color = 'primary',

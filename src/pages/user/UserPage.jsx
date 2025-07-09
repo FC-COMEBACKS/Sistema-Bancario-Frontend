@@ -1,11 +1,11 @@
 import React from 'react';
-import './UserPage.css';
+import './userPage.css';
+import { UserManagement } from '../../components';
 
 const UserPage = () => {
   return (
-    <div>
-      <h1>User Page</h1>
-      <p>This is the page where users can view and manage their account information.</p>
+    <div className="user-page">
+      <UserManagement />
     </div>
   );
 };

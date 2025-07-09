@@ -15,7 +15,7 @@ const formatDate = (dateString) => {
 };
 
 const ActividadReciente = ({ limit = 5 }) => {
-  const { movimientosRecientes, isLoading, fetchMovimientosRecientes } = useEstadisticas();
+  const { movimientosRecientes, isLoading, hasErrors, fetchMovimientosRecientes } = useEstadisticas();
 
   useEffect(() => {
     fetchMovimientosRecientes(limit);
@@ -27,7 +27,12 @@ const ActividadReciente = ({ limit = 5 }) => {
     <div className="dashboard-section">
       <h2>Actividad Reciente</h2>
       
-      {movimientosRecientes && movimientosRecientes.length > 0 ? (
+      {hasErrors ? (
+        <div className="error-message">
+          <p>Error al cargar movimientos recientes</p>
+          <small>Verifique la conexión con el servidor</small>
+        </div>
+      ) : movimientosRecientes && movimientosRecientes.length > 0 ? (
         <div className="dashboard-activity-list">
           {movimientosRecientes.map((movimiento) => (
             <div className="activity-item" key={movimiento.mid}>

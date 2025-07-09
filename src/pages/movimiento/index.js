@@ -1,1 +1,1 @@
-export { default as MovimientoPage } from './MovimientoPage';
+export { default as MovimientoPage } from './MovimientoPage.jsx';

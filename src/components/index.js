@@ -1,4 +1,3 @@
-
 export { default as LoginForm } from './auth/LoginForm.jsx';
 export { default as RegisterForm } from './auth/RegisterForm.jsx';
 export { default as ForgotPasswordForm } from './auth/ForgotPasswordForm.jsx';
@@ -20,3 +19,11 @@ export { default as EstadisticasCards } from './dashboard/EstadisticasCards.jsx'
 export { default as ActividadReciente } from './dashboard/ActividadReciente.jsx';
 export { default as GraficoMovimientos } from './dashboard/GraficoMovimientos.jsx';
 export { default as ProductosPopulares } from './dashboard/ProductosPopulares.jsx';
+export { default as Sidebar } from './layout/Sidebar.jsx';
+export { default as Topbar } from './layout/Topbar.jsx';
+export { default as Layout } from './layout/Layout.jsx';
+export { default as UserList } from './user/UserList.jsx';
+export { default as UserForm } from './user/UserForm.jsx';
+export { default as UserDetails } from './user/UserDetails.jsx';
+export { default as ProfileForm } from './user/ProfileForm.jsx';
+export { default as UserManagement } from './user/UserManagement.jsx';

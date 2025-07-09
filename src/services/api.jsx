@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
     baseURL: "http://localhost:3000/HRB/v1",
-    timeout: 3000,
+    timeout: 10000,
     httpsAgent: false
 })
 
@@ -17,7 +17,7 @@ api.interceptors.request.use(
                     config.headers.Authorization = `Bearer ${parsedUser.token}`;
                 }
             } catch (err) {
-                console.warn("Error al leer el token:", err);
+               err
             }
         }
 
@@ -33,11 +33,15 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response && error.response.status === 401 && !window.location.pathname.includes('/auth')) {
-            console.warn('Sesión expirada o inválida');
+        if (error.response && error.response.status === 401 && 
+            !window.location.pathname.includes('/auth') &&
+            error.response.data?.error?.includes('token') &&
+            error.response.data?.error?.includes('expired')) {
+            
             localStorage.removeItem('user');
             window.location.href = '/auth';
         }
+        
         return Promise.reject(error);
     }
 );
@@ -65,7 +69,6 @@ export const login = async (data) => {
     }
 };
 
-// ESTADISTICAS
 export const getEstadisticasGenerales = async () => {
     try {
         return await api.get("/estadisticas/estadisticasgenerales");
@@ -113,6 +116,97 @@ export const getEstadisticasUsuarios = async () => {
 export const getEstadisticasProductos = async () => {
     try {
         return await api.get("/estadisticas/productos");
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getUserById = async (uid) => {
+    try {
+        return await api.get(`/users/${uid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getAllUsers = async (filters = {}) => {
+    try {
+        const queryParams = new URLSearchParams();
+        
+        if (filters.rol && filters.rol.trim()) queryParams.append('rol', filters.rol);
+        if (filters.estado && filters.estado.trim()) queryParams.append('estado', filters.estado);
+        if (filters.nombre && filters.nombre.trim()) queryParams.append('nombre', filters.nombre);
+        if (filters.email && filters.email.trim()) queryParams.append('email', filters.email);
+        if (filters.page) queryParams.append('page', filters.page);
+        if (filters.limit) queryParams.append('limit', filters.limit);
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/users?${queryString}` : '/users';
+        
+        return await api.get(url);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const deleteUserAdmin = async (uid) => {
+    try {
+        return await api.delete(`/users/admin/${uid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const deleteUserClient = async (password) => {
+    try {
+        return await api.delete('/users/client', {
+            data: { password }
+        });
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const updatePassword = async (passwordData) => {
+    try {
+        return await api.patch('/users/password', passwordData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const updateUserAdmin = async (uid, userData) => {
+    try {
+        return await api.put(`/users/admin/${uid}`, userData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const updateUserClient = async (userData) => {
+    try {
+        return await api.put('/users/client', userData);
     } catch (err) {
         return {
             error: true,

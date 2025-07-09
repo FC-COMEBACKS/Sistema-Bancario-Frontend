@@ -1,8 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 
 const ClienteHome = () => {
+  const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('user')) || { nombre: 'Cliente', balance: 0 };
+  
+  const handleNavigateToProfile = () => {
+    navigate('/mi-perfil');
+  };
   
   return (
     <div className="cliente-dashboard">
@@ -90,9 +96,9 @@ const ClienteHome = () => {
               <span className="action-icon">$</span>
               <span>Cambio de Divisa</span>
             </button>
-            <button className="quick-action-button">
-              <span className="action-icon">✓</span>
-              <span>Pagos</span>
+            <button className="quick-action-button" onClick={handleNavigateToProfile}>
+              <span className="action-icon">👤</span>
+              <span>Mi Perfil</span>
             </button>
           </div>
         </div>

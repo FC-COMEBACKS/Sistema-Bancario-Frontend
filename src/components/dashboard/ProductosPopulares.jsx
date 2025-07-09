@@ -3,7 +3,7 @@ import { useEstadisticas } from '../../shared/hooks';
 import Loader from '../ui/Loader';
 
 const ProductosPopulares = () => {
-  const { estadisticasProductos, isLoading, fetchEstadisticasProductos } = useEstadisticas();
+  const { estadisticasProductos, isLoading, hasErrors, fetchEstadisticasProductos } = useEstadisticas();
 
   useEffect(() => {
     fetchEstadisticasProductos();
@@ -15,7 +15,12 @@ const ProductosPopulares = () => {
     <div className="dashboard-section">
       <h2>Productos Más Populares</h2>
       
-      {estadisticasProductos && estadisticasProductos.productosPopulares && estadisticasProductos.productosPopulares.length > 0 ? (
+      {hasErrors ? (
+        <div className="error-message">
+          <p>Error al cargar estadísticas de movimientos</p>
+          <small>Verifique la conexión con el servidor</small>
+        </div>
+      ) : estadisticasProductos && estadisticasProductos.productosPopulares && estadisticasProductos.productosPopulares.length > 0 ? (
         <div className="productos-populares-lista">
           {estadisticasProductos.productosPopulares.map((producto) => (
             <div key={producto.pid} className="producto-popular-item">

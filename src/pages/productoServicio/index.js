@@ -1,1 +1,1 @@
-export { default as ProductoServicioPage } from './ProductoServicioPage';
+export { default as ProductoServicioPage } from './ProductoServicioPage.jsx';

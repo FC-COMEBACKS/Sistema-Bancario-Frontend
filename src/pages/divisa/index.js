@@ -1,1 +1,1 @@
-export { default as DivisaPage } from './DivisaPage';
+export { default as DivisaPage } from './DivisaPage.jsx';

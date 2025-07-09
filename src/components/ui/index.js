@@ -1,19 +1,8 @@
-import Button from './Button.jsx';
-import Card from './Card.jsx';
-import Input from './Input.jsx';
-import Loader from './Loader.jsx';
-import Modal from './Modal.jsx';
-import Pagination from './Pagination.jsx';
-import Select from './Select.jsx';
-import Table from './Table.jsx';
-
-export {
-  Button,
-  Card,
-  Input,
-  Loader,
-  Modal,
-  Pagination,
-  Select,
-  Table
-};
+export { default as Button } from './Button.jsx';
+export { default as Card } from './Card.jsx';
+export { default as Input } from './Input.jsx';
+export { default as Loader } from './Loader.jsx';
+export { default as Modal } from './Modal.jsx';
+export { default as Pagination } from './Pagination.jsx';
+export { default as Select } from './Select.jsx';
+export { default as Table } from './Table.jsx';

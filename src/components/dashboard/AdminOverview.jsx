@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import EstadisticasCards from './EstadisticasCards';
 import ActividadReciente from './ActividadReciente';
@@ -6,6 +7,16 @@ import GraficoMovimientos from './GraficoMovimientos';
 import ProductosPopulares from './ProductosPopulares';
 
 const AdminOverview = () => {
+  const navigate = useNavigate();
+
+  const handleNavigateToUsers = () => {
+    navigate('/usuarios');
+  };
+
+  const handleNavigateToProfile = () => {
+    navigate('/mi-perfil');
+  };
+
   return (
     <div className="admin-dashboard">
       <h1 className="dashboard-title">Panel de Administración</h1>
@@ -20,9 +31,15 @@ const AdminOverview = () => {
       <GraficoMovimientos />
       
       <div className="dashboard-actions">
-        <button className="dashboard-action-button">Ver todos los usuarios</button>
-        <button className="dashboard-action-button">Generar reportes</button>
-        <button className="dashboard-action-button">Configuración del sistema</button>
+        <button className="dashboard-action-button" onClick={handleNavigateToUsers}>
+          Ver todos los usuarios
+        </button>
+        <button className="dashboard-action-button">
+          Generar reportes
+        </button>
+        <button className="dashboard-action-button" onClick={handleNavigateToProfile}>
+          Administrar mi perfil
+        </button>
       </div>
     </div>
   );

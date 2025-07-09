@@ -1,1 +1,1 @@
-export { default as FavoritoPage } from './FavoritoPage';
+export { default as FavoritoPage } from './FavoritoPage.jsx';

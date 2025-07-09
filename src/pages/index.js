@@ -1,1 +1,1 @@
-export { default as NotFoundPage } from './auth/NotFoundPage';
+export { default as NotFoundPage } from './auth/NotFoundPage.jsx';
