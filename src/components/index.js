@@ -27,3 +27,12 @@ export { default as UserForm } from './user/UserForm.jsx';
 export { default as UserDetails } from './user/UserDetails.jsx';
 export { default as ProfileForm } from './user/ProfileForm.jsx';
 export { default as UserManagement } from './user/UserManagement.jsx';
+export { default as CuentaCard } from './cuenta/CuentaCard.jsx';
+export { default as CuentaDetails } from './cuenta/CuentaDetails.jsx';
+export { default as CuentaForm } from './cuenta/CuentaForm.jsx';
+export { default as CuentaTable } from './cuenta/CuentaTable.jsx';
+export { default as CuentasDashboard } from './cuenta/CuentasDashboard.jsx';
+export { default as CuentaManagement } from './cuenta/CuentaManagement.jsx';
+export { default as DepositoForm } from './cuenta/DepositoForm.jsx';
+export { default as MisCuentasCliente } from './cuenta/MisCuentasCliente.jsx';
+

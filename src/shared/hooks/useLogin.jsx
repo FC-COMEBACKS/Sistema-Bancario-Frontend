@@ -27,11 +27,16 @@ export const useLogin = () => {
       toast.success("¡Inicio de sesión exitoso!");
       const userData = response.data.userDetails || response.data.user || {};
       localStorage.setItem('user', JSON.stringify(userData));
+      
+      const userRole = userData.rol || userData.role || 'CLIENTE';
+      localStorage.setItem('userRole', userRole);
+      
       const event = new Event('localStorageChange');
       document.dispatchEvent(event);
-      const userRole = (userData.rol || userData.role || '').toLowerCase();
-      console.log("Rol de usuario detectado:", userData.rol || userData.role, "convertido a:", userRole);
-      if (userRole.includes('admin')) {
+      
+      console.log("Rol de usuario detectado:", userData.rol || userData.role, "guardado como:", userRole);
+      
+      if (userRole.toLowerCase().includes('admin')) {
         navigate('/dashboard/admin');
       } else {
         navigate('/dashboard/cliente');

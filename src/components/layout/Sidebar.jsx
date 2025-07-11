@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import './sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const role = localStorage.getItem('userRole') || 'CLIENTE';
   
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('userRole');
+    navigate('/auth');
+  };
 
   return (
     <div className="sidebar">
@@ -23,7 +31,7 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#128450;</span>
               Dashboard
             </Link>
-            <Link to="/user" className={`sidebar-item ${isActive('/user') ? 'active' : ''}`}>
+            <Link to="/usuarios" className={`sidebar-item ${isActive('/usuarios') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#128100;</span>
               Users
             </Link>
@@ -33,7 +41,7 @@ const Sidebar = () => {
             </Link>
             <Link to="/cuenta" className={`sidebar-item ${isActive('/cuenta') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#128176;</span>
-              Accounts
+              Gestión Cuentas
             </Link>
             <Link to="/settings" className={`sidebar-item ${isActive('/settings') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9881;</span>
@@ -46,9 +54,9 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#127968;</span>
               Home
             </Link>
-            <Link to="/cuenta" className={`sidebar-item ${isActive('/cuenta') ? 'active' : ''}`}>
+            <Link to="/mis-cuentas" className={`sidebar-item ${isActive('/mis-cuentas') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#128179;</span>
-              Accounts
+              Mis Cuentas
             </Link>
             <Link to="/movimiento" className={`sidebar-item ${isActive('/movimiento') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#8646;</span>
@@ -65,6 +73,16 @@ const Sidebar = () => {
           </>
         )}
       </nav>
+      
+      <div className="sidebar-footer">
+        <button 
+          onClick={handleLogout}
+          className="sidebar-item sidebar-logout-btn"
+        >
+          <span className="sidebar-icon">🚪</span>
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
   );
 };

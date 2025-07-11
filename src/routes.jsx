@@ -1,7 +1,8 @@
 import React from 'react';
+import { NotFoundPage } from './pages';
 import { AuthPage } from './pages/auth';
+import { CuentaPage, MisCuentasPage } from './pages/cuenta';
 import DashboardPage from './pages/dashboard/DashboardPage';
-import NotFoundPage from './pages/notFoundPage';
 import { ProtectedRoute } from './components';
 import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
@@ -38,6 +39,14 @@ export const routes = [
   {
     path: '/mi-perfil',
     element: <ProtectedRoute element={<UserMiPerfilPage />} />
+  },
+  {
+    path: '/cuenta',
+    element: <ProtectedRoute element={<CuentaPage />} adminOnly={true} />
+  },
+  {
+    path: '/mis-cuentas',
+    element: <ProtectedRoute element={<MisCuentasPage />} />
   },
   {
     path: '*',

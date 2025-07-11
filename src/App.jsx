@@ -11,19 +11,16 @@ function App() {
   const isAuthPage = location.pathname.includes('/auth');
 
   useEffect(() => {
-    // Verificar si hay una sesión válida al cargar la aplicación
     const checkAuthStatus = () => {
       try {
         const userString = localStorage.getItem('user');
-        
-        // Si no hay usuario o estamos en una página que no es de auth
+
         if (!userString && !isAuthPage) {
           console.log('No hay sesión válida, redirigiendo al login');
           navigate('/auth');
           return;
         }
 
-        // Si hay usuario pero está en auth, redirigir al dashboard
         if (userString && isAuthPage) {
           const userData = JSON.parse(userString);
           const role = (userData.rol || userData.role || '').toLowerCase();
@@ -36,7 +33,6 @@ function App() {
         }
       } catch (error) {
         console.error('Error al verificar la autenticación:', error);
-        // Si hay error al parsear, limpiar localStorage y redirigir
         localStorage.removeItem('user');
         if (!isAuthPage) {
           navigate('/auth');

@@ -13,11 +13,12 @@ api.interceptors.request.use(
         if (userDetails) {
             try {
                 const parsedUser = JSON.parse(userDetails);
+                
                 if (parsedUser?.token) {
                     config.headers.Authorization = `Bearer ${parsedUser.token}`;
                 }
             } catch (err) {
-               err
+                console.error("Error parsing user token:", err);
             }
         }
 
@@ -215,3 +216,103 @@ export const updateUserClient = async (userData) => {
     }
 };
 
+export const getCuentas = async (filters = {}) => {
+    try {
+        const queryParams = new URLSearchParams();
+        
+        if (filters.limite) queryParams.append('limite', filters.limite);
+        if (filters.pagina) queryParams.append('pagina', filters.pagina);
+        if (filters.tipo) queryParams.append('tipo', filters.tipo);
+        if (filters.activa !== undefined) queryParams.append('activa', filters.activa);
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/cuentas?${queryString}` : '/cuentas';
+        
+        return await api.get(url);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const crearCuenta = async (cuentaData) => {
+    try {
+        const response = await api.post('/cuentas/crearCuenta', cuentaData);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        };
+    }
+};
+
+export const editarCuenta = async (cid, cuentaData) => {
+    try {
+        return await api.put(`/cuentas/editarCuenta/${cid}`, cuentaData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getDetallesCuenta = async (cid) => {
+    try {
+        return await api.get(`/cuentas/detallesCuenta/${cid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getCuentaById = async (cid) => {
+    try {
+        return await api.get(`/cuentas/${cid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getCuentaPorNumero = async (numeroCuenta) => {
+    try {
+        return await api.get(`/cuentas/numero/${numeroCuenta}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getCuentaByUsuario = async (uid) => {
+    try {
+        const response = await api.get(`/cuentas/cuentaUsuario/${uid}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const deleteCuenta = async (cid) => {
+    try {
+        const response = await api.delete(`/cuentas/eliminarCuenta/${cid}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};

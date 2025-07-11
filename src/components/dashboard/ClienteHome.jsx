@@ -1,13 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCuenta } from '../../shared/hooks';
+import { getMovimientosRecientes } from '../../services/api';
 import './dashboard.css';
 
 const ClienteHome = () => {
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem('user')) || { nombre: 'Cliente', balance: 0 };
+  
+  const userData = useMemo(() => {
+    const userDataString = localStorage.getItem('user');
+    const parsedData = userDataString ? JSON.parse(userDataString) : { nombre: 'Cliente' };
+    return parsedData;
+  }, []);
+  
+  const { cuentas, loading, error, fetchCuentaByUsuario } = useCuenta();
+  const [movimientos, setMovimientos] = useState([]);
+  const [movimientosLoading, setMovimientosLoading] = useState(false);
+  
+  useEffect(() => {
+    const loadUserData = async () => {
+      const userId = userData.uid || userData._id;
+      
+      if (userId) {
+        await fetchCuentaByUsuario(userId);
+        
+        setMovimientosLoading(true);
+        try {
+          const response = await getMovimientosRecientes(5);
+          if (response && !response.error) {
+            setMovimientos(response.data?.movimientos || []);
+          }
+        } catch (err) {
+          console.error('Error al cargar movimientos:', err);
+        } finally {
+          setMovimientosLoading(false);
+        }
+      }
+    };
+    
+    loadUserData();
+  }, [userData.uid, userData._id, fetchCuentaByUsuario]);
+  
+  const balanceTotal = cuentas.reduce((total, cuenta) => {
+    return total + (cuenta.saldo || 0);
+  }, 0);
   
   const handleNavigateToProfile = () => {
     navigate('/mi-perfil');
+  };
+  
+  const handleNavigateToMisCuentas = () => {
+    navigate('/mis-cuentas');
+  };
+  
+  const formatAccountNumber = (numeroCuenta) => {
+    if (!numeroCuenta) return '**** **** **** ****';
+    const str = numeroCuenta.toString();
+    return `**** **** **** ${str.slice(-4)}`;
+  };
+  
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Fecha no disponible';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-GT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
   
   return (
@@ -20,64 +81,76 @@ const ClienteHome = () => {
       <div className="balance-overview">
         <div className="balance-card">
           <h3>Balance Total</h3>
-          <p className="balance-amount">Q {userData.balance?.toLocaleString() || '0.00'}</p>
-          <button className="balance-action">Ver detalles</button>
+          <p className="balance-amount">Q {balanceTotal.toLocaleString('es-GT', { minimumFractionDigits: 2 })}</p>
+          <button className="balance-action" onClick={handleNavigateToMisCuentas}>Ver mis cuentas</button>
         </div>
       </div>
       
       <div className="dashboard-sections">
         <div className="dashboard-section">
-          <h2>Cuentas</h2>
-          <div className="account-cards">
-            <div className="account-card">
-              <h4>Cuenta de Ahorro</h4>
-              <p className="account-number">**** **** **** 4523</p>
-              <p className="account-balance">Q 3,250.75</p>
-              <div className="account-actions">
-                <button>Ver</button>
-                <button>Transferir</button>
-              </div>
-            </div>
-            <div className="account-card">
-              <h4>Cuenta Corriente</h4>
-              <p className="account-number">**** **** **** 7890</p>
-              <p className="account-balance">Q 1,120.50</p>
-              <div className="account-actions">
-                <button>Ver</button>
-                <button>Transferir</button>
-              </div>
-            </div>
+          <div className="section-header">
+            <h2>Cuentas</h2>
+            <button className="see-all-button" onClick={handleNavigateToMisCuentas}>
+              Ver todas
+            </button>
           </div>
+          {loading ? (
+            <div className="loading-message">Cargando cuentas...</div>
+          ) : error ? (
+            <div className="error-message">Error al cargar cuentas: {error}</div>
+          ) : (
+            <div className="account-cards">
+              {cuentas.length > 0 ? (
+                cuentas.map((cuenta) => (
+                  <div key={cuenta.cid} className="account-card">
+                    <h4>Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}</h4>
+                    <p className="account-number">{formatAccountNumber(cuenta.numeroCuenta)}</p>
+                    <p className="account-balance">Q {cuenta.saldo?.toLocaleString('es-GT', { minimumFractionDigits: 2 }) || '0.00'}</p>
+                    <div className="account-actions">
+                      <button onClick={handleNavigateToMisCuentas}>Ver</button>
+                      <button>Transferir</button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-accounts">
+                  <p>No tienes cuentas registradas</p>
+                  <p>Contacta con un administrador para crear una cuenta</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         
         <div className="dashboard-section">
           <h2>Movimientos Recientes</h2>
-          <div className="transactions-list">
-            <div className="transaction-item">
-              <div className="transaction-icon deposit">↓</div>
-              <div className="transaction-details">
-                <h4>Depósito</h4>
-                <p className="transaction-date">Hoy, 10:30 AM</p>
-              </div>
-              <p className="transaction-amount positive">+ Q 500.00</p>
+          {movimientosLoading ? (
+            <div className="loading-message">Cargando movimientos...</div>
+          ) : (
+            <div className="transactions-list">
+              {movimientos.length > 0 ? (
+                movimientos.map((movimiento, index) => (
+                  <div key={index} className="transaction-item">
+                    <div className={`transaction-icon ${movimiento.tipo?.toLowerCase() || 'transfer'}`}>
+                      {movimiento.tipo === 'DEPOSITO' ? '↓' : 
+                       movimiento.tipo === 'RETIRO' ? '↑' : '⟷'}
+                    </div>
+                    <div className="transaction-details">
+                      <h4>{movimiento.concepto || movimiento.tipo}</h4>
+                      <p className="transaction-date">{formatDate(movimiento.fecha)}</p>
+                    </div>
+                    <p className={`transaction-amount ${movimiento.tipo === 'DEPOSITO' ? 'positive' : 'negative'}`}>
+                      {movimiento.tipo === 'DEPOSITO' ? '+' : '-'} Q {Math.abs(movimiento.monto || 0).toLocaleString('es-GT', { minimumFractionDigits: 2 })}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="no-transactions">
+                  <p>No hay movimientos recientes</p>
+                </div>
+              )}
             </div>
-            <div className="transaction-item">
-              <div className="transaction-icon withdraw">↑</div>
-              <div className="transaction-details">
-                <h4>Pago de servicio</h4>
-                <p className="transaction-date">Ayer, 15:45 PM</p>
-              </div>
-              <p className="transaction-amount negative">- Q 120.50</p>
-            </div>
-            <div className="transaction-item">
-              <div className="transaction-icon transfer">⟷</div>
-              <div className="transaction-details">
-                <h4>Transferencia</h4>
-                <p className="transaction-date">03/07/2025, 09:20 AM</p>
-              </div>
-              <p className="transaction-amount negative">- Q 350.00</p>
-            </div>
-          </div>
+          )}
           <button className="see-all-button">Ver todos</button>
         </div>
         

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import './topbar.css';
 
 const getPageTitle = (pathname) => {
   switch (pathname) {
@@ -23,19 +24,31 @@ const Topbar = () => {
   const handleProfileClick = () => {
     navigate('/mi-perfil');
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('userRole');
+    navigate('/auth');
+  };
   
   return (
     <div className="topbar">
       <h1 className="page-title">{pageTitle}</h1>
-      <div className="user-profile">
+      <div className="user-profile-container">
         <div 
           className="user-avatar" 
           onClick={handleProfileClick}
-          style={{ cursor: 'pointer' }}
           title="Ir a mi perfil"
         >
           U
         </div>
+        <button 
+          className="logout-btn"
+          onClick={handleLogout}
+          title="Cerrar Sesión"
+        >
+          Salir
+        </button>
       </div>
     </div>
   );

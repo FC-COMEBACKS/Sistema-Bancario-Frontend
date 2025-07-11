@@ -5,7 +5,6 @@ import Topbar from './Topbar';
 const Layout = ({ children }) => {
   return (
     <div className="layout">
-      <Navbar />
       <div className="flex">
         <Sidebar />
         <div className="content-area w-full">

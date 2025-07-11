@@ -1,0 +1,157 @@
+.cuenta-page {
+    padding: 1rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.view-switcher {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.cuenta-management {
+    width: 100%;
+}
+
+.cuenta-management .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cuenta-management .card-header h2 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.filters-section {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e9ecef;
+}
+
+.filters-section h4 {
+    margin-bottom: 1rem;
+    color: #495057;
+    font-size: 1.1rem;
+}
+
+.cuentas-dashboard {
+    width: 100%;
+}
+
+.cuentas-dashboard .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cuentas-dashboard .card-header h2 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.cuenta-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.cuenta-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cuenta-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.75rem 1rem;
+}
+
+.cuenta-card .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.tabla-cuentas {
+    overflow-x: auto;
+}
+
+.tabla-cuentas .table {
+    margin-bottom: 0;
+}
+
+.tabla-cuentas .table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.tabla-cuentas .table td {
+    vertical-align: middle;
+}
+
+.cuenta-details .card {
+    margin-bottom: 1rem;
+}
+
+.cuenta-details .card-header h5 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.cuenta-details .table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .cuenta-page {
+        padding: 0.5rem;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .view-switcher {
+        justify-content: center;
+    }
+    
+    .filters-section .row {
+        margin: 0;
+    }
+    
+    .filters-section .col-md-3 {
+        margin-bottom: 1rem;
+    }
+    
+    .cuenta-management .card-header,
+    .cuentas-dashboard .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}
