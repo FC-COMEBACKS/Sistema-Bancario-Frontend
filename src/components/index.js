@@ -35,4 +35,11 @@ export { default as CuentasDashboard } from './cuenta/CuentasDashboard.jsx';
 export { default as CuentaManagement } from './cuenta/CuentaManagement.jsx';
 export { default as DepositoForm } from './cuenta/DepositoForm.jsx';
 export { default as MisCuentasCliente } from './cuenta/MisCuentasCliente.jsx';
+export { default as MovimientoFilter } from './movimiento/MovimientoFilter.jsx';
+export { default as MovimientoItem } from './movimiento/MovimientoItem.jsx';
+export { default as MovimientosList } from './movimiento/MovimientosList.jsx';
+export { default as MovimientosManagement } from './movimiento/MovimientosManagement.jsx';
+export { default as TransferForm } from './movimiento/TransferForm.jsx';
+export { default as DepositoFormMovimiento } from './movimiento/DepositoForm.jsx';
+export { default as RevertirForm } from './movimiento/RevertirForm.jsx';
 

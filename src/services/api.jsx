@@ -316,3 +316,126 @@ export const deleteCuenta = async (cid) => {
         }
     }
 };
+
+// ===== MOVIMIENTOS API =====
+
+export const getAllMovimientos = async (filters = {}) => {
+    try {
+        const queryParams = new URLSearchParams();
+
+        if (filters.limite) queryParams.append("limite", filters.limite);
+        if (filters.pagina) queryParams.append("pagina", filters.pagina);
+        if (filters.tipo) queryParams.append("tipo", filters.tipo);
+
+        const queryString = queryParams.toString();
+        const url = queryString ? `/movimientos?${queryString}` : "/movimientos";
+
+        return await api.get(url);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        };
+    }
+};
+
+export const realizarTransferencia = async (transferenciaData) => {
+    try {
+        return await api.post('/movimientos/transferencia', transferenciaData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const realizarDeposito = async (depositoData) => {
+    try {
+        return await api.post('/movimientos/deposito', depositoData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const revertirDeposito = async (movimientoId) => {
+    try {
+        return await api.post(`/movimientos/deposito/${movimientoId}/revertir`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const comprarProducto = async (compraData) => {
+    try {
+        return await api.post('/movimientos/realizar-compra', compraData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getHistorialCuenta = async (cuentaId) => {
+    try {
+        return await api.get(`/movimientos/cuenta/${cuentaId}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        };
+    }
+};
+
+export const getMovimientoById = async (movimientoId) => {
+    try {
+        return await api.get(`/movimientos/${movimientoId}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+// ===== PRODUCTOS/SERVICIOS API =====
+
+export const getProductosServicios = async (filters = {}) => {
+    try {
+        const queryParams = new URLSearchParams();
+        
+        if (filters.categoria) queryParams.append('categoria', filters.categoria);
+        if (filters.disponible !== undefined) queryParams.append('disponible', filters.disponible);
+        if (filters.limite) queryParams.append('limite', filters.limite);
+        if (filters.pagina) queryParams.append('pagina', filters.pagina);
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/productos-servicios?${queryString}` : '/productos-servicios';
+        
+        return await api.get(url);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getProductoById = async (productoId) => {
+    try {
+        return await api.get(`/productos-servicios/${productoId}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+

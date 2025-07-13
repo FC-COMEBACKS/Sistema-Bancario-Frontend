@@ -6,6 +6,7 @@ import DashboardPage from './pages/dashboard/DashboardPage';
 import { ProtectedRoute } from './components';
 import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
+import MovimientoPage  from './pages/movimiento/MovimientoPage';
 
 export const routes = [
   {
@@ -47,6 +48,10 @@ export const routes = [
   {
     path: '/mis-cuentas',
     element: <ProtectedRoute element={<MisCuentasPage />} />
+  },
+  {
+    path: '/movimiento',
+    element: <ProtectedRoute element={<MovimientoPage />} />
   },
   {
     path: '*',

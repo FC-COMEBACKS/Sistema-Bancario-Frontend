@@ -1,0 +1,11 @@
+.movimiento-page {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .movimiento-page {
+        padding: 1rem;
+    }
+}

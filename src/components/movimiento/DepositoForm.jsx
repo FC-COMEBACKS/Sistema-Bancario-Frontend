@@ -2,38 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button, Select, Modal } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import { useCuenta } from '../../shared/hooks/useCuenta';
-import { validateTransferAmount } from '../../shared/validators';
+import { validateAmount } from '../../shared/validators';
 
-const TransferForm = ({ isOpen, onClose, onSuccess }) => {
+const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
     const [formData, setFormData] = useState({
-        cuentaOrigen: '',
-        cuentaDestino: '',
+        cuentaDestinoId: '',
         monto: '',
         descripcion: ''
     });
     const [errors, setErrors] = useState({});
-    const [cuentasUsuario, setCuentasUsuario] = useState([]);
 
-    const { handleTransferencia, loading, error, success } = useMovimiento();
-    const { fetchCuentaByUsuario, cuentas } = useCuenta();
+    const { handleDeposito, loading, error, success } = useMovimiento();
+    const { fetchCuentas, cuentas } = useCuenta();
 
     useEffect(() => {
-        const loadCuentasUsuario = async () => {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.uid) {
-                const cuenta = await fetchCuentaByUsuario(user.uid);
-                setCuentasUsuario(cuenta ? [cuenta] : []);
-            }
+        const loadCuentas = async () => {
+            await fetchCuentas();
         };
 
         if (isOpen) {
-            loadCuentasUsuario();
+            loadCuentas();
         }
-    }, [isOpen, fetchCuentaByUsuario]);
-
-    useEffect(() => {
-        setCuentasUsuario(cuentas || []);
-    }, [cuentas]);
+    }, [isOpen, fetchCuentas]);
 
     useEffect(() => {
         if (success) {
@@ -45,8 +35,7 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
 
     const resetForm = () => {
         setFormData({
-            cuentaOrigen: '',
-            cuentaDestino: '',
+            cuentaDestinoId: '',
             monto: '',
             descripcion: ''
         });
@@ -71,29 +60,18 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.cuentaOrigen) {
-            newErrors.cuentaOrigen = 'Selecciona una cuenta de origen';
-        }
-
-        if (!formData.cuentaDestino) {
-            newErrors.cuentaDestino = 'Ingresa el número de cuenta destino';
-        }
-
-        if (formData.cuentaOrigen === formData.cuentaDestino) {
-            newErrors.cuentaDestino = 'La cuenta destino debe ser diferente a la origen';
+        if (!formData.cuentaDestinoId) {
+            newErrors.cuentaDestinoId = 'Selecciona una cuenta destino';
         }
 
         // Validar monto
-        const cuentaOrigen = cuentasUsuario.find(c => c.numeroCuenta === formData.cuentaOrigen);
-        const montoValidation = validateTransferAmount(
-            formData.monto,
-            cuentaOrigen?.saldo,
-            1,
-            2000 // límite por transacción
-        );
-
+        const montoValidation = validateAmount(formData.monto, 0.01);
         if (montoValidation !== true) {
             newErrors.monto = montoValidation;
+        }
+
+        if (!formData.descripcion || formData.descripcion.trim() === '') {
+            newErrors.descripcion = 'La descripción es requerida';
         }
 
         setErrors(newErrors);
@@ -107,7 +85,7 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
             return;
         }
 
-        await handleTransferencia(formData);
+        await handleDeposito(formData);
     };
 
     const handleClose = () => {
@@ -115,40 +93,26 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         onClose();
     };
 
-    const cuentasOptions = cuentasUsuario.map(cuenta => ({
-        value: cuenta.numeroCuenta,
-        label: `${cuenta.numeroCuenta} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
+    const cuentasOptions = cuentas.map(cuenta => ({
+        value: cuenta.cid || cuenta._id,
+        label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Usuario'} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
     }));
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Transferencia">
+        <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Depósito">
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cuenta de origen
-                    </label>
-                    <Select
-                        value={formData.cuentaOrigen}
-                        onChange={(value) => handleInputChange('cuentaOrigen', value)}
-                        options={[
-                            { value: '', label: 'Selecciona una cuenta' },
-                            ...cuentasOptions
-                        ]}
-                        error={errors.cuentaOrigen}
-                        disabled={loading}
-                    />
-                </div>
-
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Cuenta destino
                     </label>
-                    <Input
-                        type="text"
-                        value={formData.cuentaDestino}
-                        onChange={(e) => handleInputChange('cuentaDestino', e.target.value)}
-                        placeholder="Ingresa el número de cuenta destino"
-                        error={errors.cuentaDestino}
+                    <Select
+                        value={formData.cuentaDestinoId}
+                        onChange={(value) => handleInputChange('cuentaDestinoId', value)}
+                        options={[
+                            { value: '', label: 'Selecciona una cuenta' },
+                            ...cuentasOptions
+                        ]}
+                        error={errors.cuentaDestinoId}
                         disabled={loading}
                     />
                 </div>
@@ -164,24 +128,21 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
                         placeholder="0.00"
                         step="0.01"
                         min="0.01"
-                        max="2000"
                         error={errors.monto}
                         disabled={loading}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                        Límite máximo por transacción: Q2,000
-                    </p>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descripción (opcional)
+                        Descripción
                     </label>
                     <Input
                         type="text"
                         value={formData.descripcion}
                         onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                        placeholder="Motivo de la transferencia"
+                        placeholder="Motivo del depósito"
+                        error={errors.descripcion}
                         disabled={loading}
                     />
                 </div>
@@ -206,7 +167,7 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
                         variant="primary"
                         loading={loading}
                     >
-                        Transferir
+                        Depositar
                     </Button>
                 </div>
             </form>
@@ -214,4 +175,4 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
     );
 };
 
-export default TransferForm;
+export default DepositoForm;
