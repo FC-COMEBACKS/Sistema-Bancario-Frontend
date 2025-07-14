@@ -88,7 +88,7 @@ const CuentasDashboard = ({
 
     return (
         <div className="space-y-6">
-            {/* Filtros */}
+            {}
             <Card>
                 <div className="p-4">
                     <h3 className="text-lg font-semibold mb-4">Filtros</h3>
@@ -137,7 +137,7 @@ const CuentasDashboard = ({
                 </div>
             </Card>
 
-            {/* Controles de vista */}
+            {}
             <div className="flex justify-between items-center">
                 <div>
                     <p className="text-gray-600">
@@ -146,7 +146,7 @@ const CuentasDashboard = ({
                 </div>
             </div>
 
-            {/* Contenido */}
+            {}
             {error && (
                 <Card className="text-center p-8">
                     <div className="text-red-500">

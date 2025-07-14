@@ -273,7 +273,7 @@ const CuentaManagement = () => {
             {renderActionMessage()}
             {renderContent()}
 
-            {/* Modal Confirmar Eliminación */}
+            {}
             <Modal
                 isOpen={showDeleteModal}
                 onClose={handleCloseDeleteModal}

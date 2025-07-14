@@ -7,7 +7,9 @@ import {
     getCuentaById as getCuentaByIdRequest,
     getCuentaPorNumero as getCuentaPorNumeroRequest,
     getCuentaByUsuario as getCuentaByUsuarioRequest,
-    deleteCuenta as deleteCuentaRequest
+    deleteCuenta as deleteCuentaRequest,
+    listarCuentasAgregadas as listarCuentasAgregadasRequest,
+    agregarCuentaDeUsuario as agregarCuentaDeUsuarioRequest
 } from '../../services/api';
 
 
@@ -17,6 +19,7 @@ export const useCuenta = () => {
     const [error, setError] = useState(null);
     const [cuentas, setCuentas] = useState([]);
     const [selectedCuenta, setSelectedCuenta] = useState(null);
+    const [cuentasAgregadas, setCuentasAgregadas] = useState([]);
     const [pagination, setPagination] = useState({
         total: 0,
         pagina: 1,
@@ -92,7 +95,6 @@ export const useCuenta = () => {
                 setError(errorMsg);
                 return false;
             }
-            // Refrescar desde la base de datos real
             await fetchCuentas();
             return true;
         } catch {
@@ -220,12 +222,18 @@ export const useCuenta = () => {
                 setError(errorMsg);
                 return false;
             }
-            
-            // La API devuelve { cuenta: {...} } según Postman
+     
             if (response.data && response.data.cuenta) {
                 const cuenta = response.data.cuenta;
-                setCuentas([cuenta]); // Convertir a array para consistencia
-                setSelectedCuenta(cuenta);
+                if (Array.isArray(cuenta)) {
+                    setCuentas(cuenta);
+                    setSelectedCuenta(cuenta[0] || null);
+                    console.log('setCuentas (array):', cuenta);
+                } else {
+                    setCuentas([cuenta]);
+                    setSelectedCuenta(cuenta);
+                    console.log('setCuentas (obj):', [cuenta]);
+                }
                 return true;
             } else {
                 setCuentas([]);
@@ -249,12 +257,61 @@ export const useCuenta = () => {
         setSelectedCuenta(null);
     }, []);
 
+    const fetchCuentasAgregadas = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await listarCuentasAgregadasRequest();
+            
+            if (response.error) {
+                const errorMsg = response.err.response?.data?.msg || 
+                                response.err.response?.data?.error || 
+                                'Error al obtener las cuentas agregadas';
+                setError(errorMsg);
+                return false;
+            }
+            
+            setCuentasAgregadas(response.data.cuentasAgregadas || []);
+            return true;
+        } catch {
+            setError('Error inesperado al obtener las cuentas agregadas');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const agregarCuentaDeUsuario = useCallback(async (numeroCuenta) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await agregarCuentaDeUsuarioRequest({ numeroCuenta });
+            
+            if (response.error) {
+                const errorMsg = response.err.response?.data?.msg || 
+                                response.err.response?.data?.error || 
+                                'Error al agregar la cuenta';
+                setError(errorMsg);
+                return false;
+            }
+            
+            await fetchCuentasAgregadas();
+            return true;
+        } catch {
+            setError('Error inesperado al agregar la cuenta');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchCuentasAgregadas]);
+
     return {
         loading,
         error,
         cuentas,
         selectedCuenta,
         pagination,
+        cuentasAgregadas,
         fetchCuentas,
         createCuenta,
         updateCuenta,
@@ -263,6 +320,8 @@ export const useCuenta = () => {
         fetchCuentaById,
         fetchCuentaPorNumero,
         fetchCuentaByUsuario,
+        fetchCuentasAgregadas,
+        agregarCuentaDeUsuario,
         clearError,
         clearSelectedCuenta
     };

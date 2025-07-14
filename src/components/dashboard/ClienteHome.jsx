@@ -151,21 +151,17 @@ const ClienteHome = () => {
               )}
             </div>
           )}
-          <button className="see-all-button">Ver todos</button>
+          <button className="see-all-button" onClick={() => navigate('/movimiento')}>Ver todos</button>
         </div>
         
         <div className="dashboard-section">
           <h2>Acciones Rápidas</h2>
           <div className="quick-actions">
-            <button className="quick-action-button">
+            <button className="quick-action-button" onClick={() => navigate('/movimiento')}>
               <span className="action-icon">↑</span>
               <span>Transferir</span>
             </button>
-            <button className="quick-action-button">
-              <span className="action-icon">+</span>
-              <span>Depositar</span>
-            </button>
-            <button className="quick-action-button">
+            <button className="quick-action-button" onClick={() => navigate('/divisa/cambio')}>
               <span className="action-icon">$</span>
               <span>Cambio de Divisa</span>
             </button>

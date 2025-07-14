@@ -52,6 +52,9 @@ const MovimientoItem = ({ movimiento, onClick }) => {
         }).format(monto);
     };
 
+    const cuentaOrigen = movimiento.cuentaOrigenDetalle || movimiento.cuentaOrigen;
+    const cuentaDestino = movimiento.cuentaDestinoDetalle || movimiento.cuentaDestino;
+
     return (
         <div 
             className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
@@ -88,20 +91,20 @@ const MovimientoItem = ({ movimiento, onClick }) => {
                     </p>
                 )}
 
-                {movimiento.cuentaOrigenDetalle && (
+                {cuentaOrigen && cuentaOrigen.numeroCuenta && (
                     <p className="text-sm text-gray-700">
-                        <span className="font-medium">Cuenta origen:</span> {movimiento.cuentaOrigenDetalle.numeroCuenta}
-                        {movimiento.cuentaOrigenDetalle.titular && (
-                            <span className="text-gray-500"> - {movimiento.cuentaOrigenDetalle.titular}</span>
+                        <span className="font-medium">Cuenta origen:</span> {cuentaOrigen.numeroCuenta}
+                        {cuentaOrigen.titular && (
+                            <span className="text-gray-500"> - {cuentaOrigen.titular}</span>
                         )}
                     </p>
                 )}
 
-                {movimiento.cuentaDestinoDetalle && (
+                {cuentaDestino && cuentaDestino.numeroCuenta && (
                     <p className="text-sm text-gray-700">
-                        <span className="font-medium">Cuenta destino:</span> {movimiento.cuentaDestinoDetalle.numeroCuenta}
-                        {movimiento.cuentaDestinoDetalle.titular && (
-                            <span className="text-gray-500"> - {movimiento.cuentaDestinoDetalle.titular}</span>
+                        <span className="font-medium">Cuenta destino:</span> {cuentaDestino.numeroCuenta}
+                        {cuentaDestino.titular && (
+                            <span className="text-gray-500"> - {cuentaDestino.titular}</span>
                         )}
                     </p>
                 )}

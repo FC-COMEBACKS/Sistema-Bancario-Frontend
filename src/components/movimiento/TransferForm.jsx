@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Select, Modal } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
-import { useCuenta } from '../../shared/hooks/useCuenta';
 import { validateTransferAmount } from '../../shared/validators';
+import { useCuenta } from '../../shared/hooks/useCuenta';
+
+
+
 
 const TransferForm = ({ isOpen, onClose, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -12,36 +15,52 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         descripcion: ''
     });
     const [errors, setErrors] = useState({});
-    const [cuentasUsuario, setCuentasUsuario] = useState([]);
+    const {
+        cuentas: cuentasUsuario,
+        cuentasAgregadas,
+        fetchCuentaByUsuario,
+        fetchCuentasAgregadas
+    } = useCuenta();
+    const cuentasAgregadasOptions = cuentasAgregadas.map(cuenta => ({
+        value: cuenta.numeroCuenta,
+        label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Sin nombre'}`
+    }));
 
-    const { handleTransferencia, loading, error, success } = useMovimiento();
-    const { fetchCuentaByUsuario, cuentas } = useCuenta();
+    const noCuentasPropias = cuentasUsuario.length === 0;
+    const noCuentasAgregadas = cuentasAgregadas.length === 0;
 
+    const { handleTransferencia, loading, error, success, clearMessages } = useMovimiento();
+
+    const cuentasOptions = cuentasUsuario.map(cuenta => ({
+        value: cuenta.numeroCuenta,
+        label: `${cuenta.numeroCuenta} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
+    }));
+
+   
     useEffect(() => {
-        const loadCuentasUsuario = async () => {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.uid) {
-                const cuenta = await fetchCuentaByUsuario(user.uid);
-                setCuentasUsuario(cuenta ? [cuenta] : []);
-            }
-        };
-
-        if (isOpen) {
-            loadCuentasUsuario();
+        if (!isOpen) return;
+        const userDetails = localStorage.getItem('user');
+        if (!userDetails) return;
+        const user = JSON.parse(userDetails);
+        const userId = user.uid || user._id || user.id;
+        if (userId) {
+            fetchCuentaByUsuario(userId);
+            fetchCuentasAgregadas();
         }
-    }, [isOpen, fetchCuentaByUsuario]);
+    }, [isOpen, fetchCuentaByUsuario, fetchCuentasAgregadas]);
 
-    useEffect(() => {
-        setCuentasUsuario(cuentas || []);
-    }, [cuentas]);
 
     useEffect(() => {
         if (success) {
             onSuccess && onSuccess();
             resetForm();
             onClose();
+            clearMessages();
         }
-    }, [success, onSuccess, onClose]);
+    }, [success, onSuccess, onClose, clearMessages]);
+
+    useEffect(() => {
+    }, [cuentasUsuario, cuentasOptions]);
 
     const resetForm = () => {
         setFormData({
@@ -58,8 +77,7 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
             ...prev,
             [name]: value
         }));
-        
-        // Limpiar error específico
+
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -83,13 +101,13 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
             newErrors.cuentaDestino = 'La cuenta destino debe ser diferente a la origen';
         }
 
-        // Validar monto
+
         const cuentaOrigen = cuentasUsuario.find(c => c.numeroCuenta === formData.cuentaOrigen);
         const montoValidation = validateTransferAmount(
             formData.monto,
             cuentaOrigen?.saldo,
             1,
-            2000 // límite por transacción
+            2000 
         );
 
         if (montoValidation !== true) {
@@ -107,7 +125,10 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
             return;
         }
 
-        await handleTransferencia(formData);
+        await handleTransferencia({
+            ...formData,
+            monto: Number(formData.monto)
+        });
     };
 
     const handleClose = () => {
@@ -115,10 +136,7 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         onClose();
     };
 
-    const cuentasOptions = cuentasUsuario.map(cuenta => ({
-        value: cuenta.numeroCuenta,
-        label: `${cuenta.numeroCuenta} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
-    }));
+
 
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Transferencia">
@@ -129,28 +147,47 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
                     </label>
                     <Select
                         value={formData.cuentaOrigen}
-                        onChange={(value) => handleInputChange('cuentaOrigen', value)}
+                        onChange={e => handleInputChange('cuentaOrigen', e.target.value)}
                         options={[
                             { value: '', label: 'Selecciona una cuenta' },
                             ...cuentasOptions
                         ]}
                         error={errors.cuentaOrigen}
-                        disabled={loading}
+                        disabled={loading || noCuentasPropias}
                     />
+                    {noCuentasPropias && (
+                        <p className="text-xs text-red-500 mt-1">No tienes cuentas propias registradas. Solicita la creación de una cuenta.</p>
+                    )}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Cuenta destino
                     </label>
-                    <Input
-                        type="text"
-                        value={formData.cuentaDestino}
-                        onChange={(e) => handleInputChange('cuentaDestino', e.target.value)}
-                        placeholder="Ingresa el número de cuenta destino"
-                        error={errors.cuentaDestino}
-                        disabled={loading}
-                    />
+                    {noCuentasAgregadas ? (
+                        <Input
+                            type="text"
+                            value={formData.cuentaDestino}
+                            onChange={e => handleInputChange('cuentaDestino', e.target.value)}
+                            placeholder="Ingresa el número de cuenta destino"
+                            error={errors.cuentaDestino}
+                            disabled={loading}
+                        />
+                    ) : (
+                        <Select
+                            value={formData.cuentaDestino}
+                            onChange={e => handleInputChange('cuentaDestino', e.target.value)}
+                            options={[
+                                { value: '', label: 'Selecciona una cuenta agregada' },
+                                ...cuentasAgregadasOptions
+                            ]}
+                            error={errors.cuentaDestino}
+                            disabled={loading}
+                        />
+                    )}
+                    {noCuentasAgregadas && (
+                        <p className="text-xs text-blue-500 mt-1">No tienes cuentas agregadas. Puedes ingresar el número manualmente o agregar una desde "Mis Cuentas".</p>
+                    )}
                 </div>
 
                 <div>
@@ -204,7 +241,8 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
                     <Button
                         type="submit"
                         variant="primary"
-                        loading={loading}
+                        {...(loading ? { loading: true } : {})}
+                        disabled={loading || noCuentasPropias}
                     >
                         Transferir
                     </Button>

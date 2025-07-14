@@ -12,9 +12,8 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
     });
     const [errors, setErrors] = useState({});
 
-    const { handleDeposito, loading, error, success } = useMovimiento();
+    const { handleDeposito, loading, error, success, clearMessages } = useMovimiento();
     const { fetchCuentas, cuentas } = useCuenta();
-
     useEffect(() => {
         const loadCuentas = async () => {
             await fetchCuentas();
@@ -30,8 +29,9 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
             onSuccess && onSuccess();
             resetForm();
             onClose();
+            if (typeof clearMessages === 'function') clearMessages();
         }
-    }, [success, onSuccess, onClose]);
+    }, [success, onSuccess, onClose, clearMessages]);
 
     const resetForm = () => {
         setFormData({
@@ -48,7 +48,6 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
             [name]: value
         }));
         
-        // Limpiar error específico
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -64,7 +63,6 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
             newErrors.cuentaDestinoId = 'Selecciona una cuenta destino';
         }
 
-        // Validar monto
         const montoValidation = validateAmount(formData.monto, 0.01);
         if (montoValidation !== true) {
             newErrors.monto = montoValidation;
@@ -85,7 +83,14 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
             return;
         }
 
-        await handleDeposito(formData);
+        const dataToSend = {
+            ...formData,
+            cuentaDestino: formData.cuentaDestinoId,
+            monto: Number(formData.monto)
+        };
+        delete dataToSend.cuentaDestinoId;
+
+        await handleDeposito(dataToSend);
     };
 
     const handleClose = () => {
@@ -94,7 +99,7 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
     };
 
     const cuentasOptions = cuentas.map(cuenta => ({
-        value: cuenta.cid || cuenta._id,
+        value: cuenta.numeroCuenta,
         label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Usuario'} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
     }));
 
@@ -107,7 +112,7 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
                     </label>
                     <Select
                         value={formData.cuentaDestinoId}
-                        onChange={(value) => handleInputChange('cuentaDestinoId', value)}
+                        onChange={e => handleInputChange('cuentaDestinoId', e.target.value)}
                         options={[
                             { value: '', label: 'Selecciona una cuenta' },
                             ...cuentasOptions

@@ -10,6 +10,7 @@ const Button = ({
   fullWidth = false,
   disabled = false,
   className = '',
+  loading = false,
   ...props
 }) => {
   const baseClasses = 'font-medium rounded transition duration-200 focus:outline-none flex items-center justify-center';
@@ -40,14 +41,20 @@ const Button = ({
     ${className}
   `;
 
+
+  const { loading: _loading, ...restProps } = props;
+
   return (
     <button
       type={type}
       className={buttonClasses}
       onClick={onClick}
-      disabled={disabled}
-      {...props}
+      disabled={disabled || loading}
+      {...restProps}
     >
+      {loading ? (
+        <span className="loader mr-2" style={{ width: 16, height: 16, border: '2px solid #fff', borderTop: '2px solid #3498db', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }} />
+      ) : null}
       {children}
     </button>
   );

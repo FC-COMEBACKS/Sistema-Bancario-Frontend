@@ -1,13 +1,15 @@
 import { useState, useCallback } from 'react';
 import { 
-    getAllMovimientos, 
-    realizarTransferencia, 
-    realizarDeposito, 
-    revertirDeposito, 
-    comprarProducto, 
-    getHistorialCuenta, 
-    getMovimientoById 
+    getAllMovimientos as getAllMovimientosRequest,
+    realizarTransferencia as realizarTransferenciaRequest,
+    realizarDeposito as realizarDepositoRequest,
+    revertirDeposito as revertirDepositoRequest,
+    realizarCredito as realizarCreditoRequest,
+    comprarProducto as comprarProductoRequest,
+    getHistorialCuenta as getHistorialCuentaRequest,
+    getMovimientoById as getMovimientoByIdRequest
 } from '../../services/api';
+
 
 export const useMovimiento = () => {
     const [movimientos, setMovimientos] = useState([]);
@@ -22,26 +24,70 @@ export const useMovimiento = () => {
         limit: 10
     });
 
-    // Limpiar mensajes
     const clearMessages = useCallback(() => {
         setError(null);
         setSuccess(false);
     }, []);
 
-    // Obtener todos los movimientos (solo admin)
+    const handleCredito = useCallback(async (creditoData) => {
+        setLoading(true);
+        clearMessages();
+        try {
+            const response = await realizarCreditoRequest(creditoData);
+            if (response.error) {
+                setError(response.err?.response?.data?.msg || 'Error al realizar crédito');
+                return false;
+            }
+            setSuccess(true);
+            return true;
+        } catch {
+            setError('Error al realizar crédito');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, [clearMessages]);
+
+const fetchMovimientosCliente = useCallback(async (filters = {}) => {
+    setLoading(true);
+    clearMessages();
+    try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const filtros = { ...filters };
+        if (user && user._id) {
+            filtros.usuario = user._id;
+        }
+        const response = await getAllMovimientosRequest(filtros);
+        if (response.error) {
+            setError(response.err?.response?.data?.msg || 'Error al obtener movimientos');
+            setMovimientos([]);
+            return;
+        }
+        setMovimientos(response.data?.movimientos || []);
+        setPagination(prev => ({
+            ...prev,
+            total: response.data?.total || 0,
+            currentPage: filtros.pagina || 1,
+            totalPages: Math.ceil((response.data?.total || 0) / (filtros.limite || 10))
+        }));
+    } catch {
+        setError('Error al obtener movimientos del cliente');
+        setMovimientos([]);
+    } finally {
+        setLoading(false);
+    }
+}, [clearMessages]);
+
     const fetchMovimientos = useCallback(async (filters = {}) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await getAllMovimientos(filters);
-            
+            const response = await getAllMovimientosRequest(filters);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al obtener movimientos');
                 setMovimientos([]);
                 return;
             }
-
             setMovimientos(response.data?.movimientos || []);
             setPagination(prev => ({
                 ...prev,
@@ -57,20 +103,16 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Obtener movimiento por ID
     const fetchMovimientoById = useCallback(async (movimientoId) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await getMovimientoById(movimientoId);
-            
+            const response = await getMovimientoByIdRequest(movimientoId);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al obtener movimiento');
                 setMovimiento(null);
                 return;
             }
-
             setMovimiento(response.data);
         } catch {
             setError('Error al obtener movimiento');
@@ -80,20 +122,16 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Obtener historial de cuenta
     const fetchHistorialCuenta = useCallback(async (cuentaId) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await getHistorialCuenta(cuentaId);
-            
+            const response = await getHistorialCuentaRequest(cuentaId);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al obtener historial de cuenta');
                 setMovimientos([]);
                 return;
             }
-
             setMovimientos(response.data?.movimientos || []);
             setPagination(prev => ({
                 ...prev,
@@ -101,7 +139,6 @@ export const useMovimiento = () => {
                 currentPage: 1,
                 totalPages: Math.ceil((response.data?.total || 0) / 10)
             }));
-            
             return response.data?.cuenta;
         } catch {
             setError('Error al obtener historial de cuenta');
@@ -111,19 +148,15 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Realizar transferencia
     const handleTransferencia = useCallback(async (transferenciaData) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await realizarTransferencia(transferenciaData);
-            
+            const response = await realizarTransferenciaRequest(transferenciaData);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al realizar transferencia');
                 return false;
             }
-
             setSuccess(true);
             return true;
         } catch {
@@ -134,19 +167,15 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Realizar depósito
     const handleDeposito = useCallback(async (depositoData) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await realizarDeposito(depositoData);
-            
+            const response = await realizarDepositoRequest(depositoData);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al realizar depósito');
                 return false;
             }
-
             setSuccess(true);
             return true;
         } catch {
@@ -157,19 +186,15 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Revertir depósito
     const handleRevertirDeposito = useCallback(async (movimientoId) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await revertirDeposito(movimientoId);
-            
+            const response = await revertirDepositoRequest(movimientoId);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al revertir depósito');
                 return false;
             }
-
             setSuccess(true);
             return true;
         } catch {
@@ -180,19 +205,15 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Comprar producto
     const handleComprarProducto = useCallback(async (compraData) => {
         setLoading(true);
         clearMessages();
-        
         try {
-            const response = await comprarProducto(compraData);
-            
+            const response = await comprarProductoRequest(compraData);
             if (response.error) {
                 setError(response.err?.response?.data?.msg || 'Error al comprar producto');
                 return false;
             }
-
             setSuccess(true);
             return true;
         } catch {
@@ -203,7 +224,6 @@ export const useMovimiento = () => {
         }
     }, [clearMessages]);
 
-    // Reset states
     const resetStates = useCallback(() => {
         setMovimientos([]);
         setMovimiento(null);
@@ -218,22 +238,21 @@ export const useMovimiento = () => {
     }, []);
 
     return {
-        // Estados
         movimientos,
         movimiento,
         loading,
         error,
         success,
         pagination,
-        
-        // Métodos
         fetchMovimientos,
         fetchMovimientoById,
         fetchHistorialCuenta,
+        fetchMovimientosCliente,
         handleTransferencia,
         handleDeposito,
         handleRevertirDeposito,
         handleComprarProducto,
+        handleCredito,
         clearMessages,
         resetStates
     };

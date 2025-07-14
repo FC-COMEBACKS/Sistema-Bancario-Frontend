@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import MovimientoFilter from './MovimientoFilter';
-import MovimientosList from './MovimientosList';
+import MovimientosTable from './MovimientosTable';
+import Pagination from '../ui/Pagination';
 import TransferForm from './TransferForm';
 import DepositoForm from './DepositoForm';
 import RevertirForm from './RevertirForm';
+import CreditoForm from './CreditoForm';
 
 const MovimientosManagement = () => {
     const [filters, setFilters] = useState({});
+    const [refreshMovimientos, setRefreshMovimientos] = useState(0);
     const [modals, setModals] = useState({
         transfer: false,
         deposit: false,
-        revert: false
+        revert: false,
+        credito: false 
     });
     const [selectedMovimiento, setSelectedMovimiento] = useState(null);
 
@@ -26,26 +30,33 @@ const MovimientosManagement = () => {
     } = useMovimiento();
 
     useEffect(() => {
-        const loadMovimientos = () => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.rol === 'ADMIN') {
             fetchMovimientos(filters);
-        };
-        loadMovimientos();
-    }, [fetchMovimientos, filters]);
+        } else if (user.rol === 'CLIENT') {
+            const filtrosCliente = { ...filters, limite: 10, pagina: filters.pagina || 1 };
+            fetchMovimientos(filtrosCliente);
+        }
+    }, [filters, refreshMovimientos, fetchMovimientos]);
 
     const handleFilterChange = (newFilters) => {
-        setFilters(newFilters);
-        fetchMovimientos(newFilters);
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        setFilters({ ...newFilters, pagina: 1 });
+        if (user.rol === 'ADMIN') {
+            fetchMovimientos({ ...newFilters, pagina: 1 });
+        }
     };
 
     const handlePageChange = (page) => {
-        const newFilters = { ...filters, pagina: page };
-        setFilters(newFilters);
-        fetchMovimientos(newFilters);
-    };
-
-    const handleMovimientoClick = (movimiento) => {
-        setSelectedMovimiento(movimiento);
-        // Aquí podrías abrir un modal de detalles del movimiento
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.rol === 'ADMIN') {
+            if (page < 1 || page > (pagination.totalPages || 1)) return;
+            setFilters(prev => ({ ...prev, pagina: page }));
+            fetchMovimientos({ ...filters, pagina: page });
+        } else {
+            if (page < 1 || page > (pagination.totalPages || 1)) return;
+            setFilters(prev => ({ ...prev, pagina: page }));
+        }
     };
 
     const openModal = (modalName) => {
@@ -65,15 +76,13 @@ const MovimientosManagement = () => {
     };
 
     const handleSuccess = () => {
-        const loadMovimientos = () => {
-            fetchMovimientos(filters);
-        };
-        loadMovimientos();
+        setRefreshMovimientos(prev => prev + 1);
     };
 
-    // Verificar si el usuario es admin para mostrar ciertas opciones
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const isAdmin = user.rol === 'ADMIN';
+    const totalPages = pagination.totalPages || 1;
+    const movimientosPaginados = movimientos;
 
     return (
         <div className="space-y-6">
@@ -84,19 +93,35 @@ const MovimientosManagement = () => {
                 </div>
                 <div className="flex space-x-3">
                     {isAdmin && (
+                        <>
+                            <Button
+                                variant="secondary"
+                                onClick={() => openModal('deposit')}
+                            >
+                                Nuevo Depósito
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => openModal('credito')}
+                            >
+                                Nuevo Crédito
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={() => openModal('transfer')}
+                            >
+                                Nueva Transferencia
+                            </Button>
+                        </>
+                    )}
+                    {!isAdmin && (
                         <Button
-                            variant="secondary"
-                            onClick={() => openModal('deposit')}
+                            variant="primary"
+                            onClick={() => openModal('transfer')}
                         >
-                            Nuevo Depósito
+                            Nueva Transferencia
                         </Button>
                     )}
-                    <Button
-                        variant="primary"
-                        onClick={() => openModal('transfer')}
-                    >
-                        Nueva Transferencia
-                    </Button>
                 </div>
             </div>
 
@@ -112,31 +137,43 @@ const MovimientosManagement = () => {
                             Movimientos
                         </h2>
                         <div className="text-sm text-gray-500">
-                            {pagination.total > 0 && (
-                                `Mostrando ${pagination.total} movimientos`
-                            )}
+                            {pagination.total > 0 && `Mostrando ${pagination.total} movimientos`}
                         </div>
                     </div>
 
-                    <MovimientosList
-                        movimientos={movimientos}
-                        loading={loading}
-                        error={error}
-                        pagination={pagination}
-                        onPageChange={handlePageChange}
-                        onMovimientoClick={handleMovimientoClick}
-                    />
+                    {loading ? (
+                        <div className="flex justify-center items-center py-12">
+                            <span className="text-gray-500">Cargando movimientos...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                            <h3 className="text-lg font-medium text-red-800 mb-2">Error al cargar movimientos</h3>
+                            <p className="text-red-600">{error}</p>
+                        </div>
+                    ) : (
+                        <>
+                            <MovimientosTable movimientos={movimientosPaginados} />
+                            {(isAdmin
+                                ? (pagination && pagination.totalPages > 1)
+                                : (totalPages > 1)
+                            ) && (
+                                <Pagination
+                                    currentPage={isAdmin ? pagination.currentPage : (filters.pagina || 1)}
+                                    totalPages={isAdmin ? pagination.totalPages : totalPages}
+                                    onPageChange={handlePageChange}
+                                />
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
 
-            {/* Modal de Transferencia */}
             <TransferForm
                 isOpen={modals.transfer}
                 onClose={() => closeModal('transfer')}
                 onSuccess={handleSuccess}
             />
 
-            {/* Modal de Depósito */}
             {isAdmin && (
                 <DepositoForm
                     isOpen={modals.deposit}
@@ -145,13 +182,20 @@ const MovimientosManagement = () => {
                 />
             )}
 
-            {/* Modal de Revertir */}
             {isAdmin && (
                 <RevertirForm
                     isOpen={modals.revert}
                     onClose={() => closeModal('revert')}
                     onSuccess={handleSuccess}
                     movimiento={selectedMovimiento}
+                />
+            )}
+
+            {isAdmin && (
+                <CreditoForm
+                    isOpen={modals.credito}
+                    onClose={() => closeModal('credito')}
+                    onSuccess={handleSuccess}
                 />
             )}
         </div>

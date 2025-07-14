@@ -43,6 +43,10 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#128176;</span>
               Gestión Cuentas
             </Link>
+            <Link to="/movimiento" className={`sidebar-item ${isActive('/movimiento') ? 'active' : ''}`}>
+              <span className="sidebar-icon">&#8646;</span>
+              Movimientos
+            </Link>
             <Link to="/settings" className={`sidebar-item ${isActive('/settings') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9881;</span>
               Settings

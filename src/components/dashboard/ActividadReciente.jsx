@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useEstadisticas } from '../../shared/hooks';
 import Loader from '../ui/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -16,6 +17,7 @@ const formatDate = (dateString) => {
 
 const ActividadReciente = ({ limit = 5 }) => {
   const { movimientosRecientes, isLoading, hasErrors, fetchMovimientosRecientes } = useEstadisticas();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMovimientosRecientes(limit);
@@ -52,7 +54,9 @@ const ActividadReciente = ({ limit = 5 }) => {
       )}
       
       <div className="see-more-link">
-        <a href="/movimientos">Ver todos los movimientos →</a>
+        <button type="button" className="see-all-button" onClick={() => navigate('/movimiento')}>
+          Ver todos los movimientos →
+        </button>
       </div>
     </div>
   );

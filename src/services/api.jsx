@@ -305,6 +305,28 @@ export const getCuentaByUsuario = async (uid) => {
     }
 };
 
+export const listarCuentasAgregadas = async () => {
+    try {
+        return await api.get('/cuentas/listarCuentasAgregadas');
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const agregarCuentaDeUsuario = async (cuentaData) => {
+    try {
+        return await api.post('/cuentas/agregarCuentaDeUsuario', cuentaData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
 export const deleteCuenta = async (cid) => {
     try {
         const response = await api.delete(`/cuentas/eliminarCuenta/${cid}`);
@@ -317,19 +339,19 @@ export const deleteCuenta = async (cid) => {
     }
 };
 
-// ===== MOVIMIENTOS API =====
-
 export const getAllMovimientos = async (filters = {}) => {
     try {
         const queryParams = new URLSearchParams();
-
         if (filters.limite) queryParams.append("limite", filters.limite);
         if (filters.pagina) queryParams.append("pagina", filters.pagina);
         if (filters.tipo) queryParams.append("tipo", filters.tipo);
+        if (filters.fechaDesde) queryParams.append("fechaDesde", filters.fechaDesde);
+        if (filters.fechaHasta) queryParams.append("fechaHasta", filters.fechaHasta);
+        if (filters.montoMinimo) queryParams.append("montoMinimo", filters.montoMinimo);
+        if (filters.montoMaximo) queryParams.append("montoMaximo", filters.montoMaximo);
 
         const queryString = queryParams.toString();
         const url = queryString ? `/movimientos?${queryString}` : "/movimientos";
-
         return await api.get(url);
     } catch (err) {
         return {
@@ -372,6 +394,18 @@ export const revertirDeposito = async (movimientoId) => {
     }
 };
 
+
+export const realizarCredito = async (creditoData) => {
+    try {
+        return await api.post('/movimientos/credito', creditoData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
 export const comprarProducto = async (compraData) => {
     try {
         return await api.post('/movimientos/realizar-compra', compraData);
@@ -405,37 +439,4 @@ export const getMovimientoById = async (movimientoId) => {
     }
 };
 
-// ===== PRODUCTOS/SERVICIOS API =====
-
-export const getProductosServicios = async (filters = {}) => {
-    try {
-        const queryParams = new URLSearchParams();
-        
-        if (filters.categoria) queryParams.append('categoria', filters.categoria);
-        if (filters.disponible !== undefined) queryParams.append('disponible', filters.disponible);
-        if (filters.limite) queryParams.append('limite', filters.limite);
-        if (filters.pagina) queryParams.append('pagina', filters.pagina);
-        
-        const queryString = queryParams.toString();
-        const url = queryString ? `/productos-servicios?${queryString}` : '/productos-servicios';
-        
-        return await api.get(url);
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-};
-
-export const getProductoById = async (productoId) => {
-    try {
-        return await api.get(`/productos-servicios/${productoId}`);
-    } catch (err) {
-        return {
-            error: true,
-            err
-        }
-    }
-};
 

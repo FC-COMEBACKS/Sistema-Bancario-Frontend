@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Button, Modal } from '../ui';
+import { Card, Button, Modal, Input } from '../ui';
 import { useCuenta } from '../../shared/hooks';
 import CuentaDetails from './CuentaDetails';
 import CuentaForm from './CuentaForm';
@@ -16,8 +16,11 @@ const MisCuentasCliente = () => {
         loading, 
         error, 
         selectedCuenta,
+        cuentasAgregadas,
         fetchCuentaByUsuario,
         fetchCuentaDetails,
+        fetchCuentasAgregadas,
+        agregarCuentaDeUsuario,
         updateCuenta,
         clearError
     } = useCuenta();
@@ -26,14 +29,17 @@ const MisCuentasCliente = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedCuentaId, setSelectedCuentaId] = useState(null);
     const [actionMessage, setActionMessage] = useState({ text: '', type: '' });
+    const [showAddCuentaModal, setShowAddCuentaModal] = useState(false);
+    const [numeroCuentaAgregar, setNumeroCuentaAgregar] = useState('');
 
     useEffect(() => {
         const userId = userData.uid || userData._id;
         
         if (userId) {
             fetchCuentaByUsuario(userId);
+            fetchCuentasAgregadas();
         }
-    }, [userData, fetchCuentaByUsuario]);
+    }, [userData, fetchCuentaByUsuario, fetchCuentasAgregadas]);
 
     const handleViewDetails = async (cuenta) => {
         setSelectedCuentaId(cuenta.cid);
@@ -83,6 +89,37 @@ const MisCuentasCliente = () => {
         clearError();
     };
 
+    const handleAgregarCuenta = async () => {
+        if (!numeroCuentaAgregar.trim()) {
+            setActionMessage({
+                text: 'Por favor ingresa un número de cuenta válido',
+                type: 'error'
+            });
+            return;
+        }
+
+        const success = await agregarCuentaDeUsuario(numeroCuentaAgregar);
+        if (success) {
+            setActionMessage({
+                text: 'Cuenta agregada exitosamente',
+                type: 'success'
+            });
+            setShowAddCuentaModal(false);
+            setNumeroCuentaAgregar('');
+        } else {
+            setActionMessage({
+                text: 'Error al agregar la cuenta',
+                type: 'error'
+            });
+        }
+    };
+
+    const handleCloseAddCuentaModal = () => {
+        setShowAddCuentaModal(false);
+        setNumeroCuentaAgregar('');
+        clearError();
+    };
+
     const formatAccountNumber = (numeroCuenta) => {
         if (!numeroCuenta) return '**** **** **** ****';
         const str = numeroCuenta.toString();
@@ -115,7 +152,7 @@ const MisCuentasCliente = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
+            {}
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Mis Cuentas</h1>
@@ -125,7 +162,7 @@ const MisCuentasCliente = () => {
 
             {renderActionMessage()}
 
-            {/* Contenido */}
+            {}
             {error && (
                 <Card className="text-center p-8">
                     <div className="text-red-500">
@@ -218,7 +255,77 @@ const MisCuentasCliente = () => {
                 </>
             )}
 
-            {/* Modal Detalles Cuenta */}
+            {}
+            {!loading && !error && (
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-900">Cuentas Agregadas</h2>
+                            <p className="text-gray-600">Cuentas de otros usuarios que has agregado</p>
+                        </div>
+                        <Button 
+                            variant="primary" 
+                            onClick={() => setShowAddCuentaModal(true)}
+                        >
+                            Agregar Cuenta
+                        </Button>
+                    </div>
+
+                    {cuentasAgregadas.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {cuentasAgregadas.map(cuenta => (
+                                <Card key={cuenta.cid} className="p-6 border-blue-200">
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-gray-900">
+                                                    Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}
+                                                </h3>
+                                                <p className="text-sm text-gray-600">
+                                                    {formatAccountNumber(cuenta.numeroCuenta)}
+                                                </p>
+                                                <p className="text-sm text-blue-600 font-medium">
+                                                    Propietario: {cuenta.usuario?.nombre || 'N/A'}
+                                                </p>
+                                            </div>
+                                            <div className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                Agregada
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-sm text-gray-600">Número de cuenta:</span>
+                                                <span className="text-sm text-gray-900 font-mono">
+                                                    {cuenta.numeroCuenta}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : (
+                        <Card className="text-center p-8 border-dashed border-2 border-gray-300">
+                            <div className="text-gray-500">
+                                <p className="text-lg font-semibold">No tienes cuentas agregadas</p>
+                                <p className="text-sm text-gray-600 mt-2">
+                                    Agrega cuentas de otros usuarios para transferir dinero fácilmente
+                                </p>
+                                <Button 
+                                    variant="primary" 
+                                    onClick={() => setShowAddCuentaModal(true)}
+                                    className="mt-4"
+                                >
+                                    Agregar Primera Cuenta
+                                </Button>
+                            </div>
+                        </Card>
+                    )}
+                </div>
+            )}
+
+            {}
             <Modal
                 isOpen={showDetailsModal}
                 onClose={handleCloseDetailsModal}
@@ -234,7 +341,7 @@ const MisCuentasCliente = () => {
                 />
             </Modal>
 
-            {/* Modal Editar Cuenta */}
+            {}
             <Modal
                 isOpen={showEditModal}
                 onClose={handleCloseEditModal}
@@ -252,6 +359,56 @@ const MisCuentasCliente = () => {
                         {error}
                     </div>
                 )}
+            </Modal>
+
+            {}
+            <Modal
+                isOpen={showAddCuentaModal}
+                onClose={handleCloseAddCuentaModal}
+                title="Agregar Cuenta de Usuario"
+            >
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Número de Cuenta
+                        </label>
+                        <Input
+                            type="text"
+                            value={numeroCuentaAgregar}
+                            onChange={(e) => setNumeroCuentaAgregar(e.target.value)}
+                            placeholder="Ingresa el número de cuenta"
+                            disabled={loading}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                            Ingresa el número de cuenta completo del usuario
+                        </p>
+                    </div>
+
+                    {error && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="flex justify-end space-x-3 pt-4">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleCloseAddCuentaModal}
+                            disabled={loading}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="primary"
+                            onClick={handleAgregarCuenta}
+                            {...(loading ? { loading: true } : {})}
+                        >
+                            Agregar Cuenta
+                        </Button>
+                    </div>
+                </div>
             </Modal>
         </div>
     );
