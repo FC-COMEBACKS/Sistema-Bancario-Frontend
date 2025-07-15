@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MovimientosTable = ({ movimientos }) => {
+const MovimientosTable = ({ movimientos, isAdmin, onRevertir }) => {
   if (!movimientos || movimientos.length === 0) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
@@ -21,6 +21,7 @@ const MovimientosTable = ({ movimientos }) => {
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cuenta Origen</th>
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cuenta Destino</th>
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
+            {isAdmin && <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -42,7 +43,31 @@ const MovimientosTable = ({ movimientos }) => {
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Q {mov.monto}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaOrigen?.numeroCuenta || '-'}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaDestino?.numeroCuenta || '-'}</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{mov.descripcion || '-'}</td>
+                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
+                  {}
+                  {mov.tipo === 'CANCELACION' && mov.cuentaDestinoDetalle?.numeroCuenta
+                    ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
+                    : mov.tipo === 'DEPOSITO' && mov.reversed && mov.cuentaDestinoDetalle?.numeroCuenta
+                      ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
+                      : mov.descripcion || '-'}
+                </td>
+                {isAdmin && (
+                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
+                    {}
+                    {mov.tipo === 'DEPOSITO' && !mov.reversed && (
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
+                        onClick={() => onRevertir && onRevertir(mov)}
+                      >
+                        Revertir
+                      </button>
+                    )}
+                    {}
+                    {((mov.tipo === 'DEPOSITO' && mov.reversed) || mov.tipo === 'CANCELACION') && (
+                      <span className="text-xs text-green-600 font-semibold">Revertido</span>
+                    )}
+                  </td>
+                )}
               </tr>
             );
           })}

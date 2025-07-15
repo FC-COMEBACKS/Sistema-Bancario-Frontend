@@ -26,7 +26,8 @@ const MovimientosManagement = () => {
         error,
         pagination,
         fetchMovimientos,
-        clearMessages
+        clearMessages,
+        handleRevertirDeposito
     } = useMovimiento();
 
     useEffect(() => {
@@ -83,6 +84,12 @@ const MovimientosManagement = () => {
     const isAdmin = user.rol === 'ADMIN';
     const totalPages = pagination.totalPages || 1;
     const movimientosPaginados = movimientos;
+
+    // Handler para abrir el modal de revertir
+    const handleRevertirClick = (movimiento) => {
+        setSelectedMovimiento(movimiento);
+        openModal('revert');
+    };
 
     return (
         <div className="space-y-6">
@@ -152,7 +159,11 @@ const MovimientosManagement = () => {
                         </div>
                     ) : (
                         <>
-                            <MovimientosTable movimientos={movimientosPaginados} />
+                            <MovimientosTable 
+                                movimientos={movimientosPaginados} 
+                                isAdmin={isAdmin} 
+                                onRevertir={handleRevertirClick} 
+                            />
                             {(isAdmin
                                 ? (pagination && pagination.totalPages > 1)
                                 : (totalPages > 1)
@@ -188,6 +199,8 @@ const MovimientosManagement = () => {
                     onClose={() => closeModal('revert')}
                     onSuccess={handleSuccess}
                     movimiento={selectedMovimiento}
+                    handleRevertirDeposito={handleRevertirDeposito}
+                    loading={loading}
                 />
             )}
 

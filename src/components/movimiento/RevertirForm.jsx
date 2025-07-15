@@ -1,25 +1,25 @@
-import React, { useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Button, Modal } from '../ui';
-import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-const RevertirForm = ({ isOpen, onClose, onSuccess, movimiento }) => {
-    const { handleRevertirDeposito, loading, error, success } = useMovimiento();
-
-    useEffect(() => {
-        if (success) {
-            onSuccess && onSuccess();
-            onClose();
-        }
-    }, [success, onSuccess, onClose]);
+const RevertirForm = ({ isOpen, onClose, onSuccess, movimiento, handleRevertirDeposito, loading }) => {
+    const [error, setError] = useState(null);
 
     const handleRevertir = async () => {
+        setError(null);
         if (!movimiento?._id && !movimiento?.mid) {
+            setError('Movimiento inválido');
             return;
         }
-
-        await handleRevertirDeposito(movimiento._id || movimiento.mid);
+        const result = await handleRevertirDeposito(movimiento._id || movimiento.mid);
+        if (result) {
+            onSuccess && onSuccess();
+            onClose();
+        } else {
+            setError('Error al revertir depósito');
+        }
     };
 
     const formatFecha = (fecha) => {

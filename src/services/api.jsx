@@ -394,7 +394,6 @@ export const revertirDeposito = async (movimientoId) => {
     }
 };
 
-
 export const realizarCredito = async (creditoData) => {
     try {
         return await api.post('/movimientos/credito', creditoData);
