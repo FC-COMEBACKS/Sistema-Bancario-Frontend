@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { validatePassword } from '../../shared/validators';
 import { Button, Card } from '../ui';
 import { useUserDetails } from '../../shared/hooks';
 
@@ -15,9 +16,9 @@ const ProfileForm = ({ onSuccess, initialData }) => {
     });
     
     const [passwordData, setPasswordData] = useState({
-        passwordActual: '',
-        passwordNuevo: '',
-        confirmarPassword: ''
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
     });
     
     const [formErrors, setFormErrors] = useState({});
@@ -66,23 +67,20 @@ const ProfileForm = ({ onSuccess, initialData }) => {
 
     const validatePasswordForm = () => {
         const errors = {};
-        
-        if (!passwordData.passwordActual) {
-            errors.passwordActual = 'La contraseña actual es requerida';
+        if (!passwordData.currentPassword) {
+            errors.currentPassword = 'La contraseña actual es requerida';
         }
-        
-        if (!passwordData.passwordNuevo) {
-            errors.passwordNuevo = 'La nueva contraseña es requerida';
-        } else if (passwordData.passwordNuevo.length < 8) {
-            errors.passwordNuevo = 'La contraseña debe tener al menos 8 caracteres';
-        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(passwordData.passwordNuevo)) {
-            errors.passwordNuevo = 'La contraseña debe contener al menos una letra mayúscula, una minúscula y un número';
+        if (!passwordData.newPassword) {
+            errors.newPassword = 'La nueva contraseña es obligatoria';
+        } else {
+            const passwordValidation = validatePassword(passwordData.newPassword);
+            if (passwordValidation !== true) {
+                errors.newPassword = passwordValidation;
+            }
         }
-        
-        if (passwordData.passwordNuevo !== passwordData.confirmarPassword) {
-            errors.confirmarPassword = 'Las contraseñas no coinciden';
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            errors.confirmPassword = 'Las contraseñas no coinciden';
         }
-        
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -137,13 +135,22 @@ const ProfileForm = ({ onSuccess, initialData }) => {
             if (success) {
                 setSuccessMessage('Contraseña actualizada exitosamente');
                 setPasswordData({
-                    passwordActual: '',
-                    passwordNuevo: '',
-                    confirmarPassword: ''
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
                 });
+                setFormErrors({});
+            } else {
+                setFormErrors({ general: 'Error al cambiar la contraseña' });
             }
         } catch (err) {
-            err
+            if (err?.response?.data?.message) {
+                setFormErrors({ general: err.response.data.message });
+            } else if (err?.response?.data?.msg) {
+                setFormErrors({ general: err.response.data.msg });
+            } else {
+                setFormErrors({ general: 'Error inesperado al cambiar la contraseña' });
+            }
         }
     };
 
@@ -264,45 +271,45 @@ const ProfileForm = ({ onSuccess, initialData }) => {
                 <form onSubmit={handlePasswordSubmit}>
                     <div className="row g-3">
                         <div className="col-md-12">
-                            <label htmlFor="passwordActual" className="form-label">Contraseña Actual*</label>
+                            <label htmlFor="currentPassword" className="form-label">Contraseña Actual*</label>
                             <input 
                                 type="password" 
-                                className={`form-control ${formErrors.passwordActual ? 'is-invalid' : ''}`}
-                                id="passwordActual"
-                                name="passwordActual"
-                                value={passwordData.passwordActual}
+                                className={`form-control ${formErrors.currentPassword ? 'is-invalid' : ''}`}
+                                id="currentPassword"
+                                name="currentPassword"
+                                value={passwordData.currentPassword}
                                 onChange={handlePasswordChange}
                                 disabled={loading}
                             />
-                            {formErrors.passwordActual && <div className="invalid-feedback">{formErrors.passwordActual}</div>}
+                            {formErrors.currentPassword && <div className="invalid-feedback">{formErrors.currentPassword}</div>}
                         </div>
                         
                         <div className="col-md-6">
-                            <label htmlFor="passwordNuevo" className="form-label">Nueva Contraseña*</label>
+                            <label htmlFor="newPassword" className="form-label">Nueva Contraseña*</label>
                             <input 
                                 type="password" 
-                                className={`form-control ${formErrors.passwordNuevo ? 'is-invalid' : ''}`}
-                                id="passwordNuevo"
-                                name="passwordNuevo"
-                                value={passwordData.passwordNuevo}
+                                className={`form-control ${formErrors.newPassword ? 'is-invalid' : ''}`}
+                                id="newPassword"
+                                name="newPassword"
+                                value={passwordData.newPassword}
                                 onChange={handlePasswordChange}
                                 disabled={loading}
                             />
-                            {formErrors.passwordNuevo && <div className="invalid-feedback">{formErrors.passwordNuevo}</div>}
+                            {formErrors.newPassword && <div className="invalid-feedback">{formErrors.newPassword}</div>}
                         </div>
                         
                         <div className="col-md-6">
-                            <label htmlFor="confirmarPassword" className="form-label">Confirmar Contraseña*</label>
+                            <label htmlFor="confirmPassword" className="form-label">Confirmar Contraseña*</label>
                             <input 
                                 type="password" 
-                                className={`form-control ${formErrors.confirmarPassword ? 'is-invalid' : ''}`}
-                                id="confirmarPassword"
-                                name="confirmarPassword"
-                                value={passwordData.confirmarPassword}
+                                className={`form-control ${formErrors.confirmPassword ? 'is-invalid' : ''}`}
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={passwordData.confirmPassword}
                                 onChange={handlePasswordChange}
                                 disabled={loading}
                             />
-                            {formErrors.confirmarPassword && <div className="invalid-feedback">{formErrors.confirmarPassword}</div>}
+                            {formErrors.confirmPassword && <div className="invalid-feedback">{formErrors.confirmPassword}</div>}
                         </div>
                         
                         <div className="col-12 d-flex justify-content-end mt-4">
