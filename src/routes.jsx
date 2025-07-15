@@ -7,6 +7,7 @@ import { ProtectedRoute } from './components';
 import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
 import MovimientoPage  from './pages/movimiento/MovimientoPage';
+import ProductoServicioPage from './pages/productoServicio/ProductoServicioPage';
 
 export const routes = [
   {
@@ -52,6 +53,10 @@ export const routes = [
   {
     path: '/movimiento',
     element: <ProtectedRoute element={<MovimientoPage />} />
+  },
+  {
+    path: '/producto',
+    element: <ProtectedRoute element={<ProductoServicioPage />} adminOnly={true} />
   },
   {
     path: '*',

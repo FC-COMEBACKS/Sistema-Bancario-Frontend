@@ -438,4 +438,3 @@ export const getMovimientoById = async (movimientoId) => {
     }
 };
 
-
