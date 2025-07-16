@@ -44,12 +44,15 @@ const MovimientosTable = ({ movimientos, isAdmin, onRevertir }) => {
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaOrigen?.numeroCuenta || '-'}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaDestino?.numeroCuenta || '-'}</td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
-                  {}
                   {mov.tipo === 'CANCELACION' && mov.cuentaDestinoDetalle?.numeroCuenta
                     ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
                     : mov.tipo === 'DEPOSITO' && mov.reversed && mov.cuentaDestinoDetalle?.numeroCuenta
                       ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
-                      : mov.descripcion || '-'}
+                      : mov.tipo === 'TRANSFERENCIA' && (cuentaOrigen?.titular || cuentaDestino?.titular)
+                        ? `Transferencia: ${cuentaOrigen?.titular || 'Usuario'} → ${cuentaDestino?.titular || 'Usuario'}`
+                        : mov.tipo === 'COMPRA' && mov.productoServicio?.nombre
+                          ? `Compra de: ${mov.productoServicio.nombre}`
+                          : mov.descripcion || '-'}
                 </td>
                 {isAdmin && (
                   <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">

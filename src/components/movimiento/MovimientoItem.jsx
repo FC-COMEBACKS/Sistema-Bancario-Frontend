@@ -87,7 +87,12 @@ const MovimientoItem = ({ movimiento, onClick }) => {
             <div className="space-y-2">
                 {movimiento.descripcion && (
                     <p className="text-sm text-gray-700">
-                        <span className="font-medium">Descripción:</span> {movimiento.descripcion}
+                        <span className="font-medium">Descripción:</span> 
+                        {movimiento.tipo === 'TRANSFERENCIA' && (cuentaOrigen?.titular || cuentaDestino?.titular)
+                            ? ` Transferencia: ${cuentaOrigen?.titular || 'Usuario'} → ${cuentaDestino?.titular || 'Usuario'}`
+                            : movimiento.tipo === 'COMPRA' && movimiento.productoServicio?.nombre
+                                ? ` Compra de: ${movimiento.productoServicio.nombre}`
+                                : ` ${movimiento.descripcion}`}
                     </p>
                 )}
 

@@ -8,6 +8,7 @@ import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
 import MovimientoPage  from './pages/movimiento/MovimientoPage';
 import ProductoServicioPage from './pages/productoServicio/ProductoServicioPage';
+import { SettingsPage } from './pages/settings';
 
 export const routes = [
   {
@@ -55,8 +56,32 @@ export const routes = [
     element: <ProtectedRoute element={<MovimientoPage />} />
   },
   {
+    path: '/movimientos',
+    element: <ProtectedRoute element={<MovimientoPage />} />
+  },
+  {
+    path: '/transferencias',
+    element: <ProtectedRoute element={<MovimientoPage />} />
+  },
+  {
     path: '/producto',
     element: <ProtectedRoute element={<ProductoServicioPage />} adminOnly={true} />
+  },
+  {
+    path: '/productos',
+    element: <ProtectedRoute element={<ProductoServicioPage />} />
+  },
+  {
+    path: '/settings',
+    element: <ProtectedRoute element={<SettingsPage />} />
+  },
+  {
+    path: '/perfil',
+    element: <ProtectedRoute element={<UserMiPerfilPage />} />
+  },
+  {
+    path: '/cambiar-password',
+    element: <ProtectedRoute element={<UserMiPerfilPage />} />
   },
   {
     path: '*',

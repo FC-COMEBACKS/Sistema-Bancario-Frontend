@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useEstadisticas } from '../../shared/hooks';
 import Loader from '../ui/Loader';
 
@@ -7,7 +8,7 @@ const ProductosPopulares = () => {
 
   useEffect(() => {
     fetchEstadisticasProductos();
-  }, []);
+  }, [fetchEstadisticasProductos]);
 
   if (isLoading) return <Loader />;
   
@@ -50,7 +51,7 @@ const ProductosPopulares = () => {
       )}
       
       <div className="see-more-link">
-        <a href="/productos">Ver todos los productos →</a>
+        <Link to="/producto" className="see-more-link">Ver todos los productos →</Link>
       </div>
     </div>
   );

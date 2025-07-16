@@ -1,0 +1,29 @@
+.precio-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.stock-info {
+    font-size: 14px;
+    color: #16a34a; /* Verde para stock normal */
+    font-weight: 500;
+}
+
+.stock-info.stock-bajo {
+    color: #dc2626; /* Rojo para stock bajo */
+}
+
+.stock-warning {
+    font-weight: 600;
+    color: #dc2626;
+}
+
+.sin-stock {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 16px;
+}

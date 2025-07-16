@@ -34,9 +34,6 @@ const AdminOverview = () => {
         <button className="dashboard-action-button" onClick={handleNavigateToUsers}>
           Ver todos los usuarios
         </button>
-        <button className="dashboard-action-button">
-          Generar reportes
-        </button>
         <button className="dashboard-action-button" onClick={handleNavigateToProfile}>
           Administrar mi perfil
         </button>

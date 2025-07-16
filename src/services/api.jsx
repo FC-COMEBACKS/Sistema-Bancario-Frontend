@@ -349,6 +349,7 @@ export const getAllMovimientos = async (filters = {}) => {
         if (filters.fechaHasta) queryParams.append("fechaHasta", filters.fechaHasta);
         if (filters.montoMinimo) queryParams.append("montoMinimo", filters.montoMinimo);
         if (filters.montoMaximo) queryParams.append("montoMaximo", filters.montoMaximo);
+        if (filters.usuario) queryParams.append("usuario", filters.usuario);
 
         const queryString = queryParams.toString();
         const url = queryString ? `/movimientos?${queryString}` : "/movimientos";
@@ -430,6 +431,109 @@ export const getHistorialCuenta = async (cuentaId) => {
 export const getMovimientoById = async (movimientoId) => {
     try {
         return await api.get(`/movimientos/${movimientoId}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getAllProductos = async (filters = {}) => {
+    try {
+        const queryParams = new URLSearchParams();
+        if (filters.nombre && filters.nombre.trim()) {
+            queryParams.append('nombre', filters.nombre.trim());
+        }
+        if (filters.disponible !== undefined && filters.disponible !== '') {
+            queryParams.append('disponible', filters.disponible);
+        }
+        if (filters.precioMin && filters.precioMin.toString().trim() !== '' && !isNaN(filters.precioMin) && parseFloat(filters.precioMin) >= 0) {
+            queryParams.append('precioMin', filters.precioMin);
+        }
+        if (filters.precioMax && filters.precioMax.toString().trim() !== '' && !isNaN(filters.precioMax) && parseFloat(filters.precioMax) >= 0) {
+            queryParams.append('precioMax', filters.precioMax);
+        }
+        if (filters.page && filters.page > 0) {
+            queryParams.append('page', filters.page);
+        }
+        if (filters.limit && filters.limit > 0) {
+            queryParams.append('limit', filters.limit);
+        }
+        if (filters.desde && filters.desde >= 0) {
+            queryParams.append('desde', filters.desde);
+        }
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/productosOServicios/listarProductoOServicio?${queryString}` : '/productosOServicios/listarProductoOServicio';
+        
+        return await api.get(url);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getProductoById = async (pid) => {
+    try {
+        return await api.get(`/productosOServicios/listarProductoOServicio/${pid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const crearProducto = async (productoData) => {
+    try {
+        return await api.post('/productosOServicios/agregarProductoOServicio', productoData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const editarProducto = async (pid, productoData) => {
+    try {
+        return await api.put(`/productosOServicios/actualizarProductoOServicio/${pid}`, productoData);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const eliminarProducto = async (pid) => {
+    try {
+        return await api.delete(`/productosOServicios/eliminarProductoOServicio/${pid}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const cambiarEstadoProducto = async (pid, disponible) => {
+    try {
+        return await api.patch(`/productosOServicios/disponibilidad/${pid}`, { disponible });
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getEstadisticasProductosServicios = async () => {
+    try {
+        return await api.get('/productosOServicios/estadisticas');
     } catch (err) {
         return {
             error: true,

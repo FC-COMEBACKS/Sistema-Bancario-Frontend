@@ -78,6 +78,10 @@ const MovimientosManagement = () => {
 
     const handleSuccess = () => {
         setRefreshMovimientos(prev => prev + 1);
+        
+        if (typeof window.refreshClienteHome === 'function') {
+            window.refreshClienteHome();
+        }
     };
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -85,7 +89,6 @@ const MovimientosManagement = () => {
     const totalPages = pagination.totalPages || 1;
     const movimientosPaginados = movimientos;
 
-    // Handler para abrir el modal de revertir
     const handleRevertirClick = (movimiento) => {
         setSelectedMovimiento(movimiento);
         openModal('revert');

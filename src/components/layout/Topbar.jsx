@@ -7,8 +7,11 @@ const getPageTitle = (pathname) => {
     case '/': return 'Dashboard';
     case '/usuarios': return 'Usuarios';
     case '/mi-perfil': return 'Mi Perfil';
-    case '/cuenta': return 'Cuentas';
-    case '/movimiento': return 'Transferencias';
+    case '/cuenta': return '';
+    case '/mis-cuentas': return '';
+    case '/movimiento': 
+    case '/movimientos': 
+    case '/transferencias': return 'Movimientos y Transferencias';
     case '/favorito': return 'Favoritos';
     case '/producto': return 'Productos';
     case '/settings': return 'Configuración';

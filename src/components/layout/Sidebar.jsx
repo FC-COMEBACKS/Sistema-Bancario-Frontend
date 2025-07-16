@@ -62,9 +62,13 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#128179;</span>
               Mis Cuentas
             </Link>
-            <Link to="/movimiento" className={`sidebar-item ${isActive('/movimiento') ? 'active' : ''}`}>
+            <Link to="/movimientos" className={`sidebar-item ${isActive('/movimientos') || isActive('/movimiento') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#8646;</span>
               Transfers
+            </Link>
+            <Link to="/productos" className={`sidebar-item ${isActive('/productos') ? 'active' : ''}`}>
+              <span className="sidebar-icon">&#128722;</span>
+              Productos
             </Link>
             <Link to="/favorito" className={`sidebar-item ${isActive('/favorito') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9825;</span>

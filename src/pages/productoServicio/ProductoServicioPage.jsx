@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '../../shared/hooks';
+import { ProductosManagement, ProductosCatalog } from '../../components';
+import { Button } from '../../components/ui';
 import './ProductoServicioPage.css';
 
 const ProductoServicioPage = () => {
+  const { user } = useAuth();
+  const [viewMode, setViewMode] = useState('catalog'); // 'catalog' o 'management'
+  
+  const isAdmin = user?.rol === 'ADMIN';
+
   return (
-    <div>
-      <h1>Producto Servicio Page</h1>
-      <p>This is the page where users can view and manage their product and service listings.</p>
+    <div className="producto-servicio-page">
+      {isAdmin && (
+        <div className="page-header">
+          <div className="view-toggle">
+            <Button
+              variant={viewMode === 'catalog' ? 'primary' : 'outline'}
+              onClick={() => setViewMode('catalog')}
+            >
+              Vista Catálogo
+            </Button>
+            <Button
+              variant={viewMode === 'management' ? 'primary' : 'outline'}
+              onClick={() => setViewMode('management')}
+            >
+              Gestión de Productos
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="page-content">
+        {isAdmin && viewMode === 'management' ? (
+          <ProductosManagement />
+        ) : (
+          <ProductosCatalog isAdmin={isAdmin} />
+        )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCuenta } from '../../shared/hooks';
 import { getMovimientosRecientes } from '../../services/api';
@@ -16,30 +16,48 @@ const ClienteHome = () => {
   const { cuentas, loading, error, fetchCuentaByUsuario } = useCuenta();
   const [movimientos, setMovimientos] = useState([]);
   const [movimientosLoading, setMovimientosLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Función para refrescar los datos
+  const refreshData = useCallback(async () => {
+    const userId = userData.uid || userData._id;
+    
+    if (userId) {
+      // Refrescar cuentas
+      await fetchCuentaByUsuario(userId);
+      
+      // Refrescar movimientos
+      setMovimientosLoading(true);
+      try {
+        const response = await getMovimientosRecientes(5);
+        if (response && !response.error) {
+          setMovimientos(response.data?.movimientos || []);
+        }
+      } catch (err) {
+        console.error('Error al cargar movimientos:', err);
+      } finally {
+        setMovimientosLoading(false);
+      }
+    }
+  }, [userData.uid, userData._id, fetchCuentaByUsuario]);
   
   useEffect(() => {
-    const loadUserData = async () => {
-      const userId = userData.uid || userData._id;
-      
-      if (userId) {
-        await fetchCuentaByUsuario(userId);
-        
-        setMovimientosLoading(true);
-        try {
-          const response = await getMovimientosRecientes(5);
-          if (response && !response.error) {
-            setMovimientos(response.data?.movimientos || []);
-          }
-        } catch (err) {
-          console.error('Error al cargar movimientos:', err);
-        } finally {
-          setMovimientosLoading(false);
-        }
-      }
-    };
-    
-    loadUserData();
-  }, [userData.uid, userData._id, fetchCuentaByUsuario]);
+    refreshData();
+  }, [refreshData, refreshKey]);
+
+  // Efecto para refrescar datos cada 30 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshData();
+    }, 30000); // 30 segundos
+
+    return () => clearInterval(interval);
+  }, [refreshData]);
+
+  // Función pública para refrescar manualmente (se puede llamar desde otros componentes)
+  window.refreshClienteHome = () => {
+    setRefreshKey(prev => prev + 1);
+  };
   
   const balanceTotal = cuentas.reduce((total, cuenta) => {
     return total + (cuenta.saldo || 0);
@@ -108,7 +126,7 @@ const ClienteHome = () => {
                     <p className="account-balance">Q {cuenta.saldo?.toLocaleString('es-GT', { minimumFractionDigits: 2 }) || '0.00'}</p>
                     <div className="account-actions">
                       <button onClick={handleNavigateToMisCuentas}>Ver</button>
-                      <button>Transferir</button>
+                      <button onClick={() => navigate('/movimientos')}>Transferir</button>
                     </div>
                   </div>
                 ))
@@ -151,13 +169,13 @@ const ClienteHome = () => {
               )}
             </div>
           )}
-          <button className="see-all-button" onClick={() => navigate('/movimiento')}>Ver todos</button>
+          <button className="see-all-button" onClick={() => navigate('/movimientos')}>Ver todos</button>
         </div>
         
         <div className="dashboard-section">
           <h2>Acciones Rápidas</h2>
           <div className="quick-actions">
-            <button className="quick-action-button" onClick={() => navigate('/movimiento')}>
+            <button className="quick-action-button" onClick={() => navigate('/movimientos')}>
               <span className="action-icon">↑</span>
               <span>Transferir</span>
             </button>
