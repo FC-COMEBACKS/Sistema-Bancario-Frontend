@@ -17,16 +17,12 @@ const ClienteHome = () => {
   const [movimientos, setMovimientos] = useState([]);
   const [movimientosLoading, setMovimientosLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  // Función para refrescar los datos
   const refreshData = useCallback(async () => {
     const userId = userData.uid || userData._id;
     
     if (userId) {
-      // Refrescar cuentas
       await fetchCuentaByUsuario(userId);
       
-      // Refrescar movimientos
       setMovimientosLoading(true);
       try {
         const response = await getMovimientosRecientes(5);
@@ -44,17 +40,15 @@ const ClienteHome = () => {
   useEffect(() => {
     refreshData();
   }, [refreshData, refreshKey]);
-
-  // Efecto para refrescar datos cada 30 segundos
+  
   useEffect(() => {
     const interval = setInterval(() => {
       refreshData();
-    }, 30000); // 30 segundos
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [refreshData]);
 
-  // Función pública para refrescar manualmente (se puede llamar desde otros componentes)
   window.refreshClienteHome = () => {
     setRefreshKey(prev => prev + 1);
   };
