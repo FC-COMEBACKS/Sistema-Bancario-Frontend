@@ -53,4 +53,9 @@ export { default as TransferForm } from './movimiento/TransferForm.jsx';
 export { default as DepositoFormMovimiento } from './movimiento/DepositoForm.jsx';
 export { default as CreditoForm } from './movimiento/CreditoForm.jsx';
 export { default as RevertirForm } from './movimiento/RevertirForm.jsx';
-
+export { DivisasConverter } from './divisa/DivisasConverter.jsx';
+export { TasasCambio } from './divisa/TasasCambio.jsx';
+export { DivisasManagement } from './divisa/DivisasManagement.jsx';
+export { CurrencySelector } from './divisa/CurrencySelector.jsx';
+export { ConversorForm } from './divisa/ConversorForm.jsx';
+export { ConvertirSaldoForm } from './divisa/ConvertirSaldoForm.jsx';

@@ -542,3 +542,69 @@ export const getEstadisticasProductosServicios = async () => {
     }
 };
 
+export const getDivisas = async (filtro = '') => {
+    try {
+        const params = filtro ? { filtro } : {};
+        return await api.get('/divisas', { params });
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const convertirMonto = async (data) => {
+    try {
+        return await api.post('/divisas/convertir', data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const convertirSaldoCuenta = async (data) => {
+    try {
+        return await api.post('/divisas/convertir-saldo', data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const actualizarTasasDivisa = async (tasas) => {
+    try {
+        return await api.post('/divisas/actualizar-tasas', { tasas });
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const agregarDivisa = async (data) => {
+    try {
+        return await api.post('/divisas/agregar', data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const restaurarTasasOficiales = async () => {
+    try {
+        return await api.post('/divisas/restaurar-tasas-oficiales');
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};

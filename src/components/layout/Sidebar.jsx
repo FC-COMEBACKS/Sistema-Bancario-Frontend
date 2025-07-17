@@ -47,6 +47,10 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#8646;</span>
               Movimientos
             </Link>
+            <Link to="/divisas" className={`sidebar-item ${isActive('/divisas') || isActive('/convertir') || isActive('/tasas-cambio') ? 'active' : ''}`}>
+              <span className="sidebar-icon">&#128176;</span>
+              Divisas
+            </Link>
             <Link to="/settings" className={`sidebar-item ${isActive('/settings') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9881;</span>
               Settings
@@ -69,6 +73,10 @@ const Sidebar = () => {
             <Link to="/productos" className={`sidebar-item ${isActive('/productos') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#128722;</span>
               Productos
+            </Link>
+            <Link to="/divisas" className={`sidebar-item ${isActive('/divisas') || isActive('/convertir') || isActive('/tasas-cambio') ? 'active' : ''}`}>
+              <span className="sidebar-icon">&#128178;</span>
+              Divisas
             </Link>
             <Link to="/favorito" className={`sidebar-item ${isActive('/favorito') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9825;</span>

@@ -3,6 +3,7 @@ import { NotFoundPage } from './pages';
 import { AuthPage } from './pages/auth';
 import { CuentaPage, MisCuentasPage } from './pages/cuenta';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import DivisaPage from './pages/divisa/DivisaPage';
 import { ProtectedRoute } from './components';
 import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
@@ -70,6 +71,18 @@ export const routes = [
   {
     path: '/productos',
     element: <ProtectedRoute element={<ProductoServicioPage />} />
+  },
+  {
+    path: '/divisas',
+    element: <ProtectedRoute element={<DivisaPage />} />
+  },
+  {
+    path: '/convertir',
+    element: <ProtectedRoute element={<DivisaPage />} />
+  },
+  {
+    path: '/tasas-cambio',
+    element: <ProtectedRoute element={<DivisaPage />} />
   },
   {
     path: '/settings',
