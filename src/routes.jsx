@@ -4,6 +4,7 @@ import { AuthPage } from './pages/auth';
 import { CuentaPage, MisCuentasPage } from './pages/cuenta';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import DivisaPage from './pages/divisa/DivisaPage';
+import FavoritoPage from './pages/favorito/FavoritoPage';
 import { ProtectedRoute } from './components';
 import UserPage from './pages/user/UserPage';
 import UserMiPerfilPage from './pages/user/UserMiPerfilPage';
@@ -83,6 +84,14 @@ export const routes = [
   {
     path: '/tasas-cambio',
     element: <ProtectedRoute element={<DivisaPage />} />
+  },
+  {
+    path: '/favoritos',
+    element: <ProtectedRoute element={<FavoritoPage />} />
+  },
+  {
+    path: '/contactos',
+    element: <ProtectedRoute element={<FavoritoPage />} />
   },
   {
     path: '/settings',

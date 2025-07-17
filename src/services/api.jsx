@@ -608,3 +608,58 @@ export const restaurarTasasOficiales = async () => {
         }
     }
 };
+
+export const getFavoritos = async () => {
+    try {
+        return await api.get('/favoritos');
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const agregarFavorito = async (data) => {
+    try {
+        return await api.post('/favoritos/agregarCuenta', data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const updateFavorito = async (id, data) => {
+    try {
+        return await api.put(`/favoritos/${id}`, data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const deleteFavorito = async (id) => {
+    try {
+        return await api.delete(`/favoritos/${id}`);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const transferirAFavorito = async (data) => {
+    try {
+        return await api.post('/favoritos/transferir', data);
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};

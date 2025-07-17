@@ -78,9 +78,9 @@ const Sidebar = () => {
               <span className="sidebar-icon">&#128178;</span>
               Divisas
             </Link>
-            <Link to="/favorito" className={`sidebar-item ${isActive('/favorito') ? 'active' : ''}`}>
-              <span className="sidebar-icon">&#9825;</span>
-              Favorites
+            <Link to="/favoritos" className={`sidebar-item ${isActive('/favoritos') || isActive('/contactos') ? 'active' : ''}`}>
+              <span className="sidebar-icon">⭐</span>
+              Favoritos
             </Link>
             <Link to="/settings" className={`sidebar-item ${isActive('/settings') ? 'active' : ''}`}>
               <span className="sidebar-icon">&#9881;</span>
