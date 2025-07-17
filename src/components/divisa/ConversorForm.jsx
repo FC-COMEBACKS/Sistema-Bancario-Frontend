@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { CurrencySelector } from './CurrencySelector';
-import { convertirMonto } from '../../services/api';
+import { useConversorDivisa } from '../../shared/hooks/useConversorDivisa';
 import './ConversorForm.css';
 
 export const ConversorForm = ({ onConversionResult, className = "" }) => {
@@ -11,14 +11,15 @@ export const ConversorForm = ({ onConversionResult, className = "" }) => {
         divisaOrigen: 'GTQ',
         divisaDestino: ''
     });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const { loading, error, setError, resultado, setResultado, convertir } = useConversorDivisa();
+
     const handleChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
         }));
         setError('');
+        setResultado(null);
     };
 
     const handleSubmit = async (e) => {
@@ -35,25 +36,19 @@ export const ConversorForm = ({ onConversionResult, className = "" }) => {
             setError('Las divisas de origen y destino deben ser diferentes');
             return;
         }
-        setLoading(true);
-        setError('');
-        try {
-            const response = await convertirMonto({
-                monto: parseFloat(formData.monto),
-                divisaOrigen: formData.divisaOrigen,
-                divisaDestino: formData.divisaDestino
-            });
-            if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al realizar la conversión');
-            } else {
-                onConversionResult && onConversionResult(response.data);
-            }
-        } catch (err) {
-            setError('Error al realizar la conversión');
-        } finally {
-            setLoading(false);
-        }
+        await convertir({
+            monto: parseFloat(formData.monto),
+            divisaOrigen: formData.divisaOrigen,
+            divisaDestino: formData.divisaDestino
+        });
     };
+
+    React.useEffect(() => {
+        if (resultado && onConversionResult) {
+            onConversionResult(resultado);
+        }
+        // eslint-disable-next-line
+    }, [resultado]);
 
     const intercambiarDivisas = () => {
         if (formData.divisaDestino) {

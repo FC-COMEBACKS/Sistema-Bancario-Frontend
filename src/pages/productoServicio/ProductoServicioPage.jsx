@@ -6,7 +6,7 @@ import './ProductoServicioPage.css';
 
 const ProductoServicioPage = () => {
   const { user } = useAuth();
-  const [viewMode, setViewMode] = useState('catalog'); // 'catalog' o 'management'
+  const [viewMode, setViewMode] = useState('catalog')
   
   const isAdmin = user?.rol === 'ADMIN';
 
