@@ -7,7 +7,6 @@ export * from './useTasasCambio.jsx';
 export * from './useConvertirSaldoCuenta.jsx';
 export * from './useConversorDivisa.jsx';
 export * from './useFavorito.jsx';
-export * from './useFavoritoManagement.jsx';
 export * from './useLogin.jsx';
 export * from './useLogout.jsx';
 export * from './useMovimiento.jsx';

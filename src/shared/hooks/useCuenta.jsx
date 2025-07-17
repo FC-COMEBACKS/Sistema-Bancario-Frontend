@@ -228,11 +228,9 @@ export const useCuenta = () => {
                 if (Array.isArray(cuenta)) {
                     setCuentas(cuenta);
                     setSelectedCuenta(cuenta[0] || null);
-                    console.log('setCuentas (array):', cuenta);
                 } else {
                     setCuentas([cuenta]);
                     setSelectedCuenta(cuenta);
-                    console.log('setCuentas (obj):', [cuenta]);
                 }
                 return true;
             } else {

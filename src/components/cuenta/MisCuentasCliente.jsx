@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Button, Modal, Input } from '../ui';
 import { useCuenta } from '../../shared/hooks';
+import { useFavorito } from '../../shared/hooks/useFavorito';
 import CuentaDetails from './CuentaDetails';
 import CuentaForm from './CuentaForm';
 
@@ -24,6 +25,12 @@ const MisCuentasCliente = () => {
         updateCuenta,
         clearError
     } = useCuenta();
+
+    const {
+        agregarAFavoritos,
+        loading: favoritosLoading,
+        error: favoritosError
+    } = useFavorito();
     
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -118,6 +125,25 @@ const MisCuentasCliente = () => {
         setShowAddCuentaModal(false);
         setNumeroCuentaAgregar('');
         clearError();
+    };
+
+    const handleAgregarAFavoritos = async (cuenta) => {
+        const alias = prompt(`¿Cómo quieres llamar a esta cuenta?\nPropietario: ${cuenta.usuario?.nombre || 'N/A'}\nCuenta: ${cuenta.numeroCuenta}`);
+        
+        if (alias && alias.trim()) {
+            const success = await agregarAFavoritos(cuenta.numeroCuenta, alias.trim());
+            if (success) {
+                setActionMessage({ 
+                    text: 'Cuenta agregada a favoritos exitosamente', 
+                    type: 'success' 
+                });
+            } else {
+                setActionMessage({
+                    text: favoritosError || 'Error al agregar cuenta a favoritos',
+                    type: 'error'
+                });
+            }
+        }
     };
 
     const formatAccountNumber = (numeroCuenta) => {
@@ -300,6 +326,18 @@ const MisCuentasCliente = () => {
                                                     {cuenta.numeroCuenta}
                                                 </span>
                                             </div>
+                                        </div>
+
+                                        <div className="pt-4 border-t border-gray-200">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleAgregarAFavoritos(cuenta)}
+                                                disabled={favoritosLoading}
+                                                className="w-full"
+                                            >
+                                                ⭐ Agregar a Favoritos
+                                            </Button>
                                         </div>
                                     </div>
                                 </Card>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { convertirSaldoCuenta, getCuentas } from '../../services/api';
+import { convertirSaldoCuenta, getCuentaByUsuario } from '../../services/api';
 
 export function useConvertirSaldoCuenta() {
     const [cuentas, setCuentas] = useState([]);
@@ -11,15 +11,42 @@ export function useConvertirSaldoCuenta() {
         setLoading(true);
         setError('');
         try {
-            const response = await getCuentas();
+            const userDetails = localStorage.getItem('user');
+            if (!userDetails) {
+                setError('Usuario no autenticado');
+                setCuentas([]);
+                return;
+            }
+            
+            const userData = JSON.parse(userDetails);
+            const userId = userData.uid || userData._id;
+            
+            if (!userId) {
+                setError('ID de usuario no encontrado');
+                setCuentas([]);
+                return;
+            }
+
+            const response = await getCuentaByUsuario(userId);
+            
             if (response.error) {
-                setError('Error al cargar las cuentas');
+                const errorMessage = response.err?.response?.data?.msg || 
+                                   response.err?.message || 
+                                   'Error al cargar las cuentas';
+                setError(errorMessage);
                 setCuentas([]);
             } else {
-                setCuentas(response.data.cuentas || []);
+                const cuentaData = response.data.cuenta;
+                
+                if (cuentaData) {
+                    const cuentasArray = Array.isArray(cuentaData) ? cuentaData : [cuentaData];
+                    setCuentas(cuentasArray);
+                } else {
+                    setCuentas([]);
+                }
             }
         } catch (err) {
-            setError('Error al cargar las cuentas');
+            error('Error al cargar las cuentas:', err);
             setCuentas([]);
         } finally {
             setLoading(false);
@@ -32,13 +59,17 @@ export function useConvertirSaldoCuenta() {
         setResultado(null);
         try {
             const response = await convertirSaldoCuenta({ cuentaId, divisaDestino });
+            
             if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al convertir el saldo');
+                const errorMessage = response.err?.response?.data?.msg || 
+                                   response.err?.message || 
+                                   'Error al convertir el saldo';
+                setError(errorMessage);
             } else {
                 setResultado(response.data);
             }
         } catch (err) {
-            setError('Error al convertir el saldo de la cuenta');
+            error('Error en convertirSaldo:', err);
         } finally {
             setLoading(false);
         }
@@ -51,7 +82,6 @@ export function useConvertirSaldoCuenta() {
         error,
         setError,
         resultado,
-        setResultado,
         convertirSaldo
     };
 }

@@ -15,9 +15,7 @@ export const TasasCambio = () => {
         cargarDivisas,
         loading,
         error,
-        setError,
         success,
-        setSuccess,
         restaurarTasas
     } = useTasasCambio();
 
@@ -126,7 +124,7 @@ export const TasasCambio = () => {
                         </div>
                         {divisas.length > 0 ? (
                             divisas.map((divisa) => (
-                                <div key={divisa._id} className="tasa-card">
+                                <div key={divisa.did || divisa._id || divisa.codigo} className="tasa-card">
                                     <div className="currency-header">
                                         <h3>{divisa.codigo}</h3>
                                         <span className="currency-name">{divisa.nombre}</span>

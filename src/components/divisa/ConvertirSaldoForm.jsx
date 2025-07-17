@@ -18,13 +18,11 @@ export const ConvertirSaldoForm = () => {
         error,
         setError,
         resultado,
-        setResultado,
         convertirSaldo
     } = useConvertirSaldoCuenta();
 
     useEffect(() => {
         cargarCuentas();
-        // eslint-disable-next-line
     }, []);
 
     const handleConvertir = async (e) => {
@@ -41,15 +39,18 @@ export const ConvertirSaldoForm = () => {
             setError('El saldo ya está en Quetzales');
             return;
         }
+        
         await convertirSaldo(selectedCuenta, divisaDestino);
     };
 
-    const cuentasOptions = cuentas.map(cuenta => ({
-        value: cuenta._id,
-        label: `${cuenta.numeroCuenta} - ${cuenta.tipoCuenta} (Q${cuenta.saldo.toLocaleString()})`
-    }));
+    const cuentasOptions = cuentas.map(cuenta => {
+        return {
+            value: cuenta.cid || cuenta._id,
+            label: `${cuenta.numeroCuenta} - ${cuenta.tipo} (Q${cuenta.saldo.toLocaleString()})`
+        };
+    });
 
-    const selectedCuentaData = cuentas.find(c => c._id === selectedCuenta);
+    const selectedCuentaData = cuentas.find(c => (c.cid || c._id) === selectedCuenta);
 
     return (
         <div className="convertir-saldo-form">
@@ -58,50 +59,62 @@ export const ConvertirSaldoForm = () => {
                     <h2>Convertir Saldo de Cuenta</h2>
                     <p className="text-muted">Consulta el equivalente del saldo de tu cuenta en otra divisa</p>
                 </div>
-                <form onSubmit={handleConvertir} className="form">
-                    <div className="form-group">
-                        <label htmlFor="cuenta">Seleccionar Cuenta</label>
-                        <Select
-                            id="cuenta"
-                            value={selectedCuenta}
-                            onChange={(e) => setSelectedCuenta(e.target.value)}
-                            options={[
-                                { value: '', label: 'Selecciona una cuenta' },
-                                ...cuentasOptions
-                            ]}
-                        />
-                        {selectedCuentaData && (
-                            <div className="cuenta-info">
-                                <small>
-                                    Saldo actual: Q{selectedCuentaData.saldo.toLocaleString()} GTQ
-                                </small>
+
+                {loading && cuentas.length === 0 ? (
+                    <div className="loading-message">
+                        Cargando cuentas...
+                    </div>
+                ) : cuentas.length === 0 && !loading ? (
+                    <div className="no-accounts-message">
+                        <p>No tienes cuentas disponibles para convertir saldo.</p>
+                        <p>Debes tener al menos una cuenta activa para usar esta función.</p>
+                    </div>
+                ) : (
+                    <form onSubmit={handleConvertir} className="form">
+                        <div className="form-group">
+                            <label htmlFor="cuenta">Seleccionar Cuenta</label>
+                            <Select
+                                id="cuenta"
+                                value={selectedCuenta}
+                                onChange={(e) => setSelectedCuenta(e.target.value)}
+                                options={[
+                                    { value: '', label: 'Selecciona una cuenta' },
+                                    ...cuentasOptions
+                                ]}
+                            />
+                            {selectedCuentaData && (
+                                <div className="cuenta-info">
+                                    <small>
+                                        Saldo actual: Q{selectedCuentaData.saldo.toLocaleString()} GTQ
+                                    </small>
+                                </div>
+                            )}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="divisaDestino">Convertir a</label>
+                            <CurrencySelector
+                                value={divisaDestino}
+                                onChange={(e) => setDivisaDestino(e.target.value)}
+                                includeGTQ={false}
+                                placeholder="Selecciona la divisa de destino"
+                            />
+                        </div>
+
+                        {error && (
+                            <div className="error-message">
+                                {error}
                             </div>
                         )}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="divisaDestino">Convertir a</label>
-                        <CurrencySelector
-                            value={divisaDestino}
-                            onChange={(e) => setDivisaDestino(e.target.value)}
-                            includeGTQ={false}
-                            placeholder="Selecciona la divisa de destino"
-                        />
-                    </div>
 
-                    {error && (
-                        <div className="error-message">
-                            {error}
-                        </div>
-                    )}
-
-                    <Button 
-                        type="submit" 
-                        disabled={loading || !selectedCuenta || !divisaDestino}
-                        className="submit-btn"
-                    >
-                        {loading ? 'Convirtiendo...' : 'Convertir Saldo'}
-                    </Button>
-                </form>
+                        <Button 
+                            type="submit" 
+                            disabled={loading || !selectedCuenta || !divisaDestino}
+                            className="submit-btn"
+                        >
+                            {loading ? 'Convirtiendo...' : 'Convertir Saldo'}
+                        </Button>
+                    </form>
+                )}
 
                 {resultado && (
                     <div className="conversion-result">
@@ -114,7 +127,7 @@ export const ConvertirSaldoForm = () => {
                                     <div className="account-detail">
                                         <span className="label">Cuenta:</span>
                                         <span className="value">
-                                            {selectedCuentaData?.numeroCuenta} - {selectedCuentaData?.tipoCuenta}
+                                            {selectedCuentaData?.numeroCuenta} - {selectedCuentaData?.tipo}
                                         </span>
                                     </div>
                                 </div>

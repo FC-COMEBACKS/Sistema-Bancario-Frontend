@@ -5,7 +5,7 @@ import {
     getEstadisticasMovimientos as getEstadisticasMovimientosRequest,
     getEstadisticasUsuarios as getEstadisticasUsuariosRequest,
     getEstadisticasProductos as getEstadisticasProductosRequest
-} from '../../services/api.jsx';
+} from '../../services';
 
 export const useEstadisticas = () => {
     const [estadisticasGenerales, setEstadisticasGenerales] = useState(null);
@@ -19,13 +19,10 @@ export const useEstadisticas = () => {
     const fetchEstadisticasGenerales = async () => {
         try {
             const response = await getEstadisticasGeneralesRequest();
-            console.log('Respuesta estadísticas generales:', response);
             if (response && !response.error) {
                 const estadisticas = response.data?.estadisticas || response.estadisticas || response.data || response;
-                console.log('Estadísticas procesadas:', estadisticas);
                 setEstadisticasGenerales(estadisticas);
             } else {
-                console.error('Error en respuesta:', response.err);
                 setHasErrors(true);
             }
         } catch (error) {

@@ -22,7 +22,6 @@ export const DivisasManagement = () => {
         error,
         setError,
         success,
-        setSuccess,
         agregarOActualizarDivisa,
         restaurarTasas
     } = useDivisasManagement();
@@ -157,7 +156,7 @@ export const DivisasManagement = () => {
                         </div>
                         {divisas.length > 0 ? (
                             divisas.map((divisa) => (
-                                <div key={divisa._id} className="table-row">
+                                <div key={divisa.did || divisa._id || divisa.codigo} className="table-row">
                                     <div className="table-cell">
                                         <span className="currency-code">{divisa.codigo}</span>
                                     </div>

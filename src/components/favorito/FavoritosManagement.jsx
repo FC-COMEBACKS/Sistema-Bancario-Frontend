@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FavoritoList } from './FavoritoList';
 import { FavoritoForm } from './FavoritoForm';
 import { QuickTransferForm } from './QuickTransferForm';
-import { useFavoritoManagement } from '../../shared/hooks/useFavoritoManagement';
+import { useFavorito } from '../../shared/hooks/useFavorito';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import './favoritos.css';
@@ -12,24 +12,33 @@ export const FavoritosManagement = () => {
     const [showTransferForm, setShowTransferForm] = useState(false);
     const [editingFavorito, setEditingFavorito] = useState(null);
     const [transferFavorito, setTransferFavorito] = useState(null);
+    const [success, setSuccess] = useState('');
 
     const {
         favoritos,
         cargarFavoritos,
+        agregarAFavoritos,
+        actualizarAlias,
+        eliminarDeFavoritos,
         loading,
         error,
         setError,
-        success,
-        setSuccess,
-        agregarNuevoFavorito,
-        actualizarFavorito,
-        eliminarFavorito,
-        transferirAContacto
-    } = useFavoritoManagement();
+        transferirRapido
+    } = useFavorito();
 
     useEffect(() => {
         cargarFavoritos();
-    }, []);
+    }, []); 
+
+    useEffect(() => {
+        if (success || error) {
+            const timer = setTimeout(() => {
+                setSuccess('');
+                setError('');
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [success, error, setError]);
 
     const handleAgregarFavorito = () => {
         setEditingFavorito(null);
@@ -43,7 +52,7 @@ export const FavoritosManagement = () => {
 
     const handleEliminarFavorito = async (favorito) => {
         if (window.confirm(`¿Estás seguro de eliminar "${favorito.alias}" de tus favoritos?`)) {
-            await eliminarFavorito(favorito._id);
+            await eliminarDeFavoritos(favorito.fid || favorito._id);
         }
     };
 
@@ -54,25 +63,31 @@ export const FavoritosManagement = () => {
 
     const handleSubmitForm = async (formData) => {
         if (editingFavorito) {
-            await actualizarFavorito(editingFavorito._id, formData.alias);
+            const success = await actualizarAlias(editingFavorito.fid || editingFavorito._id, formData.alias);
+            if (success) {
+                setSuccess('Favorito actualizado correctamente');
+                setShowForm(false);
+                setEditingFavorito(null);
+            }
         } else {
-            await agregarNuevoFavorito(formData.numeroCuenta, formData.alias);
-        }
-        
-        if (!error) {
-            setShowForm(false);
-            setEditingFavorito(null);
+            const success = await agregarAFavoritos(formData.numeroCuenta, formData.alias);
+            if (success) {
+                setSuccess('Favorito agregado correctamente');
+                setShowForm(false);
+                setEditingFavorito(null);
+            }
         }
     };
 
     const handleTransferSubmit = async (transferData) => {
-        const result = await transferirAContacto(
+        const result = await transferirRapido(
             transferData.favoritoId,
             transferData.monto,
             transferData.descripcion
         );
         
         if (result && !error) {
+            setSuccess('Transferencia realizada correctamente');
             setShowTransferForm(false);
             setTransferFavorito(null);
         }

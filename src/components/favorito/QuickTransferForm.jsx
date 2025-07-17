@@ -42,7 +42,7 @@ export const QuickTransferForm = ({ isOpen, onClose, favorito, onTransfer, loadi
         e.preventDefault();
         if (validateForm()) {
             onTransfer({
-                favoritoId: favorito._id,
+                favoritoId: favorito.fid || favorito._id,
                 monto: parseFloat(formData.monto),
                 descripcion: formData.descripcion || `Transferencia a ${favorito.alias}`
             });

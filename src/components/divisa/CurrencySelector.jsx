@@ -10,7 +10,7 @@ export const CurrencySelector = ({
     className = "",
     disabled = false 
 }) => {
-    const { divisas, loading, error, getDivisasOptions } = useDivisas();
+    const { loading, error, getDivisasOptions } = useDivisas();
 
     if (loading) {
         return (

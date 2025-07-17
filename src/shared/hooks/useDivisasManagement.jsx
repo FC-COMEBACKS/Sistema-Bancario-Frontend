@@ -19,7 +19,7 @@ export function useDivisasManagement() {
                 setDivisas(response.data.divisas || []);
             }
         } catch (err) {
-            setError('Error al cargar las divisas');
+            error('Error al cargar las divisas:', err);
             setDivisas([]);
         } finally {
             setLoading(false);
@@ -52,7 +52,7 @@ export function useDivisasManagement() {
                 await cargarDivisas();
             }
         } catch (err) {
-            setError('Error al guardar la divisa');
+            error('Error al guardar la divisa:', err);
         } finally {
             setLoading(false);
         }
@@ -71,7 +71,7 @@ export function useDivisasManagement() {
                 await cargarDivisas();
             }
         } catch (err) {
-            setError('Error al restaurar las tasas oficiales');
+            error('Error al restaurar las tasas:', err);
         } finally {
             setLoading(false);
         }

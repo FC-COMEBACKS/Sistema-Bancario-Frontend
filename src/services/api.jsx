@@ -620,9 +620,9 @@ export const getFavoritos = async () => {
     }
 };
 
-export const agregarFavorito = async (data) => {
+export const agregarFavorito = async (favoritoData) => {
     try {
-        return await api.post('/favoritos/agregarCuenta', data);
+        return await api.post('/favoritos/agregarCuenta', favoritoData);
     } catch (err) {
         return {
             error: true,
@@ -631,9 +631,9 @@ export const agregarFavorito = async (data) => {
     }
 };
 
-export const updateFavorito = async (id, data) => {
+export const actualizarFavorito = async (id, favoritoData) => {
     try {
-        return await api.put(`/favoritos/${id}`, data);
+        return await api.put(`/favoritos/actualizarNombre/${id}`, favoritoData);
     } catch (err) {
         return {
             error: true,
@@ -642,9 +642,9 @@ export const updateFavorito = async (id, data) => {
     }
 };
 
-export const deleteFavorito = async (id) => {
+export const eliminarFavorito = async (id) => {
     try {
-        return await api.delete(`/favoritos/${id}`);
+        return await api.delete(`/favoritos/eliminarFavorito/${id}`);
     } catch (err) {
         return {
             error: true,

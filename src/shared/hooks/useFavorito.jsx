@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { getFavoritos, transferirAFavorito } from '../../services/api';
+import { 
+    getFavoritos, 
+    agregarFavorito, 
+    actualizarFavorito, 
+    eliminarFavorito, 
+    transferirAFavorito 
+} from '../../services/api';
 
 export function useFavorito() {
     const [favoritos, setFavoritos] = useState([]);
@@ -18,7 +24,7 @@ export function useFavorito() {
                 setFavoritos(response.data.favoritos || []);
             }
         } catch (err) {
-            setError('Error al cargar los favoritos');
+            error('Error al cargar los favoritos:', err);
             setFavoritos([]);
         } finally {
             setLoading(false);
@@ -37,8 +43,71 @@ export function useFavorito() {
                 return response.data;
             }
         } catch (err) {
-            setError('Error al realizar la transferencia');
+            error('Error al realizar la transferencia:', err);
             return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const agregarAFavoritos = async (numeroCuenta, alias) => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await agregarFavorito({ numeroCuenta, alias });
+            if (response.error) {
+                const errorMsg = response.err?.response?.data?.msg || 'Error al agregar a favoritos';
+                setError(errorMsg);
+                return false;
+            } else {
+                await cargarFavoritos(); 
+                return true;
+            }
+        } catch (err) {
+            error('Error al agregar a favoritos:', err);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const actualizarAlias = async (id, alias) => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await actualizarFavorito(id, { alias });
+            if (response.error) {
+                const errorMsg = response.err?.response?.data?.msg || 'Error al actualizar favorito';
+                setError(errorMsg);
+                return false;
+            } else {
+                await cargarFavoritos(); 
+                return true;
+            }
+        } catch (err) {
+            error('Error al actualizar favorito:', err);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const eliminarDeFavoritos = async (id) => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await eliminarFavorito(id);
+            if (response.error) {
+                const errorMsg = response.err?.response?.data?.msg || 'Error al eliminar favorito';
+                setError(errorMsg);
+                return false;
+            } else {
+                await cargarFavoritos(); 
+                return true;
+            }
+        } catch (err) {
+            error('Error al eliminar favorito:', err);
+            return false;
         } finally {
             setLoading(false);
         }
@@ -47,6 +116,9 @@ export function useFavorito() {
     return {
         favoritos,
         cargarFavoritos,
+        agregarAFavoritos,
+        actualizarAlias,
+        eliminarDeFavoritos,
         loading,
         error,
         setError,

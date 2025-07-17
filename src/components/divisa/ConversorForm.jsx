@@ -47,7 +47,6 @@ export const ConversorForm = ({ onConversionResult, className = "" }) => {
         if (resultado && onConversionResult) {
             onConversionResult(resultado);
         }
-        // eslint-disable-next-line
     }, [resultado]);
 
     const intercambiarDivisas = () => {

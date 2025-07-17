@@ -59,3 +59,8 @@ export { DivisasManagement } from './divisa/DivisasManagement.jsx';
 export { CurrencySelector } from './divisa/CurrencySelector.jsx';
 export { ConversorForm } from './divisa/ConversorForm.jsx';
 export { ConvertirSaldoForm } from './divisa/ConvertirSaldoForm.jsx';
+export { FavoritoCard } from './favorito/FavoritoCard.jsx';
+export { FavoritoForm } from './favorito/FavoritoForm.jsx';
+export { FavoritoList } from './favorito/FavoritoList.jsx';
+export { FavoritosManagement } from './favorito/FavoritosManagement.jsx';
+export { QuickTransferForm } from './favorito/QuickTransferForm.jsx';

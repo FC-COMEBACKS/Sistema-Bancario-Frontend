@@ -34,7 +34,7 @@ export const FavoritoList = ({
             <div className="favoritos-grid">
                 {favoritos.map((favorito) => (
                     <FavoritoCard
-                        key={favorito._id}
+                        key={favorito.fid || favorito._id}
                         favorito={favorito}
                         onEdit={onEdit}
                         onDelete={onDelete}
