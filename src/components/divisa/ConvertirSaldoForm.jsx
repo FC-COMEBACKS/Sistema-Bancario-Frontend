@@ -1,74 +1,47 @@
+
 import React, { useState, useEffect } from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Select from '../ui/Select';
 import { CurrencySelector } from './CurrencySelector';
-import { convertirSaldoCuenta, getCuentas } from '../../services/api';
+import { useConvertirSaldoCuenta } from '../../shared/hooks/useConvertirSaldoCuenta';
 import './ConvertirSaldoForm.css';
 
+
 export const ConvertirSaldoForm = () => {
-    const [cuentas, setCuentas] = useState([]);
     const [selectedCuenta, setSelectedCuenta] = useState('');
     const [divisaDestino, setDivisaDestino] = useState('');
-    const [resultado, setResultado] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const {
+        cuentas,
+        cargarCuentas,
+        loading,
+        error,
+        setError,
+        resultado,
+        setResultado,
+        convertirSaldo
+    } = useConvertirSaldoCuenta();
+
     useEffect(() => {
         cargarCuentas();
+        // eslint-disable-next-line
     }, []);
-
-    const cargarCuentas = async () => {
-        try {
-            const response = await getCuentas();
-            if (response.error) {
-                setError('Error al cargar las cuentas');
-                return;
-            }
-            setCuentas(response.data.cuentas || []);
-        } catch (err) {
-            setError('Error al cargar las cuentas');
-        }
-    };
 
     const handleConvertir = async (e) => {
         e.preventDefault();
-        
         if (!selectedCuenta) {
             setError('Seleccione una cuenta');
             return;
         }
-
         if (!divisaDestino) {
             setError('Seleccione la divisa de destino');
             return;
         }
-
         if (divisaDestino === 'GTQ') {
             setError('El saldo ya está en Quetzales');
             return;
         }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const response = await convertirSaldoCuenta({
-                cuentaId: selectedCuenta,
-                divisaDestino
-            });
-
-            if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al convertir el saldo');
-                setResultado(null);
-            } else {
-                setResultado(response.data);
-            }
-        } catch (err) {
-            setError('Error al convertir el saldo de la cuenta');
-            setResultado(null);
-        } finally {
-            setLoading(false);
-        }
+        await convertirSaldo(selectedCuenta, divisaDestino);
     };
 
     const cuentasOptions = cuentas.map(cuenta => ({
@@ -145,7 +118,6 @@ export const ConvertirSaldoForm = () => {
                                         </span>
                                     </div>
                                 </div>
-                                
                                 <div className="amount-display">
                                     <div className="original-amount">
                                         <span className="amount">
@@ -164,7 +136,6 @@ export const ConvertirSaldoForm = () => {
                                         <span className="currency">{resultado.divisaDestino}</span>
                                     </div>
                                 </div>
-                                
                                 <div className="exchange-rate">
                                     <small>
                                         Tasa de cambio: 1 {resultado.divisaOrigen} = {resultado.tasa.toLocaleString(undefined, {
@@ -173,7 +144,6 @@ export const ConvertirSaldoForm = () => {
                                         })} {resultado.divisaDestino}
                                     </small>
                                 </div>
-
                                 <div className="disclaimer">
                                     <small>
                                         * Esta es una conversión informativa. El saldo real de su cuenta permanece en {resultado.divisaOrigen}.

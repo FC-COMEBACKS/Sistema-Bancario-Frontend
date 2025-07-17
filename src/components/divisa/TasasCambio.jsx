@@ -1,17 +1,25 @@
+
 import React, { useState, useEffect } from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
-import { getDivisas, restaurarTasasOficiales } from '../../services/api';
+import { useTasasCambio } from '../../shared/hooks/useTasasCambio';
 import './TasasCambio.css';
 
+
 export const TasasCambio = () => {
-    const [divisas, setDivisas] = useState([]);
     const [filtro, setFiltro] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [user, setUser] = useState(null);
+    const {
+        divisas,
+        cargarDivisas,
+        loading,
+        error,
+        setError,
+        success,
+        setSuccess,
+        restaurarTasas
+    } = useTasasCambio();
 
     useEffect(() => {
         const userDetails = localStorage.getItem('user');
@@ -24,58 +32,19 @@ export const TasasCambio = () => {
             }
         }
         cargarDivisas();
+        // eslint-disable-next-line
     }, []);
-
-    const cargarDivisas = async () => {
-        try {
-            setLoading(true);
-            const response = await getDivisas(filtro);
-            
-            if (response.error) {
-                setError('Error al cargar las tasas de cambio');
-                return;
-            }
-            
-            setDivisas(response.data.divisas || []);
-        } catch (err) {
-            setError('Error al cargar las tasas de cambio');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleFiltroChange = (e) => {
         setFiltro(e.target.value);
     };
 
     const buscarDivisas = () => {
-        cargarDivisas();
+        cargarDivisas(filtro);
     };
 
     const handleRestaurarTasas = async () => {
-        if (!user || user.rol !== 'ADMIN') {
-            setError('Solo los administradores pueden restaurar las tasas');
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError('');
-            setSuccess('');
-
-            const response = await restaurarTasasOficiales();
-            
-            if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al restaurar las tasas');
-            } else {
-                setSuccess('Tasas de cambio restauradas correctamente');
-                cargarDivisas(); 
-            }
-        } catch (err) {
-            setError('Error al restaurar las tasas oficiales');
-        } finally {
-            setLoading(false);
-        }
+        await restaurarTasas(user);
     };
 
     const formatearFecha = (fecha) => {
@@ -100,7 +69,6 @@ export const TasasCambio = () => {
                         <h2>Tasas de Cambio</h2>
                         <p className="text-muted">Consulta las tasas de cambio actuales</p>
                     </div>
-                    
                     {user && user.rol === 'ADMIN' && (
                         <Button
                             onClick={handleRestaurarTasas}
@@ -112,7 +80,6 @@ export const TasasCambio = () => {
                         </Button>
                     )}
                 </div>
-
                 <div className="search-section">
                     <div className="search-bar">
                         <Input
@@ -127,19 +94,16 @@ export const TasasCambio = () => {
                         </Button>
                     </div>
                 </div>
-
                 {error && (
                     <div className="error-message">
                         {error}
                     </div>
                 )}
-
                 {success && (
                     <div className="success-message">
                         {success}
                     </div>
                 )}
-
                 {loading ? (
                     <div className="loading-state">
                         <div className="spinner"></div>
@@ -160,7 +124,6 @@ export const TasasCambio = () => {
                                 </div>
                             </div>
                         </div>
-
                         {divisas.length > 0 ? (
                             divisas.map((divisa) => (
                                 <div key={divisa._id} className="tasa-card">

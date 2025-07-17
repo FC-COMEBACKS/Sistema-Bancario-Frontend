@@ -3,26 +3,31 @@ import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
-import { getDivisas, agregarDivisa, actualizarTasasDivisa, restaurarTasasOficiales } from '../../services/api';
+import { useDivisasManagement } from '../../shared/hooks/useDivisasManagement';
 import './DivisasManagement.css';
 
 export const DivisasManagement = () => {
-    const [divisas, setDivisas] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingDivisa, setEditingDivisa] = useState(null);
     const [user, setUser] = useState(null);
-
     const [formData, setFormData] = useState({
         codigo: '',
         nombre: '',
         tasaEnQuetzales: ''
     });
+    const {
+        divisas,
+        cargarDivisas,
+        loading,
+        error,
+        setError,
+        success,
+        setSuccess,
+        agregarOActualizarDivisa,
+        restaurarTasas
+    } = useDivisasManagement();
 
     useEffect(() => {
-        // Verificar que el usuario sea admin
         const userDetails = localStorage.getItem('user');
         if (userDetails) {
             try {
@@ -37,24 +42,6 @@ export const DivisasManagement = () => {
         }
     }, []);
 
-    const cargarDivisas = async () => {
-        try {
-            setLoading(true);
-            const response = await getDivisas();
-            
-            if (response.error) {
-                setError('Error al cargar las divisas');
-                return;
-            }
-            
-            setDivisas(response.data.divisas || []);
-        } catch (err) {
-            setError('Error al cargar las divisas');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -64,39 +51,18 @@ export const DivisasManagement = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         if (!formData.codigo || !formData.nombre || !formData.tasaEnQuetzales) {
             setError('Todos los campos son obligatorios');
             return;
         }
-
         if (parseFloat(formData.tasaEnQuetzales) <= 0) {
             setError('La tasa debe ser mayor a 0');
             return;
         }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const response = await agregarDivisa({
-                codigo: formData.codigo.toUpperCase(),
-                nombre: formData.nombre,
-                tasaEnQuetzales: parseFloat(formData.tasaEnQuetzales)
-            });
-
-            if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al guardar la divisa');
-            } else {
-                setSuccess(editingDivisa ? 'Divisa actualizada correctamente' : 'Divisa agregada correctamente');
-                setShowModal(false);
-                resetForm();
-                cargarDivisas();
-            }
-        } catch (err) {
-            setError('Error al guardar la divisa');
-        } finally {
-            setLoading(false);
+        await agregarOActualizarDivisa(formData, editingDivisa);
+        if (!error) {
+            setShowModal(false);
+            resetForm();
         }
     };
 
@@ -111,24 +77,7 @@ export const DivisasManagement = () => {
     };
 
     const handleRestaurarTasas = async () => {
-        try {
-            setLoading(true);
-            setError('');
-            setSuccess('');
-
-            const response = await restaurarTasasOficiales();
-            
-            if (response.error) {
-                setError(response.err?.response?.data?.msg || 'Error al restaurar las tasas');
-            } else {
-                setSuccess('Tasas restauradas a valores oficiales correctamente');
-                cargarDivisas();
-            }
-        } catch (err) {
-            setError('Error al restaurar las tasas oficiales');
-        } finally {
-            setLoading(false);
-        }
+        await restaurarTasas();
     };
 
     const resetForm = () => {
@@ -182,19 +131,16 @@ export const DivisasManagement = () => {
                         </Button>
                     </div>
                 </div>
-
                 {error && (
                     <div className="error-message">
                         {error}
                     </div>
                 )}
-
                 {success && (
                     <div className="success-message">
                         {success}
                     </div>
                 )}
-
                 {loading && !showModal ? (
                     <div className="loading-state">
                         <div className="spinner"></div>
@@ -209,7 +155,6 @@ export const DivisasManagement = () => {
                             <div className="header-cell">Última Actualización</div>
                             <div className="header-cell">Acciones</div>
                         </div>
-                        
                         {divisas.length > 0 ? (
                             divisas.map((divisa) => (
                                 <div key={divisa._id} className="table-row">
@@ -251,7 +196,6 @@ export const DivisasManagement = () => {
                     </div>
                 )}
             </Card>
-
             <Modal isOpen={showModal} onClose={closeModal} title={editingDivisa ? 'Editar Divisa' : 'Agregar Nueva Divisa'}>
                 <form onSubmit={handleSubmit} className="divisa-form">
                     <div className="form-group">
@@ -267,7 +211,6 @@ export const DivisasManagement = () => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="nombre">Nombre de la Divisa</label>
                         <Input
@@ -279,7 +222,6 @@ export const DivisasManagement = () => {
                             required
                         />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="tasa">Tasa en Quetzales</label>
                         <Input
@@ -296,13 +238,11 @@ export const DivisasManagement = () => {
                             Ejemplo: Si 1 USD = 7.75 GTQ, ingrese 7.750000
                         </small>
                     </div>
-
                     {error && (
                         <div className="error-message">
                             {error}
                         </div>
                     )}
-
                     <div className="form-actions">
                         <Button type="button" variant="outline" onClick={closeModal}>
                             Cancelar
