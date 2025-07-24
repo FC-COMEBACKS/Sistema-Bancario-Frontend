@@ -1,21 +1,33 @@
+/* ===== IMPORTACIÓN DE ESTILOS DE MODALES ===== */
+@import url('./../../components/movimiento/MovimientoModals.css');
+
+/* ===== VARIABLES CSS PARA MOVIMIENTOS ===== */
 :root {
+  /* Colores principales - Tema financiero */
   --movimiento-primary: #1e40af;
   --movimiento-secondary: #059669;
   --movimiento-accent: #7c3aed;
   --movimiento-danger: #dc2626;
   --movimiento-warning: #d97706;
   --movimiento-success: #16a34a;
+  
+  /* Gradientes bancarios */
   --movimiento-gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
   --movimiento-gradient-secondary: linear-gradient(135deg, #059669 0%, #10b981 100%);
   --movimiento-gradient-card: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   --movimiento-gradient-header: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  
+  /* Sombras modernas */
   --movimiento-shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --movimiento-shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --movimiento-shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transiciones suaves */
   --movimiento-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --movimiento-transition-fast: all 0.15s ease-in-out;
 }
 
+/* ===== PÁGINA PRINCIPAL ===== */
 .movimiento-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
@@ -38,6 +50,7 @@
   z-index: -1;
 }
 
+/* ===== HEADER PRINCIPAL ===== */
 .page-header {
   background: var(--movimiento-gradient-header);
   color: white;
@@ -64,7 +77,7 @@
   font-size: 2.5rem;
   font-weight: 800;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -81,6 +94,7 @@
   z-index: 1;
 }
 
+/* ===== GESTIÓN DE MOVIMIENTOS ===== */
 .movimientos-management {
   max-width: 1400px;
   margin: 0 auto;
@@ -161,6 +175,7 @@
   box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);
 }
 
+/* ===== FILTROS ===== */
 .filters-container {
   background: white;
   padding: 1.5rem;
@@ -217,6 +232,7 @@
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
 }
 
+/* ===== TABLA DE MOVIMIENTOS ===== */
 .movimientos-container {
   background: white;
   border-radius: 1.25rem;
@@ -292,6 +308,7 @@
   vertical-align: middle;
 }
 
+/* ===== TIPOS DE MOVIMIENTO ===== */
 .movimiento-tipo {
   display: inline-flex;
   align-items: center;
@@ -329,6 +346,7 @@
   color: var(--movimiento-danger);
 }
 
+/* ===== MONTOS ===== */
 .movimiento-monto {
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
@@ -347,6 +365,7 @@
   color: var(--movimiento-primary);
 }
 
+/* ===== CUENTAS ===== */
 .cuenta-info {
   display: flex;
   flex-direction: column;
@@ -365,6 +384,7 @@
   font-size: 0.8rem;
 }
 
+/* ===== BOTONES DE ACCIÓN ===== */
 .action-btn {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -402,6 +422,7 @@
   color: var(--movimiento-success);
 }
 
+/* ===== ESTADOS VACÍOS Y DE CARGA ===== */
 .empty-state {
   background: var(--movimiento-gradient-card);
   border: 2px dashed #cbd5e1;
@@ -474,6 +495,7 @@
   font-size: 0.95rem;
 }
 
+/* ===== PAGINACIÓN ===== */
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -596,6 +618,7 @@
   }
 }
 
+/* ===== ANIMACIONES ADICIONALES ===== */
 .fade-in {
   animation: fadeIn 0.6s ease-out forwards;
 }
@@ -626,6 +649,7 @@
   }
 }
 
+/* ===== EFECTOS HOVER ADICIONALES ===== */
 .movimientos-container:hover {
   box-shadow: var(--movimiento-shadow-large);
 }

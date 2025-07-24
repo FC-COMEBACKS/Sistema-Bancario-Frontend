@@ -111,40 +111,51 @@ const ProductosCatalog = ({ isAdmin = false }) => {
     };
 
     if (loading && productos.length === 0) {
-        return <Loader />;
+        return (
+            <div className="catalog-loading">
+                <Loader />
+                <h3>🔍 Cargando productos...</h3>
+                <p>Estamos buscando los mejores productos para ti</p>
+            </div>
+        );
     }
 
     return (
         <div className="productos-catalog">
             <div className="catalog-header">
-                <h2>Catálogo de Productos y Servicios</h2>
+                <h2>🏪 Catálogo de Productos y Servicios</h2>
                 
                 <div className="view-controls">
                     <Button
                         variant={viewMode === 'grid' ? 'primary' : 'outline'}
                         size="sm"
                         onClick={() => setViewMode('grid')}
+                        className="view-btn"
                     >
-                        Vista Grid
+                        🔲 Vista Grid
                     </Button>
                     <Button
                         variant={viewMode === 'list' ? 'primary' : 'outline'}
                         size="sm"
                         onClick={() => setViewMode('list')}
+                        className="view-btn"
                     >
-                        Vista Lista
+                        📋 Vista Lista
                     </Button>
-                    <Button
-                        variant={showEstadisticas ? 'primary' : 'outline'}
-                        size="sm"
-                        onClick={() => setShowEstadisticas(!showEstadisticas)}
-                    >
-                        {showEstadisticas ? 'Ocultar Estadísticas' : 'Ver Estadísticas'}
-                    </Button>
+                    {isAdmin && (
+                        <Button
+                            variant={showEstadisticas ? 'primary' : 'outline'}
+                            size="sm"
+                            onClick={() => setShowEstadisticas(!showEstadisticas)}
+                            className="view-btn"
+                        >
+                            {showEstadisticas ? '📊 Ocultar Stats' : '📈 Ver Stats'}
+                        </Button>
+                    )}
                 </div>
             </div>
 
-            {showEstadisticas && (
+            {showEstadisticas && isAdmin && (
                 <EstadisticasProductos />
             )}
 
@@ -155,14 +166,26 @@ const ProductosCatalog = ({ isAdmin = false }) => {
 
             {(error || compraError) && (
                 <div className="error-message">
-                    <p>Error: {error || compraError}</p>
+                    <div className="error-icon">❌</div>
+                    <h4>¡Oops! Algo salió mal</h4>
+                    <p>{error || compraError}</p>
+                </div>
+            )}
+
+            {loading && productos.length > 0 && (
+                <div className="loading-overlay">
+                    <div className="loading-spinner">🔄</div>
+                    <p>Actualizando productos...</p>
                 </div>
             )}
 
             <div className={`productos-container ${viewMode}`}>
-                {productos.length === 0 ? (
+                {productos.length === 0 && !loading ? (
                     <div className="empty-state">
+                        <div className="empty-icon">🔍</div>
+                        <h3>No encontramos productos</h3>
                         <p>No se encontraron productos con los filtros aplicados.</p>
+                        <p>Intenta ajustar tus criterios de búsqueda.</p>
                     </div>
                 ) : (
                     productos.map((producto) => (

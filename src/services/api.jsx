@@ -305,6 +305,18 @@ export const getCuentaByUsuario = async (uid) => {
     }
 };
 
+export const getCuentasByUsuario = async (uid) => {
+    try {
+        const response = await api.get(`/cuentas/cuentasUsuario/${uid}`);
+        return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
 export const listarCuentasAgregadas = async () => {
     try {
         return await api.get('/cuentas/listarCuentasAgregadas');

@@ -61,13 +61,11 @@ const RegisterForm = () => {
 
   return (
     <div className="register-form-container">
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-blue-700 mb-2">Registrarse</h2>
-        <p className="text-gray-600">Crea una nueva cuenta en el sistema bancario</p>
-      </div>
+      <div className="form-title">Registrarse</div>
+      <div className="form-subtitle">Crea una nueva cuenta en el sistema bancario</div>
       
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-group">
           <Input
             label="Nombre de usuario"
             placeholder="usuario123"
@@ -77,7 +75,9 @@ const RegisterForm = () => {
             })}
             error={errors.username?.message}
           />
-          
+        </div>
+        
+        <div className="form-group">
           <Input
             label="Correo Electrónico"
             type="email"
@@ -88,7 +88,9 @@ const RegisterForm = () => {
             })}
             error={errors.email?.message}
           />
-          
+        </div>
+        
+        <div className="form-group">
           <Input
             label="Nombre"
             placeholder="Ingresa tu nombre"
@@ -98,7 +100,9 @@ const RegisterForm = () => {
             })}
             error={errors.nombre?.message}
           />
-          
+        </div>
+        
+        <div className="form-group">
           <Input
             label="Apellido"
             placeholder="Ingresa tu apellido"
@@ -108,30 +112,34 @@ const RegisterForm = () => {
             })}
             error={errors.apellido?.message}
           />
-          
-          <div className="relative">
-            <Input
-              label="Contraseña"
+        </div>
+        
+        <div className="form-group">
+          <label>Contraseña</label>
+          <div className="password-field">
+            <input
               type={showPassword ? "text" : "password"}
               placeholder="Ingresa tu contraseña"
               {...register('password', {
                 required: 'La contraseña es requerida',
                 validate: value => validatePassword(value) === true || validatePassword(value)
               })}
-              error={errors.password?.message}
             />
             <button
               type="button"
-              className="absolute right-2 top-10 text-gray-500 hover:text-gray-700"
+              className="password-toggle"
               onClick={toggleShowPassword}
             >
-              {showPassword ? "Ocultar" : "Mostrar"}
+              Mostrar
             </button>
-            <p className="text-xs text-gray-500 mt-1">
-              La contraseña debe contener al menos 8 caracteres, 6 letras mayúsculas, 1 minúscula y 1 número.
-            </p>
           </div>
-          
+          {errors.password && <div className="error-message">{errors.password.message}</div>}
+          <div className="password-help">
+            La contraseña debe contener al menos 8 caracteres, 6 letras mayúsculas, 1 minúscula y 1 número.
+          </div>
+        </div>
+        
+        <div className="form-group">
           <Input
             label="Confirmar Contraseña"
             type={showPassword ? "text" : "password"}
@@ -142,7 +150,9 @@ const RegisterForm = () => {
             })}
             error={errors.confirmPassword?.message}
           />
-          
+        </div>
+        
+        <div className="form-group">
           <Input
             label="DPI"
             placeholder="Ingresa tu DPI"
@@ -152,7 +162,9 @@ const RegisterForm = () => {
             })}
             error={errors.dpi?.message}
           />
-          
+        </div>
+        
+        <div className="form-group">
           <Input
             label="Celular"
             placeholder="Ingresa tu número de celular"
@@ -162,7 +174,9 @@ const RegisterForm = () => {
             })}
             error={errors.celular?.message}
           />
+        </div>
 
+        <div className="form-group">
           <Input
             label="Dirección"
             placeholder="Ingresa tu dirección completa"
@@ -172,7 +186,9 @@ const RegisterForm = () => {
             })}
             error={errors.direccion?.message}
           />
+        </div>
 
+        <div className="form-group">
           <Input
             label="Lugar de Trabajo"
             placeholder="Ingresa el nombre de tu trabajo"
@@ -182,7 +198,9 @@ const RegisterForm = () => {
             })}
             error={errors.nombreTrabajo?.message}
           />
+        </div>
 
+        <div className="form-group">
           <Input
             label="Ingresos Mensuales"
             placeholder="Ingresa tus ingresos mensuales"
@@ -195,25 +213,14 @@ const RegisterForm = () => {
           />
         </div>
         
-        <Button 
+        <button 
           type="submit" 
-          variant="primary" 
-          fullWidth 
+          className="submit-button"
           disabled={!isValid || isLoading}
-          className="login-button py-3 text-lg font-medium transition-transform duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-4"
         >
           {isLoading ? 'Registrando...' : 'Registrarse'}
-        </Button>
+        </button>
       </form>
-
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
-          ¿Ya tienes una cuenta?{' '}
-          <Link to="/auth" className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-300">
-            Inicia sesión
-          </Link>
-        </p>
-      </div>
     </div>
   );
 };

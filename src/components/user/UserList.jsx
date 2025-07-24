@@ -83,136 +83,144 @@ const UserList = ({ onEdit }) => {
 
     return (
         <div className="user-list">
-            <Card className="mb-4">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h4>Filtros</h4>
-                    <div className="d-flex gap-2">
-                        <Button variant="secondary" onClick={handleClearFilters}>
-                            Limpiar Filtros
-                        </Button>
-                        <Button variant="primary" onClick={loadUsers}>
-                            Actualizar
-                        </Button>
-                    </div>
-                </div>
-                <div className="row g-3 mb-3">
-                    <div className="col-md-3">
-                        <label className="form-label">Rol</label>
+            {/* Sección de Filtros */}
+            <div className="filters-section">
+                <h3 className="filters-title">Filtros</h3>
+                
+                <div className="filters-grid">
+                    <div className="filter-group">
+                        <label>Rol</label>
                         <select 
-                            className="form-select" 
                             name="rol" 
                             value={filters.rol} 
                             onChange={handleFilterChange}
+                            className="filter-select"
                         >
                             <option value="">Todos</option>
                             <option value="ADMIN">Administrador</option>
                             <option value="CLIENT">Cliente</option>
                         </select>
                     </div>
-                    <div className="col-md-3">
-                        <label className="form-label">Estado</label>
+
+                    <div className="filter-group">
+                        <label>Estado</label>
                         <select 
-                            className="form-select" 
                             name="estado" 
                             value={filters.estado} 
                             onChange={handleFilterChange}
+                            className="filter-select"
                         >
                             <option value="">Todos</option>
                             <option value="ACTIVO">Activo</option>
                             <option value="INACTIVO">Inactivo</option>
                         </select>
                     </div>
-                    <div className="col-md-3">
-                        <label className="form-label">Nombre</label>
+
+                    <div className="filter-group">
+                        <label>Nombre</label>
                         <input 
                             type="text" 
-                            className="form-control" 
                             name="nombre" 
                             value={filters.nombre} 
                             onChange={handleFilterChange}
-                            placeholder="Buscar por nombre"
+                            className="filter-input"
                         />
                     </div>
-                    <div className="col-md-3">
-                        <label className="form-label">Email</label>
+
+                    <div className="filter-group">
+                        <label>Email</label>
                         <input 
                             type="text" 
-                            className="form-control" 
                             name="email" 
                             value={filters.email} 
                             onChange={handleFilterChange}
-                            placeholder="Buscar por email"
+                            className="filter-input"
                         />
                     </div>
                 </div>
-            </Card>
 
-            <Card>
-                {/* Tabla de usuarios */}
+                <div className="filters-actions">
+                    <button 
+                        className="actualizar-btn"
+                        onClick={loadUsers}
+                    >
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+
+            {/* Tabla de usuarios */}
+            <div className="users-table-container">
                 {loading ? (
-                    <div className="text-center p-4">
-                        <div className="spinner-border" role="status">
-                            <span className="visually-hidden">Cargando...</span>
-                        </div>
+                    <div className="loading-container">
+                        <div className="loading-spinner"></div>
                     </div>
                 ) : error ? (
-                    <div className="alert alert-danger">{error}</div>
+                    <div className="error-message">{error}</div>
                 ) : users.length === 0 ? (
-                    <div className="alert alert-warning">No se encontraron usuarios</div>
+                    <div className="no-users-message">No se encontraron usuarios</div>
                 ) : (
-                    <div className="table-responsive">
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Email</th>
-                                    <th>Rol</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users.map((user, index) => (
-                                    <tr key={getUserId(user) || index}>
-                                        <td>{user.nombre || 'N/A'}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.rol}</td>
-                                        <td>
-                                            <span className={`badge ${user.estado === 'ACTIVO' ? 'bg-success' : 'bg-danger'}`}>
-                                                {user.estado || 'No especificado'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="btn-group">
-                                                <EditButton onClick={() => {
+                    <table className="users-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user, index) => (
+                                <tr key={getUserId(user) || index}>
+                                    <td>{user.nombre || 'N/A'}</td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <span className={`role-badge ${user.rol?.toLowerCase()}`}>
+                                            {user.rol}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span className={`status-badge ${user.estado?.toLowerCase()}`}>
+                                            {user.estado || 'No especificado'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="action-buttons">
+                                            <button 
+                                                className="edit-btn"
+                                                onClick={() => {
                                                     const userId = getUserId(user);
                                                     if (onEdit && userId) {
                                                         onEdit(userId);
-                                                    } else {
-                                                        alert(userId ? 'Función de edición no disponible' : 'No se pudo obtener el ID del usuario');
                                                     }
-                                                }} />
-                                                <DeleteButton onClick={() => {
+                                                }}
+                                                title="Editar"
+                                            >
+                                                ✏️
+                                            </button>
+                                            <button 
+                                                className="delete-btn"
+                                                onClick={() => {
                                                     const userId = getUserId(user);
-                                                    
-                                                    if (!userId) {
-                                                        alert('No se pudo obtener el ID del usuario');
-                                                        return;
+                                                    if (userId) {
+                                                        handleDelete(userId);
                                                     }
-                                                    
-                                                    handleDelete(userId);
-                                                }} />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                                }}
+                                                title="Eliminar"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 )}
                 
                 {pagination && pagination.totalPages > 1 && (
-                    <div className="d-flex justify-content-center mt-4">
+                    <div className="pagination-container">
                         <Pagination
                             currentPage={pagination.currentPage}
                             totalPages={pagination.totalPages}
@@ -220,7 +228,7 @@ const UserList = ({ onEdit }) => {
                         />
                     </div>
                 )}
-            </Card>
+            </div>
         </div>
     );
 };

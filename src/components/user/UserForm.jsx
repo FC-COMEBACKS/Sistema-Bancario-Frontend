@@ -134,194 +134,298 @@ const UserForm = ({ user, onSubmit, onCancel, isAdmin = false }) => {
     };
 
     return (
-        <Card>
-            <form onSubmit={handleSubmit}>
-                <div className="row g-3">
-                    <div className="col-md-6">
-                        <label htmlFor="username" className="form-label">Nombre de Usuario*</label>
-                        <input 
-                            type="text" 
-                            className={`form-control ${errors.username ? 'is-invalid' : ''}`}
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            placeholder="Mínimo 3 caracteres"
-                            disabled={isSubmitting}
-                        />
-                        {errors.username && <div className="invalid-feedback">{errors.username}</div>}
-                    </div>
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="nombre" className="form-label">Nombre*</label>
-                        <input 
-                            type="text" 
-                            className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-                            id="nombre"
-                            name="nombre"
-                            value={formData.nombre}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                        />
-                        {errors.nombre && <div className="invalid-feedback">{errors.nombre}</div>}
-                    </div>
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="email" className="form-label">Email*</label>
-                        <input 
-                            type="email" 
-                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                        />
-                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                    </div>
-                    
-                    {/* Campo de contraseña solo para usuarios nuevos */}
-                    {!user && (
-                        <div className="col-md-6">
-                            <label htmlFor="password" className="form-label">Contraseña*</label>
-                            <input 
-                                type="password" 
-                                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="Mínimo 6 caracteres"
-                                disabled={isSubmitting}
-                            />
-                            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+        <div className="user-profile-container">
+            {/* Header with gradient background */}
+            <div className="profile-header">
+                <div className="profile-header-content">
+                    <div className="profile-avatar">
+                        <div className="avatar-circle">
+                            <i className="fas fa-user"></i>
                         </div>
-                    )}
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="celular" className="form-label">Celular*</label>
-                        <input 
-                            type="tel" 
-                            className={`form-control ${errors.celular ? 'is-invalid' : ''}`}
-                            id="celular"
-                            name="celular"
-                            value={formData.celular}
-                            onChange={handleChange}
-                            placeholder="48020284"
-                            disabled={isSubmitting}
-                        />
-                        {errors.celular && <div className="invalid-feedback">{errors.celular}</div>}
+                        <div className="avatar-badge editing">
+                            <i className="fas fa-edit"></i>
+                        </div>
                     </div>
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="dpi" className="form-label">DPI*</label>
-                        <input 
-                            type="text" 
-                            className={`form-control ${errors.dpi ? 'is-invalid' : ''}`}
-                            id="dpi"
-                            name="dpi"
-                            value={formData.dpi}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                        />
-                        {errors.dpi && <div className="invalid-feedback">{errors.dpi}</div>}
-                    </div>
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="nombreTrabajo" className="form-label">Trabajo*</label>
-                        <input 
-                            type="text" 
-                            className={`form-control ${errors.nombreTrabajo ? 'is-invalid' : ''}`}
-                            id="nombreTrabajo"
-                            name="nombreTrabajo"
-                            value={formData.nombreTrabajo}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                        />
-                        {errors.nombreTrabajo && <div className="invalid-feedback">{errors.nombreTrabajo}</div>}
-                    </div>
-                    
-                    <div className="col-md-6">
-                        <label htmlFor="ingresosMensuales" className="form-label">Ingresos Mensuales*</label>
-                        <input 
-                            type="number" 
-                            className={`form-control ${errors.ingresosMensuales ? 'is-invalid' : ''}`}
-                            id="ingresosMensuales"
-                            name="ingresosMensuales"
-                            value={formData.ingresosMensuales}
-                            onChange={handleChange}
-                            min="100"
-                            disabled={isSubmitting}
-                        />
-                        {errors.ingresosMensuales && <div className="invalid-feedback">{errors.ingresosMensuales}</div>}
-                    </div>
-                    
-                    <div className="col-12">
-                        <label htmlFor="direccion" className="form-label">Dirección</label>
-                        <textarea 
-                            className="form-control"
-                            id="direccion"
-                            name="direccion"
-                            value={formData.direccion}
-                            onChange={handleChange}
-                            rows="3"
-                            disabled={isSubmitting}
-                        />
-                    </div>
-
-                    {isAdmin && (
-                        <>
-                            <div className="col-md-6">
-                                <label htmlFor="rol" className="form-label">Rol</label>
-                                <select 
-                                    className="form-select"
-                                    id="rol"
-                                    name="rol"
-                                    value={formData.rol}
-                                    onChange={handleChange}
-                                    disabled={isSubmitting}
-                                >
-                                    <option value="ADMIN">Administrador</option>
-                                    <option value="CLIENT">Cliente</option>
-                                </select>
-                            </div>
-                            
-                            <div className="col-md-6">
-                                <label htmlFor="estado" className="form-label">Estado</label>
-                                <select 
-                                    className="form-select"
-                                    id="estado"
-                                    name="estado"
-                                    value={formData.estado}
-                                    onChange={handleChange}
-                                    disabled={isSubmitting}
-                                >
-                                    <option value="ACTIVO">Activo</option>
-                                    <option value="INACTIVO">Inactivo</option>
-                                </select>
-                            </div>
-                        </>
-                    )}
-                    
-                    <div className="col-12 d-flex justify-content-end gap-2 mt-4">
-                        <Button 
-                            variant="secondary" 
-                            onClick={onCancel}
-                            disabled={isSubmitting}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button 
-                            variant="primary" 
-                            type="submit"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? 'Guardando...' : (user ? 'Actualizar' : 'Guardar')}
-                        </Button>
+                    <div className="profile-info">
+                        <h2 className="profile-name">{formData.nombre || 'Editando Perfil'}</h2>
+                        <p className="profile-role">
+                            <i className="fas fa-edit me-2"></i>
+                            Modo de Edición
+                        </p>
                     </div>
                 </div>
-            </form>
-        </Card>
+            </div>
+
+            {/* Profile Content */}
+            <div className="profile-content">
+                <form onSubmit={handleSubmit} className="profile-form">
+                    <div className="profile-cards-grid">
+                        {/* Personal Information Card */}
+                        <div className="profile-card">
+                            <div className="card-header">
+                                <h5 className="card-title">
+                                    <i className="fas fa-user-circle me-2"></i>
+                                    Información Personal
+                                </h5>
+                            </div>
+                            <div className="card-body">
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label htmlFor="nombre" className="form-label">
+                                            <i className="fas fa-user me-2"></i>
+                                            Nombre Completo *
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            className={`form-control modern-input ${errors.nombre ? 'is-invalid' : ''}`}
+                                            id="nombre"
+                                            name="nombre"
+                                            value={formData.nombre}
+                                            onChange={handleChange}
+                                            disabled={isSubmitting}
+                                            placeholder="Ingrese su nombre completo"
+                                        />
+                                        {errors.nombre && <div className="invalid-feedback">{errors.nombre}</div>}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="username" className="form-label">
+                                            <i className="fas fa-at me-2"></i>
+                                            Nombre de Usuario *
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            className={`form-control modern-input ${errors.username ? 'is-invalid' : ''}`}
+                                            id="username"
+                                            name="username"
+                                            value={formData.username}
+                                            onChange={handleChange}
+                                            placeholder="Mínimo 3 caracteres"
+                                            disabled={isSubmitting}
+                                        />
+                                        {errors.username && <div className="invalid-feedback">{errors.username}</div>}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="email" className="form-label">
+                                            <i className="fas fa-envelope me-2"></i>
+                                            Correo Electrónico *
+                                        </label>
+                                        <input 
+                                            type="email" 
+                                            className={`form-control modern-input ${errors.email ? 'is-invalid' : ''}`}
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            disabled={isSubmitting}
+                                            placeholder="ejemplo@correo.com"
+                                        />
+                                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                                    </div>
+
+                                    {!user && (
+                                        <div className="form-group">
+                                            <label htmlFor="password" className="form-label">
+                                                <i className="fas fa-lock me-2"></i>
+                                                Contraseña *
+                                            </label>
+                                            <input 
+                                                type="password" 
+                                                className={`form-control modern-input ${errors.password ? 'is-invalid' : ''}`}
+                                                id="password"
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                placeholder="Mínimo 6 caracteres"
+                                                disabled={isSubmitting}
+                                            />
+                                            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                                        </div>
+                                    )}
+
+                                    <div className="form-group">
+                                        <label htmlFor="dpi" className="form-label">
+                                            <i className="fas fa-id-card me-2"></i>
+                                            DPI *
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            className={`form-control modern-input ${errors.dpi ? 'is-invalid' : ''}`}
+                                            id="dpi"
+                                            name="dpi"
+                                            value={formData.dpi}
+                                            onChange={handleChange}
+                                            disabled={isSubmitting}
+                                            placeholder="1234567890123"
+                                        />
+                                        {errors.dpi && <div className="invalid-feedback">{errors.dpi}</div>}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="celular" className="form-label">
+                                            <i className="fas fa-phone me-2"></i>
+                                            Teléfono *
+                                        </label>
+                                        <input 
+                                            type="tel" 
+                                            className={`form-control modern-input ${errors.celular ? 'is-invalid' : ''}`}
+                                            id="celular"
+                                            name="celular"
+                                            value={formData.celular}
+                                            onChange={handleChange}
+                                            placeholder="48020284"
+                                            disabled={isSubmitting}
+                                        />
+                                        {errors.celular && <div className="invalid-feedback">{errors.celular}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Work Information Card */}
+                        <div className="profile-card">
+                            <div className="card-header">
+                                <h5 className="card-title">
+                                    <i className="fas fa-briefcase me-2"></i>
+                                    Información Laboral
+                                </h5>
+                            </div>
+                            <div className="card-body">
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label htmlFor="nombreTrabajo" className="form-label">
+                                            <i className="fas fa-building me-2"></i>
+                                            Trabajo *
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            className={`form-control modern-input ${errors.nombreTrabajo ? 'is-invalid' : ''}`}
+                                            id="nombreTrabajo"
+                                            name="nombreTrabajo"
+                                            value={formData.nombreTrabajo}
+                                            onChange={handleChange}
+                                            disabled={isSubmitting}
+                                            placeholder="Ingrese su trabajo actual"
+                                        />
+                                        {errors.nombreTrabajo && <div className="invalid-feedback">{errors.nombreTrabajo}</div>}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="ingresosMensuales" className="form-label">
+                                            <i className="fas fa-dollar-sign me-2"></i>
+                                            Ingresos Mensuales *
+                                        </label>
+                                        <input 
+                                            type="number" 
+                                            className={`form-control modern-input ${errors.ingresosMensuales ? 'is-invalid' : ''}`}
+                                            id="ingresosMensuales"
+                                            name="ingresosMensuales"
+                                            value={formData.ingresosMensuales}
+                                            onChange={handleChange}
+                                            min="100"
+                                            disabled={isSubmitting}
+                                            placeholder="0"
+                                        />
+                                        {errors.ingresosMensuales && <div className="invalid-feedback">{errors.ingresosMensuales}</div>}
+                                    </div>
+
+                                    <div className="form-group full-width">
+                                        <label htmlFor="direccion" className="form-label">
+                                            <i className="fas fa-map-marker-alt me-2"></i>
+                                            Dirección
+                                        </label>
+                                        <textarea 
+                                            className={`form-control modern-input ${errors.direccion ? 'is-invalid' : ''}`}
+                                            id="direccion"
+                                            name="direccion"
+                                            value={formData.direccion}
+                                            onChange={handleChange}
+                                            rows="3"
+                                            disabled={isSubmitting}
+                                            placeholder="Ingrese su dirección completa"
+                                        />
+                                        {errors.direccion && <div className="invalid-feedback">{errors.direccion}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Admin Settings Card */}
+                        {isAdmin && (
+                            <div className="profile-card">
+                                <div className="card-header">
+                                    <h5 className="card-title">
+                                        <i className="fas fa-cog me-2"></i>
+                                        Configuración de Cuenta
+                                    </h5>
+                                </div>
+                                <div className="card-body">
+                                    <div className="form-grid">
+                                        <div className="form-group">
+                                            <label htmlFor="rol" className="form-label">
+                                                <i className="fas fa-user-tag me-2"></i>
+                                                Rol
+                                            </label>
+                                            <select 
+                                                className="form-control modern-input"
+                                                id="rol"
+                                                name="rol"
+                                                value={formData.rol}
+                                                onChange={handleChange}
+                                                disabled={isSubmitting}
+                                            >
+                                                <option value="ADMIN">Administrador</option>
+                                                <option value="CLIENT">Cliente</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="estado" className="form-label">
+                                                <i className="fas fa-toggle-on me-2"></i>
+                                                Estado
+                                            </label>
+                                            <select 
+                                                className="form-control modern-input"
+                                                id="estado"
+                                                name="estado"
+                                                value={formData.estado}
+                                                onChange={handleChange}
+                                                disabled={isSubmitting}
+                                            >
+                                                <option value="ACTIVO">Activo</option>
+                                                <option value="INACTIVO">Inactivo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="form-actions">
+                        <button 
+                            type="button"
+                            onClick={onCancel}
+                            disabled={isSubmitting}
+                            className="cancel-btn-modern"
+                        >
+                            <i className="fas fa-times"></i>
+                            <span>Cancelar</span>
+                        </button>
+                        <button 
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="save-btn-modern"
+                        >
+                            <i className="fas fa-save"></i>
+                            <span>{isSubmitting ? 'Guardando...' : (user ? 'Actualizar' : 'Guardar')}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 };
 

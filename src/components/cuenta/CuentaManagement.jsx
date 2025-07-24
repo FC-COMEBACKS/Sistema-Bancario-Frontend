@@ -140,44 +140,44 @@ const CuentaManagement = () => {
         const getTitle = () => {
             switch (mode) {
                 case 'create':
-                    return 'Nueva Cuenta';
+                    return '➕ Nueva Cuenta Bancaria';
                 case 'edit':
-                    return 'Editar Cuenta';
+                    return '✏️ Editar Cuenta';
                 case 'view':
-                    return 'Detalles de Cuenta';
+                    return '👁️ Detalles de Cuenta';
                 default:
-                    return 'Gestión de Cuentas';
+                    return '🏦 Gestión de Cuentas';
             }
         };
 
         const getDescription = () => {
             switch (mode) {
                 case 'create':
-                    return 'Crear una nueva cuenta bancaria';
+                    return 'Crear una nueva cuenta bancaria en el sistema';
                 case 'edit':
-                    return 'Modificar información de la cuenta';
+                    return 'Modificar información y configuración de la cuenta';
                 case 'view':
-                    return 'Información detallada de la cuenta';
+                    return 'Información detallada y historial de la cuenta';
                 default:
-                    return 'Administra las cuentas bancarias del sistema';
+                    return 'Administra y supervisa todas las cuentas bancarias del sistema';
             }
         };
 
         return (
-            <div className="flex justify-between items-center mb-6">
+            <div className="management-header">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{getTitle()}</h1>
-                    <p className="text-gray-600">{getDescription()}</p>
+                    <h2>{getTitle()}</h2>
+                    <p className="management-description">{getDescription()}</p>
                 </div>
-                <div className="flex space-x-2">
+                <div style={{display: 'flex', gap: '1rem'}}>
                     {mode !== 'list' && (
-                        <Button variant="secondary" onClick={handleBack}>
-                            Volver
+                        <Button variant="outline" onClick={handleBack}>
+                            ⬅️ Volver al Listado
                         </Button>
                     )}
                     {mode === 'list' && (
                         <Button onClick={handleCreate} variant="primary">
-                            Nueva Cuenta
+                            ➕ Nueva Cuenta
                         </Button>
                     )}
                 </div>
@@ -188,11 +188,14 @@ const CuentaManagement = () => {
     const renderActionMessage = () => {
         if (!actionMessage.text) return null;
 
-        const bgColor = actionMessage.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700';
+        const className = actionMessage.type === 'success' ? 'notification success' : 'notification error';
 
         return (
-            <div className={`p-3 border rounded mb-4 ${bgColor}`}>
-                {actionMessage.text}
+            <div className={className}>
+                <div>
+                    <strong>{actionMessage.type === 'success' ? '¡Éxito!' : '¡Error!'}</strong>
+                    <p style={{margin: '0.5rem 0 0 0'}}>{actionMessage.text}</p>
+                </div>
             </div>
         );
     };
@@ -217,22 +220,22 @@ const CuentaManagement = () => {
 
         if (loading) {
             return (
-                <Card className="text-center p-8">
-                    <div className="text-gray-500">
-                        <p>Cargando...</p>
-                    </div>
-                </Card>
+                <div className="loading-state">
+                    <div className="loading-spinner">🔄</div>
+                    <h3>Cargando información...</h3>
+                    <p>Por favor espera mientras procesamos tu solicitud</p>
+                </div>
             );
         }
 
         if (error) {
             return (
-                <Card className="text-center p-8">
-                    <div className="text-red-500">
-                        <p className="text-lg font-semibold">Error</p>
-                        <p className="text-sm text-gray-600 mt-2">{error}</p>
+                <div className="notification error">
+                    <div>
+                        <strong>Error al cargar la información</strong>
+                        <p style={{margin: '0.5rem 0 0 0'}}>{error}</p>
                     </div>
-                </Card>
+                </div>
             );
         }
 

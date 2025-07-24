@@ -389,6 +389,17 @@ button:focus-visible {
 .mt-3 { margin-top: 1rem; }
 .mb-3 { margin-bottom: 1rem; }
 
+.divisa-page .page-header h1,
+.divisa-page .header-content h1 {
+  color: #222 !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  background: none !important;
+  -webkit-text-fill-color: #222 !important;
+  background-clip: initial !important;
+  -webkit-background-clip: initial !important;
+}
+
 @media (max-width: 768px) {
   body {
     display: block;

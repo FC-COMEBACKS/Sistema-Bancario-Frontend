@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import MovimientoFilter from './MovimientoFilter';
 import MovimientosTable from './MovimientosTable';
@@ -95,70 +94,78 @@ const MovimientosManagement = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Gestión de Movimientos</h1>
-                    <p className="text-gray-600">Administra las transacciones del sistema</p>
-                </div>
-                <div className="flex space-x-3">
-                    {isAdmin && (
-                        <>
-                            <Button
-                                variant="secondary"
-                                onClick={() => openModal('deposit')}
-                            >
-                                Nuevo Depósito
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                onClick={() => openModal('credito')}
-                            >
-                                Nuevo Crédito
-                            </Button>
-                            <Button
-                                variant="primary"
+        <div className="movimientos-management slide-up">
+            <div className="management-header">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1>🏦 Gestión de Movimientos</h1>
+                        <p>Administra las transacciones y operaciones del sistema bancario</p>
+                    </div>
+                    <div className="actions-container">
+                        {isAdmin && (
+                            <>
+                                <button
+                                    className="action-button secondary"
+                                    onClick={() => openModal('deposit')}
+                                >
+                                    💰 Nuevo Depósito
+                                </button>
+                                <button
+                                    className="action-button secondary"
+                                    onClick={() => openModal('credito')}
+                                >
+                                    💳 Nuevo Crédito
+                                </button>
+                                <button
+                                    className="action-button primary"
+                                    onClick={() => openModal('transfer')}
+                                >
+                                    🔄 Nueva Transferencia
+                                </button>
+                            </>
+                        )}
+                        {!isAdmin && (
+                            <button
+                                className="action-button primary"
                                 onClick={() => openModal('transfer')}
                             >
-                                Nueva Transferencia
-                            </Button>
-                        </>
-                    )}
-                    {!isAdmin && (
-                        <Button
-                            variant="primary"
-                            onClick={() => openModal('transfer')}
-                        >
-                            Nueva Transferencia
-                        </Button>
-                    )}
+                                🔄 Nueva Transferencia
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <MovimientoFilter
-                onFilterChange={handleFilterChange}
-                loading={loading}
-            />
+            <div className="filters-container">
+                <div className="filters-header">
+                    <h4>🔍 Filtros de Búsqueda</h4>
+                </div>
+                <MovimientoFilter
+                    onFilterChange={handleFilterChange}
+                    loading={loading}
+                />
+            </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            Movimientos
-                        </h2>
-                        <div className="text-sm text-gray-500">
-                            {pagination.total > 0 && `Mostrando ${pagination.total} movimientos`}
+            <div className="movimientos-container">
+                <div className="movimientos-header">
+                    <div className="flex justify-between items-center">
+                        <h2>📊 Historial de Movimientos</h2>
+                        <div className="movimientos-stats">
+                            {pagination.total > 0 && `📈 ${pagination.total} movimientos registrados`}
                         </div>
                     </div>
+                </div>
 
+                <div className="table-container">
                     {loading ? (
-                        <div className="flex justify-center items-center py-12">
-                            <span className="text-gray-500">Cargando movimientos...</span>
+                        <div className="loading-state">
+                            <div className="loading-spinner"></div>
+                            <span className="loading-text">Cargando movimientos...</span>
                         </div>
                     ) : error ? (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                            <h3 className="text-lg font-medium text-red-800 mb-2">Error al cargar movimientos</h3>
-                            <p className="text-red-600">{error}</p>
+                        <div className="error-state">
+                            <h3>⚠️ Error al cargar movimientos</h3>
+                            <p>{error}</p>
                         </div>
                     ) : (
                         <>
@@ -171,11 +178,13 @@ const MovimientosManagement = () => {
                                 ? (pagination && pagination.totalPages > 1)
                                 : (totalPages > 1)
                             ) && (
-                                <Pagination
-                                    currentPage={isAdmin ? pagination.currentPage : (filters.pagina || 1)}
-                                    totalPages={isAdmin ? pagination.totalPages : totalPages}
-                                    onPageChange={handlePageChange}
-                                />
+                                <div className="pagination-container">
+                                    <Pagination
+                                        currentPage={isAdmin ? pagination.currentPage : (filters.pagina || 1)}
+                                        totalPages={isAdmin ? pagination.totalPages : totalPages}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </div>
                             )}
                         </>
                     )}

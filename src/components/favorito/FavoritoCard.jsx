@@ -1,57 +1,65 @@
 import React from 'react';
-import Button from '../ui/Button';
-import Card from '../ui/Card';
 
 export const FavoritoCard = ({ favorito, onEdit, onDelete, onTransfer }) => {
     const { cuentaFavorita, alias, numeroCuenta, fechaCreacion } = favorito;
     
     return (
-        <Card className="favorito-card">
+        <div className="favorito-card fade-in">
             <div className="favorito-header">
                 <div className="favorito-info">
-                    <h3 className="favorito-alias">{alias}</h3>
-                    <p className="favorito-numero">Cuenta: {numeroCuenta}</p>
-                    {cuentaFavorita && (
-                        <p className="favorito-tipo">Tipo: {cuentaFavorita.tipo}</p>
-                    )}
+                    <h3>{alias}</h3>
+                    <p>Cuenta de confianza</p>
                 </div>
                 <div className="favorito-badge">
-                    ⭐ Favorito
+                    Favorito
                 </div>
             </div>
             
             <div className="favorito-details">
-                <p className="favorito-fecha">
-                    Agregado: {new Date(fechaCreacion).toLocaleDateString()}
-                </p>
+                <div className="detail-item">
+                    <span className="detail-label cuenta">Número de Cuenta</span>
+                    <span className="detail-value">{numeroCuenta}</span>
+                </div>
+                {cuentaFavorita && (
+                    <>
+                        <div className="detail-item">
+                            <span className="detail-label tipo">Tipo de Cuenta</span>
+                            <span className="detail-value">{cuentaFavorita.tipo}</span>
+                        </div>
+                        {cuentaFavorita.banco && (
+                            <div className="detail-item">
+                                <span className="detail-label banco">Banco</span>
+                                <span className="detail-value">{cuentaFavorita.banco}</span>
+                            </div>
+                        )}
+                    </>
+                )}
+                <div className="detail-item">
+                    <span className="detail-label">Fecha de Agregado</span>
+                    <span className="detail-value">{new Date(fechaCreacion).toLocaleDateString()}</span>
+                </div>
             </div>
             
             <div className="favorito-actions">
-                <Button
-                    variant="primary"
-                    size="sm"
+                <button
+                    className="btn-favorito primary"
                     onClick={() => onTransfer(favorito)}
-                    className="transfer-btn"
                 >
-                    💸 Transferir
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
+                    Transferir
+                </button>
+                <button
+                    className="btn-favorito secondary"
                     onClick={() => onEdit(favorito)}
-                    className="edit-btn"
                 >
-                    ✏️ Editar
-                </Button>
-                <Button
-                    variant="danger"
-                    size="sm"
+                    Editar
+                </button>
+                <button
+                    className="btn-favorito danger"
                     onClick={() => onDelete(favorito)}
-                    className="delete-btn"
                 >
-                    🗑️ Eliminar
-                </Button>
+                    Eliminar
+                </button>
             </div>
-        </Card>
+        </div>
     );
 };

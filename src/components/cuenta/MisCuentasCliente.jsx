@@ -4,6 +4,7 @@ import { useCuenta } from '../../shared/hooks';
 import { useFavorito } from '../../shared/hooks/useFavorito';
 import CuentaDetails from './CuentaDetails';
 import CuentaForm from './CuentaForm';
+import './MisCuentas.css';
 
 const MisCuentasCliente = () => {
     const userData = useMemo(() => {
@@ -43,10 +44,19 @@ const MisCuentasCliente = () => {
         const userId = userData.uid || userData._id;
         
         if (userId) {
-            fetchCuentaByUsuario(userId);
-            fetchCuentasAgregadas();
-        }
-    }, [userData, fetchCuentaByUsuario, fetchCuentasAgregadas]);
+                   fetchCuentaByUsuario(userId);
+                   fetchCuentasAgregadas();
+               } else {
+                   console.error('No se encontró ID de usuario en localStorage');
+                   setActionMessage({
+                       text: 'Error: No se pudo identificar el usuario',
+                       type: 'error'
+                   });
+               }
+           }, [userData, fetchCuentaByUsuario, fetchCuentasAgregadas]);
+       
+           useEffect(() => {
+           }, [cuentas, loading, error]);
 
     const handleViewDetails = async (cuenta) => {
         setSelectedCuentaId(cuenta.cid);
@@ -113,6 +123,7 @@ const MisCuentasCliente = () => {
             });
             setShowAddCuentaModal(false);
             setNumeroCuentaAgregar('');
+             await fetchCuentasAgregadas();
         } else {
             setActionMessage({
                 text: 'Error al agregar la cuenta',
@@ -165,10 +176,8 @@ const MisCuentasCliente = () => {
     const renderActionMessage = () => {
         if (!actionMessage.text) return null;
 
-        const bgColor = actionMessage.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700';
-
         return (
-            <div className={`p-3 border rounded mb-4 ${bgColor}`}>
+            <div className={`action-message ${actionMessage.type}`}>
                 {actionMessage.text}
             </div>
         );
@@ -177,193 +186,171 @@ const MisCuentasCliente = () => {
 
 
     return (
-        <div className="space-y-6">
-            {}
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Mis Cuentas</h1>
-                    <p className="text-gray-600">Administra tus cuentas bancarias</p>
+        <div className="mis-cuentas-page">
+            <div className="mis-cuentas-container">
+                <div className="page-header">
+                    <h1>Mis Cuentas</h1>
+                    <p>Administra todas tus cuentas bancarias desde un solo lugar</p>
                 </div>
-            </div>
 
-            {renderActionMessage()}
-
-            {}
-            {error && (
-                <Card className="text-center p-8">
-                    <div className="text-red-500">
-                        <p className="text-lg font-semibold">Error al cargar las cuentas</p>
-                        <p className="text-sm text-gray-600 mt-2">{error}</p>
+                {renderActionMessage()}
+                {error && (
+                    <div className="error-card">
+                        <h3 className="error-title">❌ Error al cargar las cuentas</h3>
+                        <p className="error-description">{error}</p>
                     </div>
-                </Card>
-            )}
+                )}
 
-            {loading && (
-                <Card className="text-center p-8">
-                    <div className="text-gray-500">
-                        <p>Cargando cuentas...</p>
+                {loading && (
+                    <div className="loading-card">
+                        <div className="loading-spinner"></div>
+                        <p className="loading-text">Cargando cuentas...</p>
                     </div>
-                </Card>
-            )}
+                )}
 
-            {!loading && !error && (
+                {!loading && !error && (
                 <>
                     {cuentas.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="cuentas-grid fade-in">
                             {cuentas.map(cuenta => (
-                                <Card key={cuenta.cid} className="p-6">
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-gray-900">
-                                                    Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}
-                                                </h3>
-                                                <p className="text-sm text-gray-600">
-                                                    {formatAccountNumber(cuenta.numeroCuenta)}
-                                                </p>
-                                            </div>
-                                            <div className={`px-2 py-1 rounded text-xs font-medium ${
-                                                cuenta.activa 
-                                                    ? 'bg-green-100 text-green-800' 
-                                                    : 'bg-red-100 text-red-800'
-                                            }`}>
+                                <div key={cuenta.cid} className="cuenta-card mi-cuenta">
+                                    <div className="cuenta-header">
+                                        <div className="cuenta-tipo">
+                                            <h3 className={`cuenta-titulo ${cuenta.tipo?.toLowerCase()}`}>
+                                                Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}
+                                            </h3>
+                                            <div className={`cuenta-status ${cuenta.activa ? 'activa' : 'inactiva'}`}>
                                                 {cuenta.activa ? 'Activa' : 'Inactiva'}
                                             </div>
                                         </div>
-                                        
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Saldo:</span>
-                                                <span className="font-semibold text-gray-900">
-                                                    Q {cuenta.saldo?.toLocaleString('es-GT', { minimumFractionDigits: 2 }) || '0.00'}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Fecha de creación:</span>
-                                                <span className="text-sm text-gray-900">
-                                                    {formatDate(cuenta.fechaCreacion)}
-                                                </span>
+                                        <p className="cuenta-numero">
+                                            {formatAccountNumber(cuenta.numeroCuenta)}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="cuenta-contenido">
+                                        <div className="cuenta-saldo">
+                                            <div className="saldo-label">Saldo Disponible</div>
+                                            <div className="saldo-valor">
+                                                Q {cuenta.saldo?.toLocaleString('es-GT', { minimumFractionDigits: 2 }) || '0.00'}
                                             </div>
                                         </div>
                                         
-                                        <div className="flex space-x-2">
-                                            <Button 
-                                                variant="secondary" 
-                                                size="sm" 
+                                        <div className="cuenta-info">
+                                            <div className="info-row">
+                                                <span className="info-label">Fecha de creación:</span>
+                                                <span className="info-value">{formatDate(cuenta.fechaCreacion)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="cuenta-acciones">
+                                            <button 
+                                                className="btn-cuenta secondary" 
                                                 onClick={() => handleViewDetails(cuenta)}
-                                                className="flex-1"
                                             >
-                                                Ver Detalles
-                                            </Button>
-                                            <Button 
-                                                variant="primary" 
-                                                size="sm" 
+                                                📋 Ver Detalles
+                                            </button>
+                                            <button 
+                                                className="btn-cuenta primary" 
                                                 onClick={() => handleEdit(cuenta)}
-                                                className="flex-1"
                                             >
-                                                Editar
-                                            </Button>
+                                                ✏️ Editar
+                                            </button>
                                         </div>
                                     </div>
-                                </Card>
+                                </div>
                             ))}
                         </div>
                     ) : (
-                        <Card className="text-center p-8">
-                            <div className="text-gray-500">
-                                <p className="text-lg font-semibold">No tienes cuentas registradas</p>
-                                <p className="text-sm text-gray-600 mt-2">
-                                    Contacta con un administrador para crear una cuenta bancaria
-                                </p>
-                            </div>
-                        </Card>
+                        <div className="empty-state fade-in">
+                            <div className="empty-icon">🏦</div>
+                            <h3 className="empty-title">No tienes cuentas registradas</h3>
+                            <p className="empty-description">
+                                Contacta con un administrador para crear una cuenta bancaria
+                            </p>
+                        </div>
                     )}
                 </>
             )}
 
-            {}
             {!loading && !error && (
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h2 className="text-xl font-bold text-gray-900">Cuentas Agregadas</h2>
-                            <p className="text-gray-600">Cuentas de otros usuarios que has agregado</p>
+                <div className="slide-up">
+                    <div className="cuentas-agregadas-header">
+                        <div className="section-info">
+                            <h2>Cuentas Agregadas</h2>
+                            <p>Cuentas de otros usuarios que has agregado</p>
                         </div>
-                        <Button 
-                            variant="primary" 
+                        <button 
+                            className="btn-agregar" 
                             onClick={() => setShowAddCuentaModal(true)}
                         >
-                            Agregar Cuenta
-                        </Button>
+                            ➕ Agregar Cuenta
+                        </button>
                     </div>
 
                     {cuentasAgregadas.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="cuentas-grid fade-in">
                             {cuentasAgregadas.map(cuenta => (
-                                <Card key={cuenta.cid} className="p-6 border-blue-200">
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-gray-900">
-                                                    Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}
-                                                </h3>
-                                                <p className="text-sm text-gray-600">
-                                                    {formatAccountNumber(cuenta.numeroCuenta)}
-                                                </p>
-                                                <p className="text-sm text-blue-600 font-medium">
-                                                    Propietario: {cuenta.usuario?.nombre || 'N/A'}
-                                                </p>
-                                            </div>
-                                            <div className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                <div key={cuenta.cid} className="cuenta-card cuenta-agregada">
+                                    <div className="cuenta-header">
+                                        <div className="cuenta-tipo">
+                                            <h3 className={`cuenta-titulo ${cuenta.tipo?.toLowerCase()}`}>
+                                                Cuenta de {cuenta.tipo === 'AHORROS' ? 'Ahorro' : 'Corriente'}
+                                            </h3>
+                                            <div className="cuenta-status agregada">
                                                 Agregada
                                             </div>
                                         </div>
+                                        <p className="cuenta-numero">
+                                            {formatAccountNumber(cuenta.numeroCuenta)}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="cuenta-contenido">
+                                        <div className="propietario-info">
+                                            Propietario: {cuenta.usuario?.nombre || 'N/A'}
+                                        </div>
                                         
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">Número de cuenta:</span>
-                                                <span className="text-sm text-gray-900 font-mono">
-                                                    {cuenta.numeroCuenta}
-                                                </span>
+                                        <div className="cuenta-info">
+                                            <div className="info-row">
+                                                <span className="info-label">Número de cuenta:</span>
+                                                <span className="info-value">{cuenta.numeroCuenta}</span>
                                             </div>
                                         </div>
 
-                                        <div className="pt-4 border-t border-gray-200">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
+                                        <div className="cuenta-acciones">
+                                            <button
+                                                className="btn-cuenta outline"
                                                 onClick={() => handleAgregarAFavoritos(cuenta)}
                                                 disabled={favoritosLoading}
-                                                className="w-full"
                                             >
                                                 ⭐ Agregar a Favoritos
-                                            </Button>
+                                            </button>
                                         </div>
                                     </div>
-                                </Card>
+                                </div>
                             ))}
                         </div>
                     ) : (
-                        <Card className="text-center p-8 border-dashed border-2 border-gray-300">
-                            <div className="text-gray-500">
-                                <p className="text-lg font-semibold">No tienes cuentas agregadas</p>
-                                <p className="text-sm text-gray-600 mt-2">
-                                    Agrega cuentas de otros usuarios para transferir dinero fácilmente
-                                </p>
-                                <Button 
-                                    variant="primary" 
-                                    onClick={() => setShowAddCuentaModal(true)}
-                                    className="mt-4"
-                                >
-                                    Agregar Primera Cuenta
-                                </Button>
-                            </div>
-                        </Card>
+                        <div className="empty-state fade-in">
+                            <div className="empty-icon">🔗</div>
+                            <h3 className="empty-title">No tienes cuentas agregadas</h3>
+                            <p className="empty-description">
+                                Agrega cuentas de otros usuarios para transferir dinero fácilmente
+                            </p>
+                            <button 
+                                className="btn-cuenta primary"
+                                onClick={() => setShowAddCuentaModal(true)}
+                            >
+                                Agregar Primera Cuenta
+                            </button>
+                        </div>
                     )}
                 </div>
             )}
 
-            {}
+            </div>
+
             <Modal
                 isOpen={showDetailsModal}
                 onClose={handleCloseDetailsModal}
@@ -379,7 +366,6 @@ const MisCuentasCliente = () => {
                 />
             </Modal>
 
-            {}
             <Modal
                 isOpen={showEditModal}
                 onClose={handleCloseEditModal}
@@ -399,7 +385,7 @@ const MisCuentasCliente = () => {
                 )}
             </Modal>
 
-            {}
+            {/* Modal para agregar cuenta */}
             <Modal
                 isOpen={showAddCuentaModal}
                 onClose={handleCloseAddCuentaModal}

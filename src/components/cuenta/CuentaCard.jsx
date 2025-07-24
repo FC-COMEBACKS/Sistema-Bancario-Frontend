@@ -7,84 +7,104 @@ const CuentaCard = ({ cuenta, onEdit, onDelete, onViewDetails }) => {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('es-GT', {
             style: 'currency',
-            currency: 'GTQ'
+            currency: 'GTQ',
+            minimumFractionDigits: 2
         }).format(amount);
     };
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-GT');
+        return new Date(dateString).toLocaleDateString('es-GT', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+    const getTipoIcon = (tipo) => {
+        switch(tipo) {
+            case 'AHORROS': return '🏦';
+            case 'CORRIENTE': return '💼';
+            case 'EMPRESARIAL': return '🏢';
+            default: return '💳';
+        }
+    };
+
+    const getTipoClass = (tipo) => {
+        return tipo ? tipo.toLowerCase() : 'corriente';
     };
 
     return (
-        <Card className="hover:shadow-md transition-shadow">
-            <div className="p-6 space-y-4">
-                <div className="flex justify-between items-start">
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{cuenta.numeroCuenta}</h3>
-                        <p className="text-sm text-gray-600">
-                            {cuenta.usuario?.nombre} ({cuenta.usuario?.username})
-                        </p>
+        <div className={`cuenta-card tipo-${getTipoClass(cuenta.tipo)}`}>
+            <div className="cuenta-header">
+                <div>
+                    <h3 className="cuenta-numero">
+                        {getTipoIcon(cuenta.tipo)} {cuenta.numeroCuenta}
+                    </h3>
+                    <p className="cuenta-propietario">
+                        👤 {cuenta.usuario?.nombre || 'Usuario'} 
+                        <span style={{opacity: 0.7}}>({cuenta.usuario?.username || 'N/A'})</span>
+                    </p>
+                </div>
+                <span className={`cuenta-tipo-badge ${getTipoClass(cuenta.tipo)}`}>
+                    {cuenta.tipo || 'CORRIENTE'}
+                </span>
+            </div>
+
+            <div className="cuenta-body">
+                <div className="cuenta-saldo">
+                    <div className="saldo-label">💰 Saldo Actual</div>
+                    <div className="saldo-amount">{formatCurrency(cuenta.saldo)}</div>
+                </div>
+
+                <div className="cuenta-stats">
+                    <div className="stat-item">
+                        <div className="stat-label">📈 Ingresos</div>
+                        <div className="stat-value ingreso">
+                            {formatCurrency(cuenta.ingresos || 0)}
+                        </div>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        cuenta.tipo === 'AHORROS' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-blue-100 text-blue-800'
-                    }`}>
-                        {cuenta.tipo}
+                    <div className="stat-item">
+                        <div className="stat-label">📉 Egresos</div>
+                        <div className="stat-value egreso">
+                            {formatCurrency(cuenta.egresos || 0)}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="cuenta-meta">
+                    <div className="fecha-creacion">
+                        📅 Creada: {formatDate(cuenta.fechaCreacion)}
+                    </div>
+                    <span className={`estado-badge ${cuenta.activa ? 'activa' : 'inactiva'}`}>
+                        {cuenta.activa ? '✅ Activa' : '❌ Inactiva'}
                     </span>
                 </div>
 
-                <div className="space-y-2">
-                    <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Saldo:</span>
-                        <span className="font-semibold text-green-600">{formatCurrency(cuenta.saldo)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Ingresos:</span>
-                        <span className="text-sm text-green-500">{formatCurrency(cuenta.ingresos || 0)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Egresos:</span>
-                        <span className="text-sm text-red-500">{formatCurrency(cuenta.egresos || 0)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Creada:</span>
-                        <span className="text-sm text-gray-500">{formatDate(cuenta.fechaCreacion)}</span>
-                    </div>
-                </div>
-
-                <div className="flex justify-between items-center pt-4 border-t">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        cuenta.activa 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                    }`}>
-                        {cuenta.activa ? 'Activa' : 'Inactiva'}
-                    </span>
-                    
-                    <div className="flex space-x-2">
-                        <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() => onViewDetails && onViewDetails(cuenta)}
-                            title="Ver detalles"
-                        >
-                            Ver
-                        </Button>
-                        <EditButton 
-                            onClick={() => onEdit && onEdit(cuenta)} 
-                            size="sm"
-                            title="Editar cuenta"
-                        />
-                        <DeleteButton 
-                            onClick={() => onDelete && onDelete(cuenta)} 
-                            size="sm"
-                            title="Eliminar cuenta"
-                        />
-                    </div>
+                <div className="cuenta-actions">
+                    <Button
+                        className="btn-view"
+                        onClick={() => onViewDetails && onViewDetails(cuenta)}
+                        title="Ver detalles completos"
+                    >
+                        👁️ Ver
+                    </Button>
+                    <Button
+                        className="btn-edit"
+                        onClick={() => onEdit && onEdit(cuenta)}
+                        title="Editar cuenta"
+                    >
+                        ✏️ Editar
+                    </Button>
+                    <Button
+                        className="btn-delete"
+                        onClick={() => onDelete && onDelete(cuenta)}
+                        title="Eliminar cuenta"
+                    >
+                        🗑️ Eliminar
+                    </Button>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };
 

@@ -15,21 +15,33 @@ const CuentaTable = ({ cuentas, onEdit, onDelete, onViewDetails, loading = false
         return new Date(dateString).toLocaleDateString('es-GT');
     };
 
+    const getTipoIcon = (tipo) => {
+        switch(tipo) {
+            case 'AHORROS': return '💰';
+            case 'CORRIENTE': return '💳';
+            case 'NOMINA': return '💼';
+            default: return '🏦';
+        }
+    };
+
     const columns = [
         {
             header: 'Número de Cuenta',
             field: 'numeroCuenta',
             render: (item) => (
-                <span className="font-mono text-sm">{item.numeroCuenta}</span>
+                <div className="account-number">
+                    <span className="account-icon">🏦</span>
+                    <span className="number">{item.numeroCuenta}</span>
+                </div>
             )
         },
         {
             header: 'Usuario',
             field: 'usuario',
             render: (item) => (
-                <div>
-                    <div className="font-medium">{item.usuario?.nombre || 'N/A'}</div>
-                    <div className="text-sm text-gray-600">{item.usuario?.username || 'N/A'}</div>
+                <div className="user-info">
+                    <div className="name">{item.usuario?.nombre || 'N/A'}</div>
+                    <div className="username">@{item.usuario?.username || 'N/A'}</div>
                 </div>
             )
         },
@@ -37,12 +49,9 @@ const CuentaTable = ({ cuentas, onEdit, onDelete, onViewDetails, loading = false
             header: 'Tipo',
             field: 'tipo',
             render: (item) => (
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    item.tipo === 'AHORROS' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-blue-100 text-blue-800'
-                }`}>
-                    {item.tipo}
+                <span className={`account-type ${item.tipo.toLowerCase()}`}>
+                    <span className="type-icon">{getTipoIcon(item.tipo)}</span>
+                    <span className="type-text">{item.tipo}</span>
                 </span>
             )
         },
@@ -50,73 +59,78 @@ const CuentaTable = ({ cuentas, onEdit, onDelete, onViewDetails, loading = false
             header: 'Saldo',
             field: 'saldo',
             render: (item) => (
-                <span className="font-semibold text-green-600">
-                    {formatCurrency(item.saldo)}
-                </span>
+                <div className="balance-info">
+                    <span className="amount primary">{formatCurrency(item.saldo)}</span>
+                </div>
             )
         },
         {
             header: 'Ingresos Totales',
             field: 'ingresos',
             render: (item) => (
-                <span className="text-sm text-green-500">
-                    {formatCurrency(item.ingresos || 0)}
-                </span>
+                <div className="income-info">
+                    <span className="amount positive">+{formatCurrency(item.ingresos || 0)}</span>
+                </div>
             )
         },
         {
             header: 'Egresos Totales',
             field: 'egresos',
             render: (item) => (
-                <span className="text-sm text-red-500">
-                    {formatCurrency(item.egresos || 0)}
-                </span>
+                <div className="expense-info">
+                    <span className="amount negative">-{formatCurrency(item.egresos || 0)}</span>
+                </div>
             )
         },
         {
             header: 'Fecha de Creación',
             field: 'fechaCreacion',
             render: (item) => (
-                <span className="text-sm text-gray-600">
-                    {formatDate(item.fechaCreacion)}
-                </span>
+                <div className="date-info">
+                    <span className="date-icon">📅</span>
+                    <span className="date-text">{formatDate(item.fechaCreacion)}</span>
+                </div>
             )
         },
         {
             header: 'Acciones',
             field: 'acciones',
             render: (item) => (
-                <div className="flex space-x-2">
-                    <Button
-                        size="sm"
-                        variant="secondary"
+                <div className="table-actions">
+                    <button
+                        className="action-btn view"
                         onClick={() => onViewDetails && onViewDetails(item)}
                         title="Ver detalles"
                     >
-                        Ver
-                    </Button>
-                    <EditButton 
-                        onClick={() => onEdit && onEdit(item)} 
-                        size="sm"
+                        👁️
+                    </button>
+                    <button
+                        className="action-btn edit"
+                        onClick={() => onEdit && onEdit(item)}
                         title="Editar cuenta"
-                    />
-                    <DeleteButton 
-                        onClick={() => onDelete && onDelete(item)} 
-                        size="sm"
+                    >
+                        ✏️
+                    </button>
+                    <button
+                        className="action-btn delete"
+                        onClick={() => onDelete && onDelete(item)}
                         title="Eliminar cuenta"
-                    />
+                    >
+                        🗑️
+                    </button>
                 </div>
             )
         }
     ];
 
     return (
-        <div className="bg-white rounded-lg shadow">
+        <div className="modern-table-wrapper">
             <Table
                 columns={columns}
                 data={cuentas}
                 isLoading={loading}
                 emptyMessage="No hay cuentas registradas"
+                className="modern-accounts-table"
             />
         </div>
     );

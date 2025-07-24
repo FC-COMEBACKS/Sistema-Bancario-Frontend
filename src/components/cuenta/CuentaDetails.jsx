@@ -20,132 +20,169 @@ const CuentaDetails = ({ cuenta, onEdit, onClose, loading = false }) => {
         });
     };
 
+    const getTipoIcon = (tipo) => {
+        switch(tipo) {
+            case 'AHORROS': return '💰';
+            case 'CORRIENTE': return '💳';
+            case 'NOMINA': return '💼';
+            default: return '🏦';
+        }
+    };
+
     return (
-        <Card>
-            <div className="space-y-6">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Detalles de la Cuenta</h2>
-                    <p className="text-gray-600">Información completa de la cuenta bancaria</p>
+        <div className="cuenta-details-container">
+            <div className="details-header">
+                <div className="header-icon">👁️</div>
+                <h2 className="details-title">Detalles de la Cuenta</h2>
+                <p className="details-subtitle">Información completa y actualizada de la cuenta bancaria</p>
+            </div>
+
+            <div className="details-grid">
+                <div className="detail-card primary">
+                    <div className="card-icon">🏦</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Número de Cuenta</h3>
+                        <p className="card-value account-number">{cuenta.numeroCuenta}</p>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Número de Cuenta</h3>
-                        <p className="text-lg font-mono bg-gray-50 px-3 py-2 rounded">{cuenta.numeroCuenta}</p>
-                    </div>
-
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Tipo de Cuenta</h3>
-                        <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${
-                            cuenta.tipo === 'AHORROS' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-blue-100 text-blue-800'
-                        }`}>
+                <div className="detail-card">
+                    <div className="card-icon">{getTipoIcon(cuenta.tipo)}</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Tipo de Cuenta</h3>
+                        <span className={`account-type-badge ${cuenta.tipo.toLowerCase()}`}>
                             {cuenta.tipo}
                         </span>
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Saldo Actual</h3>
-                        <p className="text-2xl font-bold text-green-600">{formatCurrency(cuenta.saldo)}</p>
+                <div className="detail-card balance">
+                    <div className="card-icon">💵</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Saldo Actual</h3>
+                        <p className="card-value balance-amount">{formatCurrency(cuenta.saldo)}</p>
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Estado</h3>
-                        <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${
-                            cuenta.activa 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                        }`}>
+                <div className="detail-card">
+                    <div className="card-icon">
+                        {cuenta.activa ? '✅' : '❌'}
+                    </div>
+                    <div className="card-content">
+                        <h3 className="card-title">Estado</h3>
+                        <span className={`status-badge ${cuenta.activa ? 'active' : 'inactive'}`}>
                             {cuenta.activa ? 'Activa' : 'Inactiva'}
                         </span>
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Total Ingresos</h3>
-                        <p className="text-lg font-semibold text-green-500">{formatCurrency(cuenta.ingresos || 0)}</p>
-                    </div>
-
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Total Egresos</h3>
-                        <p className="text-lg font-semibold text-red-500">{formatCurrency(cuenta.egresos || 0)}</p>
-                    </div>
-
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">Fecha de Creación</h3>
-                        <p className="text-gray-600">{formatDate(cuenta.fechaCreacion)}</p>
-                    </div>
-
-                    <div className="space-y-2">
-                        <h3 className="font-semibold text-gray-700">ID de Cuenta</h3>
-                        <p className="text-sm text-gray-500 font-mono">{cuenta.cid}</p>
+                <div className="detail-card positive">
+                    <div className="card-icon">📈</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Total Ingresos</h3>
+                        <p className="card-value positive-amount">+{formatCurrency(cuenta.ingresos || 0)}</p>
                     </div>
                 </div>
 
-                {cuenta.usuario && (
-                    <div className="border-t pt-4">
-                        <h3 className="font-semibold text-gray-700 mb-2">Información del Usuario</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p className="text-sm text-gray-600">Nombre</p>
-                                <p className="font-medium">{cuenta.usuario.nombre}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-600">Username</p>
-                                <p className="font-medium">{cuenta.usuario.username}</p>
-                            </div>
-                        </div>
+                <div className="detail-card negative">
+                    <div className="card-icon">📉</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Total Egresos</h3>
+                        <p className="card-value negative-amount">-{formatCurrency(cuenta.egresos || 0)}</p>
                     </div>
-                )}
+                </div>
 
-                {cuenta.ultimosMovimientos && cuenta.ultimosMovimientos.length > 0 && (
-                    <div className="border-t pt-4">
-                        <h3 className="font-semibold text-gray-700 mb-2">Últimos Movimientos</h3>
-                        <div className="space-y-2">
-                            {cuenta.ultimosMovimientos.map((movimiento, index) => (
-                                <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                                    <div>
-                                        <p className="font-medium">{movimiento.tipo}</p>
-                                        <p className="text-sm text-gray-600">{movimiento.descripcion}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className={`font-semibold ${
-                                            movimiento.tipo === 'INGRESO' ? 'text-green-600' : 'text-red-600'
-                                        }`}>
-                                            {formatCurrency(movimiento.monto)}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            {formatDate(movimiento.fechaHora)}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                <div className="detail-card">
+                    <div className="card-icon">📅</div>
+                    <div className="card-content">
+                        <h3 className="card-title">Fecha de Creación</h3>
+                        <p className="card-value date-value">{formatDate(cuenta.fechaCreacion)}</p>
                     </div>
-                )}
+                </div>
 
-                <div className="flex space-x-2">
-                    {onEdit && (
-                        <Button
-                            variant="primary"
-                            onClick={() => onEdit(cuenta)}
-                            disabled={loading}
-                        >
-                            Editar Cuenta
-                        </Button>
-                    )}
-                    
-                    {onClose && (
-                        <Button
-                            variant="secondary"
-                            onClick={onClose}
-                        >
-                            Cerrar
-                        </Button>
-                    )}
+                <div className="detail-card full-width">
+                    <div className="card-icon">🆔</div>
+                    <div className="card-content">
+                        <h3 className="card-title">ID de Cuenta</h3>
+                        <p className="card-value id-value">{cuenta.cid}</p>
+                    </div>
                 </div>
             </div>
-        </Card>
+
+            {cuenta.usuario && (
+                <div className="user-info-section">
+                    <div className="section-header">
+                        <div className="section-icon">👤</div>
+                        <h3 className="section-title">Información del Usuario</h3>
+                    </div>
+                    <div className="user-info-grid">
+                        <div className="user-info-item">
+                            <span className="info-label">👤 Nombre:</span>
+                            <span className="info-value">{cuenta.usuario.nombre}</span>
+                        </div>
+                        <div className="user-info-item">
+                            <span className="info-label">🏷️ Username:</span>
+                            <span className="info-value">@{cuenta.usuario.username}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {cuenta.ultimosMovimientos && cuenta.ultimosMovimientos.length > 0 && (
+                <div className="movements-section">
+                    <div className="section-header">
+                        <div className="section-icon">📊</div>
+                        <h3 className="section-title">Últimos Movimientos</h3>
+                    </div>
+                    <div className="movements-list">
+                        {cuenta.ultimosMovimientos.map((movimiento, index) => (
+                            <div key={index} className="movement-item">
+                                <div className="movement-info">
+                                    <div className="movement-type">
+                                        <span className="type-icon">
+                                            {movimiento.tipo === 'INGRESO' ? '📈' : '📉'}
+                                        </span>
+                                        <span className="type-text">{movimiento.tipo}</span>
+                                    </div>
+                                    <p className="movement-description">{movimiento.descripcion}</p>
+                                </div>
+                                <div className="movement-amount">
+                                    <p className={`amount ${movimiento.tipo === 'INGRESO' ? 'positive' : 'negative'}`}>
+                                        {movimiento.tipo === 'INGRESO' ? '+' : '-'}{formatCurrency(Math.abs(movimiento.monto))}
+                                    </p>
+                                    <p className="movement-date">
+                                        {formatDate(movimiento.fechaHora)}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="action-buttons">
+                {onEdit && (
+                    <button
+                        onClick={() => onEdit(cuenta)}
+                        disabled={loading}
+                        className="btn-primary"
+                    >
+                        <span className="btn-icon">✏️</span>
+                        Editar Cuenta
+                    </button>
+                )}
+                
+                {onClose && (
+                    <button
+                        onClick={onClose}
+                        className="btn-secondary"
+                    >
+                        <span className="btn-icon">↩️</span>
+                        Volver
+                    </button>
+                )}
+            </div>
+        </div>
     );
 };
 

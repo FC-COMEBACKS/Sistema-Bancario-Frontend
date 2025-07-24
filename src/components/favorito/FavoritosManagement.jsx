@@ -5,7 +5,7 @@ import { QuickTransferForm } from './QuickTransferForm';
 import { useFavorito } from '../../shared/hooks/useFavorito';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
-import './favoritos.css';
+import './Favoritos.css';
 
 export const FavoritosManagement = () => {
     const [showForm, setShowForm] = useState(false);
@@ -95,33 +95,33 @@ export const FavoritosManagement = () => {
 
     return (
         <div className="favoritos-management">
-            <Card className="favoritos-header">
-                <div className="header-content">
-                    <div className="header-info">
-                        <h2>Mis Favoritos</h2>
-                        <p>Gestiona tus cuentas favoritas para transferencias rápidas</p>
-                    </div>
-                    <Button
-                        variant="primary"
-                        onClick={handleAgregarFavorito}
-                        className="add-favorito-btn"
-                    >
-                        ⭐ Agregar Favorito
-                    </Button>
+            <div className="favoritos-header">
+                <h2>Mis Favoritos</h2>
+                <p>Gestiona tus cuentas favoritas para transferencias rápidas y seguras</p>
+            </div>
+
+            <div className="header-content">
+                <div className="header-info">
+                    <h3>Lista de Favoritos</h3>
+                    <p>Accede rápidamente a tus cuentas de confianza</p>
                 </div>
-            </Card>
+                <button
+                    onClick={handleAgregarFavorito}
+                    className="add-favorito-btn"
+                >
+                    Agregar Favorito
+                </button>
+            </div>
 
             {error && (
-                <div className="alert alert-error">
-                    <span className="alert-icon">❌</span>
+                <div className="alert error">
                     <span>{error}</span>
                     <button onClick={() => setError('')} className="alert-close">×</button>
                 </div>
             )}
 
             {success && (
-                <div className="alert alert-success">
-                    <span className="alert-icon">✅</span>
+                <div className="alert success">
                     <span>{success}</span>
                     <button onClick={() => setSuccess('')} className="alert-close">×</button>
                 </div>

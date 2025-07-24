@@ -28,15 +28,35 @@ const EstadisticasProductos = () => {
         }
     };
 
+    const formatNumber = (num) => {
+        return new Intl.NumberFormat('es-GT').format(num);
+    };
+
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('es-GT', {
+            style: 'currency',
+            currency: 'GTQ'
+        }).format(amount);
+    };
+
     if (loading) {
-        return <Loader />;
+        return (
+            <div className="estadisticas-loading">
+                <Loader />
+                <p>Cargando estadísticas...</p>
+            </div>
+        );
     }
 
     if (error) {
         return (
-            <Card>
-                <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
-                    Error: {error}
+            <Card className="estadisticas-error">
+                <div className="error-content">
+                    <h3>❌ Error al cargar estadísticas</h3>
+                    <p>{error}</p>
+                    <button onClick={fetchEstadisticas} className="btn-retry">
+                        🔄 Reintentar
+                    </button>
                 </div>
             </Card>
         );
@@ -44,7 +64,12 @@ const EstadisticasProductos = () => {
 
     return (
         <div className="estadisticas-productos">
-            <h3>Estadísticas de Productos y Servicios</h3>
+            <div className="estadisticas-header">
+                <h3>📊 Dashboard de Productos y Servicios</h3>
+                <button onClick={fetchEstadisticas} className="btn-refresh">
+                    🔄 Actualizar
+                </button>
+            </div>
             
             <div className="estadisticas-grid">
                 {/* Estadísticas Generales */}

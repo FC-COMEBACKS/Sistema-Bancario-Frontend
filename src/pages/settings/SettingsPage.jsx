@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button } from '../../components/ui';
-import './settingsPage.css';
+import './SettingsPage.css';
 
 const SettingsPage = () => {
     const navigate = useNavigate();
@@ -15,47 +14,55 @@ const SettingsPage = () => {
     };
 
     return (
-        <div className="settings-page">
+        <div className="settings-page fade-in">
             <div className="settings-header">
-                <h1>Configuración</h1>
-                <p>Administra tu cuenta y configuraciones</p>
+                <h1>Configuración del Sistema</h1>
+                <p>Administra tu cuenta, seguridad y preferencias personales desde un panel de control completo</p>
             </div>
 
             <div className="settings-content">
                 <div className="settings-grid">
-                    <Card>
+                    <div className="setting-card slide-up">
                         <div className="setting-item">
-                            <div className="setting-icon">
+                            <div className="setting-icon profile">
                                 <span>👤</span>
                             </div>
                             <div className="setting-info">
                                 <h3>Perfil de Usuario</h3>
-                                <p>Actualiza tu información personal, nombre, email y otros datos</p>
+                                <p>Actualiza tu información personal, nombre, email y otros datos importantes de tu perfil</p>
+                                <div className="setting-features">
+                                    <span className="feature-tag">Información Personal</span>
+                                    <span className="feature-tag">Contacto</span>
+                                </div>
                             </div>
                             <div className="setting-action">
-                                <Button onClick={handleEditProfile}>
-                                    Editar Perfil
-                                </Button>
+                                <button className="setting-button primary" onClick={handleEditProfile}>
+                                    ✏️ Editar Perfil
+                                </button>
                             </div>
                         </div>
-                    </Card>
+                    </div>
 
-                    <Card>
+                    <div className="setting-card slide-up">
                         <div className="setting-item">
-                            <div className="setting-icon">
+                            <div className="setting-icon security">
                                 <span>🔒</span>
                             </div>
                             <div className="setting-info">
                                 <h3>Seguridad</h3>
-                                <p>Cambia tu contraseña para mantener tu cuenta segura</p>
+                                <p>Cambia tu contraseña y configura medidas de seguridad para mantener tu cuenta protegida</p>
+                                <div className="setting-features">
+                                    <span className="feature-tag">Contraseña</span>
+                                    <span className="feature-tag">Autenticación</span>
+                                </div>
                             </div>
                             <div className="setting-action">
-                                <Button onClick={handleChangePassword}>
-                                    Cambiar Contraseña
-                                </Button>
+                                <button className="setting-button secondary" onClick={handleChangePassword}>
+                                    🔑 Cambiar Contraseña
+                                </button>
                             </div>
                         </div>
-                    </Card>
+                    </div>
                 </div>
             </div>
         </div>

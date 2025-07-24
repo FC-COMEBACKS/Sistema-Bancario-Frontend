@@ -4,7 +4,7 @@
 }
 
 .page-header {
-    background: white;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     border-bottom: 1px solid #e2e8f0;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -19,12 +19,12 @@
 .header-content h1 {
     font-size: 2rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #000 !important;
     margin-bottom: 0.5rem;
 }
 
 .page-description {
-    color: #6b7280;
+    color: #222 !important;
     font-size: 1rem;
     margin: 0;
 }
@@ -121,4 +121,10 @@
     .page-description {
         font-size: 0.875rem;
     }
+}
+.divisa-page .header-content h1 {
+  color: #222 !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  background: none !important;
 }

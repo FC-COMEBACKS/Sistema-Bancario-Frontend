@@ -102,29 +102,36 @@ const UserManagement = () => {
     };
 
     const renderHeader = () => {
-        let title = 'Administración de Usuarios';
-        let actions = (
-            <Button variant="primary" onClick={handleCreateUser}>
-                Nuevo Usuario
-            </Button>
-        );
-
-        if (mode === 'view') {
-            title = 'Detalles del Usuario';
-            actions = (
-                <div className="d-flex gap-2">
-                    <Button variant="secondary" onClick={handleBack}>
-                        Volver
-                    </Button>
-                    <Button variant="primary" onClick={() => handleEditUser(selectedUserId)}>
-                        Editar
-                    </Button>
-                    <Button variant="danger" onClick={handleDeleteUser}>
-                        Eliminar
-                    </Button>
+        if (mode === 'list') {
+            return (
+                <div className="users-header">
+                    <div></div>
+                    <button 
+                        className="nuevo-usuario-btn"
+                        onClick={handleCreateUser}
+                    >
+                        Nuevo Usuario
+                    </button>
                 </div>
             );
-        } else if (mode === 'edit') {
+        }
+
+        let title = 'Detalles del Usuario';
+        let actions = (
+            <div className="d-flex gap-2">
+                <Button variant="secondary" onClick={handleBack}>
+                    Volver
+                </Button>
+                <Button variant="primary" onClick={() => handleEditUser(selectedUserId)}>
+                    Editar
+                </Button>
+                <Button variant="danger" onClick={handleDeleteUser}>
+                    Eliminar
+                </Button>
+            </div>
+        );
+
+        if (mode === 'edit') {
             title = 'Editar Usuario';
             actions = (
                 <Button variant="secondary" onClick={() => setMode('view')}>

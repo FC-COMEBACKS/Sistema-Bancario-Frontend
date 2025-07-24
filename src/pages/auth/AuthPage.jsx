@@ -29,26 +29,29 @@ const AuthPage = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-tabs mb-6">
-          <button
-            className={`auth-tab ${activeForm === 'login' ? 'active' : ''}`}
-            onClick={() => switchForm('login')}
-          >
-            Iniciar Sesión
-          </button>
-          <button
-            className={`auth-tab ${activeForm === 'register' ? 'active' : ''}`}
-            onClick={() => switchForm('register')}
-          >
-            Registrarse
-          </button>
-        </div>
-        
-        <div className="auth-form-wrapper">
-          {activeForm === 'login' && <LoginForm />}
-          {activeForm === 'register' && <RegisterForm />}
-          {activeForm === 'forgotPassword' && <ForgotPasswordForm />}
+      {/* Contenido principal */}
+      <div className="auth-content">
+        <div className="auth-container">
+          <div className="auth-tabs">
+            <button
+              className={`auth-tab ${activeForm === 'login' ? 'active' : ''}`}
+              onClick={() => switchForm('login')}
+            >
+              Iniciar Sesión
+            </button>
+            <button
+              className={`auth-tab ${activeForm === 'register' ? 'active' : ''}`}
+              onClick={() => switchForm('register')}
+            >
+              Registrarse
+            </button>
+          </div>
+          
+          <div className="auth-form-wrapper">
+            {activeForm === 'login' && <LoginForm />}
+            {activeForm === 'register' && <RegisterForm />}
+            {activeForm === 'forgotPassword' && <ForgotPasswordForm />}
+          </div>
         </div>
       </div>
     </div>

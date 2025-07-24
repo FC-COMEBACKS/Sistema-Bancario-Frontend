@@ -213,33 +213,56 @@ export const useCuenta = () => {
         setLoading(true);
         setError(null);
         try {
+            
             const response = await getCuentaByUsuarioRequest(uid);
             
             if (response.error) {
                 const errorMsg = response.err.response?.data?.msg || 
                                 response.err.response?.data?.error || 
+                                response.err.message ||
                                 'Error al obtener las cuentas del usuario';
+                console.error('Error fetching cuentas:', errorMsg, response.err);
                 setError(errorMsg);
                 return false;
             }
-     
-            if (response.data && response.data.cuenta) {
-                const cuenta = response.data.cuenta;
-                if (Array.isArray(cuenta)) {
-                    setCuentas(cuenta);
-                    setSelectedCuenta(cuenta[0] || null);
-                } else {
-                    setCuentas([cuenta]);
-                    setSelectedCuenta(cuenta);
+
+            let cuentasArray = [];
+            
+            if (response.data) {
+                if (response.data.cuentas && Array.isArray(response.data.cuentas)) {
+                    cuentasArray = response.data.cuentas;
+                    console.log('Found cuentas array:', cuentasArray);
                 }
+                else if (response.data.cuenta) {
+                    const cuenta = response.data.cuenta;
+                    cuentasArray = Array.isArray(cuenta) ? cuenta : [cuenta];
+                }
+                else if (Array.isArray(response.data)) {
+                    cuentasArray = response.data;
+                }
+                else if (response.data.numeroCuenta || response.data.cid || response.data._id) {
+                    cuentasArray = [response.data];
+                }
+                else {
+                    console.log('No recognized cuenta format in response data');
+                }
+            }
+
+            console.log('Final cuentas array:', cuentasArray);
+            
+            if (cuentasArray.length > 0) {
+                setCuentas(cuentasArray);
+                setSelectedCuenta(cuentasArray[0]);
                 return true;
             } else {
                 setCuentas([]);
+                setSelectedCuenta(null);
                 setError('No se encontraron cuentas para este usuario');
                 return false;
             }
             
-        } catch {
+        } catch (error) {
+            console.error('Error al obtener cuentas del usuario:', error);
             setError('Error inesperado al obtener las cuentas del usuario');
             return false;
         } finally {

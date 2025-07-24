@@ -1,7 +1,6 @@
 import React from 'react';
 import { FavoritosManagement } from '../../components/favorito/FavoritosManagement';
-import '../../components/favorito/favoritos.css';
-import './FavoritoPage.css';
+import '../../components/favorito/Favoritos.css';
 
 const FavoritoPage = () => {
     return (

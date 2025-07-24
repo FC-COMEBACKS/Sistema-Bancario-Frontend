@@ -3,80 +3,136 @@ import React from 'react';
 const MovimientosTable = ({ movimientos, isAdmin, onRevertir }) => {
   if (!movimientos || movimientos.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-        <h3 className="text-lg font-medium text-gray-700 mb-2">No hay movimientos</h3>
-        <p className="text-gray-500">No se encontraron movimientos.</p>
+      <div className="empty-state">
+        <h3>📭 No hay movimientos</h3>
+        <p>No se encontraron movimientos que coincidan con los filtros aplicados.</p>
       </div>
     );
   }
 
+  const formatMonto = (monto, tipo) => {
+    const amount = `Q ${parseFloat(monto).toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
+    let className = 'movimiento-monto ';
+    
+    switch(tipo) {
+      case 'DEPOSITO':
+      case 'CREDITO':
+        className += 'positivo';
+        break;
+      case 'TRANSFERENCIA':
+      case 'COMPRA':
+        className += 'negativo';
+        break;
+      default:
+        className += 'neutro';
+    }
+    
+    return <span className={className}>{amount}</span>;
+  };
+
+  const getTipoComponent = (tipo) => {
+    const tipoClasses = {
+      'TRANSFERENCIA': 'transferencia',
+      'DEPOSITO': 'deposito',
+      'COMPRA': 'compra',
+      'CREDITO': 'credito',
+      'CANCELACION': 'cancelacion'
+    };
+
+    const tipoTextos = {
+      'TRANSFERENCIA': '🔄 Transferencia',
+      'DEPOSITO': '💰 Depósito',
+      'COMPRA': '🛒 Compra',
+      'CREDITO': '💳 Crédito',
+      'CANCELACION': '❌ Cancelación'
+    };
+
+    return (
+      <span className={`movimiento-tipo ${tipoClasses[tipo] || 'neutro'}`}>
+        {tipoTextos[tipo] || tipo}
+      </span>
+    );
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cuenta Origen</th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cuenta Destino</th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
-            {isAdmin && <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>}
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {movimientos.map((mov) => {
-            const cuentaOrigen = mov.cuentaOrigenDetalle || mov.cuentaOrigen;
-            const cuentaDestino = mov.cuentaDestinoDetalle || mov.cuentaDestino;
-            return (
-              <tr key={mov._id || mov.mid}>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{new Date(mov.fechaHora).toLocaleString()}</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{
-                  {
-                    TRANSFERENCIA: 'Transferencia',
-                    DEPOSITO: 'Depósito',
-                    COMPRA: 'Compra',
-                    CREDITO: 'Crédito',
-                    CANCELACION: 'Cancelación'
-                  }[mov.tipo] || mov.tipo
-                }</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Q {mov.monto}</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaOrigen?.numeroCuenta || '-'}</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">{cuentaDestino?.numeroCuenta || '-'}</td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
+    <table className="movimientos-table">
+      <thead>
+        <tr>
+          <th>📅 Fecha</th>
+          <th>🏷️ Tipo</th>
+          <th>💰 Monto</th>
+          <th>📤 Cuenta Origen</th>
+          <th>📥 Cuenta Destino</th>
+          <th>📝 Descripción</th>
+          {isAdmin && <th>⚙️ Acciones</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {movimientos.map((mov) => {
+          const cuentaOrigen = mov.cuentaOrigenDetalle || mov.cuentaOrigen;
+          const cuentaDestino = mov.cuentaDestinoDetalle || mov.cuentaDestino;
+          return (
+            <tr key={mov._id || mov.mid} className="fade-in">
+              <td>
+                {new Date(mov.fechaHora).toLocaleDateString('es-GT', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </td>
+              <td>{getTipoComponent(mov.tipo)}</td>
+              <td>{formatMonto(mov.monto, mov.tipo)}</td>
+              <td>
+                <div className="cuenta-info">
+                  <span className="cuenta-numero">{cuentaOrigen?.numeroCuenta || '-'}</span>
+                  {cuentaOrigen?.titular && (
+                    <span className="cuenta-titular">{cuentaOrigen.titular}</span>
+                  )}
+                </div>
+              </td>
+              <td>
+                <div className="cuenta-info">
+                  <span className="cuenta-numero">{cuentaDestino?.numeroCuenta || '-'}</span>
+                  {cuentaDestino?.titular && (
+                    <span className="cuenta-titular">{cuentaDestino.titular}</span>
+                  )}
+                </div>
+              </td>
+              <td>
+                <div className="description-cell">
                   {mov.tipo === 'CANCELACION' && mov.cuentaDestinoDetalle?.numeroCuenta
-                    ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
+                    ? `🔄 Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
                     : mov.tipo === 'DEPOSITO' && mov.reversed && mov.cuentaDestinoDetalle?.numeroCuenta
-                      ? `Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
+                      ? `🔄 Reversión del depósito a la cuenta: ${mov.cuentaDestinoDetalle.numeroCuenta}`
                       : mov.tipo === 'TRANSFERENCIA' && (cuentaOrigen?.titular || cuentaDestino?.titular)
-                        ? `Transferencia: ${cuentaOrigen?.titular || 'Usuario'} → ${cuentaDestino?.titular || 'Usuario'}`
+                        ? `💸 Transferencia: ${cuentaOrigen?.titular || 'Usuario'} → ${cuentaDestino?.titular || 'Usuario'}`
                         : mov.tipo === 'COMPRA' && mov.productoServicio?.nombre
-                          ? `Compra de: ${mov.productoServicio.nombre}`
+                          ? `🛒 Compra de: ${mov.productoServicio.nombre}`
                           : mov.descripcion || '-'}
+                </div>
+              </td>
+              {isAdmin && (
+                <td>
+                  {mov.tipo === 'DEPOSITO' && !mov.reversed && (
+                    <button
+                      className="action-btn revertir"
+                      onClick={() => onRevertir && onRevertir(mov)}
+                    >
+                      ↩️ Revertir
+                    </button>
+                  )}
+                  {((mov.tipo === 'DEPOSITO' && mov.reversed) || mov.tipo === 'CANCELACION') && (
+                    <span className="status-badge revertido">✅ Revertido</span>
+                  )}
                 </td>
-                {isAdmin && (
-                  <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
-                    {}
-                    {mov.tipo === 'DEPOSITO' && !mov.reversed && (
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
-                        onClick={() => onRevertir && onRevertir(mov)}
-                      >
-                        Revertir
-                      </button>
-                    )}
-                    {}
-                    {((mov.tipo === 'DEPOSITO' && mov.reversed) || mov.tipo === 'CANCELACION') && (
-                      <span className="text-xs text-green-600 font-semibold">Revertido</span>
-                    )}
-                  </td>
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+              )}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
 

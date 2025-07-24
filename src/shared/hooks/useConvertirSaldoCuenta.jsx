@@ -36,17 +36,28 @@ export function useConvertirSaldoCuenta() {
                 setError(errorMessage);
                 setCuentas([]);
             } else {
-                const cuentaData = response.data.cuenta;
+                let cuentasArray = [];
                 
-                if (cuentaData) {
-                    const cuentasArray = Array.isArray(cuentaData) ? cuentaData : [cuentaData];
-                    setCuentas(cuentasArray);
-                } else {
-                    setCuentas([]);
+                if (response.data) {
+                    if (response.data.cuentas && Array.isArray(response.data.cuentas)) {
+                        cuentasArray = response.data.cuentas;
+                    }
+                    else if (response.data.cuenta) {
+                        const cuenta = response.data.cuenta;
+                        cuentasArray = Array.isArray(cuenta) ? cuenta : [cuenta];
+                    }
+                    else if (Array.isArray(response.data)) {
+                        cuentasArray = response.data;
+                    }
+                    else if (response.data.numeroCuenta || response.data.cid || response.data._id) {
+                        cuentasArray = [response.data];
+                    }
                 }
+                
+                setCuentas(cuentasArray);
             }
         } catch (err) {
-            error('Error al cargar las cuentas:', err);
+            console.error('Error al cargar las cuentas:', err);
             setCuentas([]);
         } finally {
             setLoading(false);
@@ -69,7 +80,8 @@ export function useConvertirSaldoCuenta() {
                 setResultado(response.data);
             }
         } catch (err) {
-            error('Error en convertirSaldo:', err);
+            console.error('Error en convertirSaldo:', err);
+            setError('Error al convertir el saldo');
         } finally {
             setLoading(false);
         }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import Button from '../ui/Button.jsx';
 import Input from '../ui/Input.jsx';
 import { validateEmail } from '../../shared/validators';
 
@@ -44,64 +44,66 @@ const ForgotPasswordForm = () => {
 
   if (emailSent) {
     return (
-      <div className="text-center p-6 bg-green-50 rounded-lg">
-        <svg className="w-16 h-16 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-        <h2 className="mt-4 text-2xl font-bold text-gray-800">¡Correo enviado!</h2>
-        <p className="mt-2 text-gray-600">
-          Por favor, revisa tu correo electrónico para seguir las instrucciones y restablecer tu contraseña.
-        </p>
-        <Button 
-          variant="outline"
-          className="mt-6"
-          onClick={() => window.location.href = '/auth'}
-        >
-          Volver al inicio de sesión
-        </Button>
+      <div className="forgot-password-form-container">
+        <div className="text-center p-6 bg-green-50 rounded-lg">
+          <svg className="w-16 h-16 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <h2 className="mt-4 text-2xl font-bold text-gray-800">¡Correo enviado!</h2>
+          <p className="mt-2 text-gray-600">
+            Por favor, revisa tu correo electrónico para seguir las instrucciones y restablecer tu contraseña.
+          </p>
+          <button 
+            className="submit-button mt-6"
+            onClick={() => window.location.href = '/auth'}
+          >
+            Volver al inicio de sesión
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="forgot-password-form-container">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Recuperar Contraseña</h2>
-        <p className="text-gray-600">Ingresa tu correo electrónico para restablecer tu contraseña</p>
-      </div>
+      <div className="form-title">Recuperar Contraseña</div>
+      <div className="form-subtitle">Ingresa tu correo electrónico para restablecer tu contraseña</div>
       
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input
-          label="Correo Electrónico"
-          type="email"
-          placeholder="usuario@ejemplo.com"
-          {...register('email', {
-            required: 'El correo electrónico es requerido',
-            validate: validateEmailField
-          })}
-          error={errors.email?.message}
-        />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-group">
+          <Input
+            label="Correo Electrónico"
+            type="email"
+            placeholder="usuario@ejemplo.com"
+            {...register('email', {
+              required: 'El correo electrónico es requerido',
+              validate: validateEmailField
+            })}
+            error={errors.email?.message}
+          />
+        </div>
         
-        <div className="flex space-x-4">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={() => window.location.href = '/auth'}
-            className="flex-1"
-          >
+        <div className="forgot-password-buttons">
+          <Link to="/auth" className="cancel-link">
             Cancelar
-          </Button>
+          </Link>
           
-          <Button 
+          <button 
             type="submit" 
-            variant="primary" 
+            className="submit-button"
             disabled={!isValid || isSubmitting}
-            className="flex-1"
           >
             {isSubmitting ? 'Enviando...' : 'Enviar Correo'}
-          </Button>
+          </button>
         </div>
       </form>
+
+      <div className="login-redirect">
+        <span>¿Ya tienes una cuenta? </span>
+        <Link to="/auth" className="login-link">
+          Inicia sesión
+        </Link>
+      </div>
     </div>
   );
 };

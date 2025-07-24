@@ -13,7 +13,7 @@ export const FavoritoList = ({
     if (loading) {
         return (
             <div className="favoritos-loading">
-                <Loader />
+                <div className="loading-spinner"></div>
                 <p>Cargando favoritos...</p>
             </div>
         );
@@ -25,12 +25,15 @@ export const FavoritoList = ({
                 <div className="empty-icon">⭐</div>
                 <h3>Sin favoritos</h3>
                 <p>{emptyMessage}</p>
+                <button className="empty-action">
+                    Agregar tu primer favorito
+                </button>
             </div>
         );
     }
 
     return (
-        <div className="favoritos-list">
+        <div className="favoritos-list slide-up">
             <div className="favoritos-grid">
                 {favoritos.map((favorito) => (
                     <FavoritoCard
