@@ -1,0 +1,848 @@
+.admin-dashboard,
+.cliente-dashboard {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Dashboard Section Header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.see-all-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.see-all-button:hover {
+  background-color: #2563eb;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-stat-card h3 {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.stat-change {
+  font-size: 0.875rem;
+}
+
+.positive {
+  color: #10b981;
+}
+
+.negative {
+  color: #ef4444;
+}
+
+.dashboard-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-section h2 {
+  font-size: 1.25rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.activity-time {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.activity-description {
+  flex: 1;
+  color: #374151;
+}
+
+.stat-details {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.stat-detail {
+  margin-bottom: 0.25rem;
+}
+
+.no-data-message {
+  padding: 1rem;
+  color: #6b7280;
+  text-align: center;
+  background-color: #f9fafb;
+  border-radius: 6px;
+}
+
+.error-message {
+  padding: 1rem;
+  color: #ef4444;
+  text-align: center;
+  background-color: #fee2e2;
+  border-radius: 6px;
+}
+
+.see-more-link {
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.see-more-link a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.see-more-link a:hover {
+  text-decoration: underline;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.periodo-selector {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.estadisticas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.estadisticas-por-tipo,
+.estadisticas-por-fecha {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.estadisticas-por-tipo h3,
+.estadisticas-por-fecha h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: #4b5563;
+}
+
+.tipos-lista,
+.fechas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tipo-item,
+.fecha-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tipo-nombre,
+.fecha-nombre {
+  font-weight: 500;
+}
+
+.tipo-total,
+.fecha-total {
+  color: #6b7280;
+}
+
+.tipo-monto,
+.fecha-monto {
+  font-weight: 500;
+  color: #2563eb;
+}
+
+.productos-populares-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.producto-popular-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.producto-info {
+  flex: 1;
+}
+
+.producto-info h4 {
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+}
+
+.producto-descripcion {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.producto-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.stat-value {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.dashboard-action-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dashboard-action-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Cliente Dashboard específico */
+.welcome-banner {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.welcome-banner h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.balance-overview {
+  margin-bottom: 2rem;
+}
+
+.balance-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.balance-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.balance-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.balance-action {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.balance-action:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.dashboard-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-sections {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard-sections > div:first-child {
+    grid-column: span 2;
+  }
+}
+
+.account-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.account-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.account-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.account-card h4 {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.account-number {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+}
+
+.account-balance {
+  color: #059669;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.account-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.account-actions button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.account-actions button:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.account-actions button:first-child {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.account-actions button:first-child:hover {
+  background: #1d4ed8;
+}
+
+/* Mejoras en las transacciones */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e5e7eb;
+  transition: background-color 0.3s ease;
+}
+
+.transaction-item:hover {
+  background: #f9fafb;
+}
+
+.transaction-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.transaction-icon.deposito {
+  background: #059669;
+}
+
+.transaction-icon.retiro {
+  background: #dc2626;
+}
+
+.transaction-icon.transfer {
+  background: #7c3aed;
+}
+
+.transaction-details {
+  flex: 1;
+}
+
+.transaction-details h4 {
+  margin: 0 0 0.25rem 0;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.transaction-date {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.transaction-amount {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.transaction-amount.positive {
+  color: #059669;
+}
+
+.transaction-amount.negative {
+  color: #dc2626;
+}
+
+/* Estados de carga, error y sin datos */
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.no-accounts, .no-transactions {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.no-accounts p, .no-transactions p {
+  margin: 0.5rem 0;
+}
+
+.no-accounts p:first-child, .no-transactions p:first-child {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ===== ESTILOS MEJORADOS PARA BOTONES DEL CLIENTE ===== */
+/* Botones de acciones rápidas del cliente */
+.cliente-dashboard .btn-primary,
+.cliente-actions .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+}
+
+.cliente-dashboard .btn-primary::before,
+.cliente-actions .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.cliente-dashboard .btn-primary:hover,
+.cliente-actions .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+.cliente-dashboard .btn-primary:hover::before,
+.cliente-actions .btn-primary:hover::before {
+  left: 100%;
+}
+
+/* Botón de transferir */
+.transfer-button {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+}
+
+.transfer-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6) !important;
+}
+
+/* Botón de cambio de divisa */
+.currency-button {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4) !important;
+}
+
+.currency-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(250, 112, 154, 0.6) !important;
+}
+
+/* Botón de mi perfil */
+.profile-button {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  border: none !important;
+  color: #2d3748 !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4) !important;
+}
+
+.profile-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(168, 237, 234, 0.6) !important;
+  color: #1a202c !important;
+}
+
+/* Botones secundarios del cliente */
+.cliente-dashboard .btn-secondary,
+.cliente-actions .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(108, 117, 125, 0.3);
+}
+
+.cliente-dashboard .btn-secondary:hover,
+.cliente-actions .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.5);
+}
+
+/* Botones outline del cliente */
+.cliente-dashboard .btn-outline-primary,
+.cliente-actions .btn-outline-primary {
+  background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(86, 171, 47, 0.3);
+}
+
+.cliente-dashboard .btn-outline-primary:hover,
+.cliente-actions .btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 171, 47, 0.5);
+}
+
+/* Contenedor de acciones del cliente */
+.quick-actions,
+.cliente-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive design para botones del cliente */
+@media (max-width: 768px) {
+  .quick-actions,
+  .cliente-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cliente-dashboard .btn-primary,
+  .cliente-actions .btn-primary,
+  .transfer-button,
+  .currency-button,
+  .profile-button {
+    width: 100% !important;
+    max-width: 300px !important;
+    margin: 8px 0 !important;
+  }
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA BOTONES DEL CLIENTE HOME ===== */
+.quick-action-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 140px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+}
+
+.quick-action-button:nth-child(1) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+}
+
+.quick-action-button:nth-child(2) {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4) !important;
+}
+
+.quick-action-button:nth-child(3) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4) !important;
+  color: #2d3748 !important;
+}
+
+.quick-action-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.quick-action-button:hover {
+  transform: translateY(-3px) !important;
+}
+
+.quick-action-button:nth-child(1):hover {
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6) !important;
+}
+
+.quick-action-button:nth-child(2):hover {
+  box-shadow: 0 8px 25px rgba(250, 112, 154, 0.6) !important;
+}
+
+.quick-action-button:nth-child(3):hover {
+  box-shadow: 0 8px 25px rgba(168, 237, 234, 0.6) !important;
+  color: #1a202c !important;
+}
+
+.quick-action-button:hover::before {
+  left: 100% !important;
+}
+
+.action-icon {
+  font-size: 24px !important;
+  margin-bottom: 4px !important;
+}
+
+.balance-action {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  cursor: pointer !important;
+}
+
+.balance-action:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+}
+
+.see-all-button {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 3px 12px rgba(79, 172, 254, 0.3) !important;
+  cursor: pointer !important;
+}
+
+.see-all-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5) !important;
+}

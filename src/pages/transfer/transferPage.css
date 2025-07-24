@@ -1,0 +1,28 @@
+.transfer-page {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.transfer-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.transfer-header h1 {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+}
+
+.transfer-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.transfer-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}

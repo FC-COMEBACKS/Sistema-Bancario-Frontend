@@ -1,0 +1,1156 @@
+:root {
+  --cuenta-blue: #3B82F6;
+  --cuenta-blue-dark: #1D4ED8;
+  --cuenta-green: #10B981;
+  --cuenta-green-dark: #059669;
+  --cuenta-orange: #F59E0B;
+  --cuenta-orange-dark: #D97706;
+  --cuenta-red: #EF4444;
+  --cuenta-red-dark: #DC2626;
+  --cuenta-purple: #8B5CF6;
+  --cuenta-indigo: #6366F1;
+  
+  --light-bg: #F8FAFC;
+  --card-bg: #FFFFFF;
+  --border-color: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cuenta-page {
+  background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.page-header {
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-blue-dark) 100%);
+  color: white;
+  padding: 2rem;
+  margin-bottom: 0;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(45deg, #FFFFFF, #E2E8F0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 400;
+}
+
+.view-switcher {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
+}
+
+.view-switcher .btn {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: var(--transition);
+  flex: 1;
+  text-align: center;
+}
+
+.view-switcher .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.view-switcher .btn.active {
+  background: white;
+  color: var(--cuenta-blue);
+  border-color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.cuenta-management {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.management-header {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.management-header h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.management-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.cuentas-dashboard {
+  width: 100%;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.filters-section {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.filters-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--cuenta-blue), var(--cuenta-green), var(--cuenta-purple));
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters-header h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.filters-icon {
+  font-size: 1.5rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-field {
+  position: relative;
+}
+
+.filter-field label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+  background: white;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  outline: none;
+  border-color: var(--cuenta-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filters-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.cuenta-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  overflow: hidden;
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cuenta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--cuenta-blue), var(--cuenta-green));
+}
+
+.cuenta-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--cuenta-blue);
+}
+
+.cuenta-card.tipo-ahorros::before {
+  background: linear-gradient(90deg, var(--cuenta-green), var(--cuenta-green-dark));
+}
+
+.cuenta-card.tipo-corriente::before {
+  background: linear-gradient(90deg, var(--cuenta-blue), var(--cuenta-blue-dark));
+}
+
+.cuenta-card.tipo-empresarial::before {
+  background: linear-gradient(90deg, var(--cuenta-purple), var(--cuenta-indigo));
+}
+
+.cuenta-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+}
+
+.cuenta-numero {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-family: 'Monaco', 'Menlo', monospace;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.cuenta-propietario {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.cuenta-tipo-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.cuenta-tipo-badge.ahorros {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  color: #065F46;
+}
+
+.cuenta-tipo-badge.corriente {
+  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  color: #1E40AF;
+}
+
+.cuenta-tipo-badge.empresarial {
+  background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+  color: #5B21B6;
+}
+
+.cuenta-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cuenta-saldo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.saldo-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.saldo-amount {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--cuenta-green), var(--cuenta-green-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.cuenta-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: var(--light-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.stat-value.ingreso {
+  color: var(--cuenta-green);
+}
+
+.stat-value.egreso {
+  color: var(--cuenta-red);
+}
+
+.cuenta-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: var(--light-bg);
+  border-radius: var(--radius-sm);
+}
+
+.fecha-creacion {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.estado-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.estado-badge.activa {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  color: #065F46;
+}
+
+.estado-badge.inactiva {
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  color: #991B1B;
+}
+
+.cuenta-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.cuenta-actions .btn {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-align: center;
+  transition: var(--transition);
+  border: 2px solid transparent;
+}
+
+.btn-view {
+  background: linear-gradient(135deg, var(--cuenta-blue), var(--cuenta-blue-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-view:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, var(--cuenta-orange), var(--cuenta-orange-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, var(--cuenta-red), var(--cuenta-red-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* ===== GRID DE CUENTAS ===== */
+.cuentas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ===== TABLA DE CUENTAS ===== */
+.tabla-cuentas {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.tabla-cuentas table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-cuentas th {
+  background: linear-gradient(135deg, var(--cuenta-blue), var(--cuenta-blue-dark));
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tabla-cuentas td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.tabla-cuentas tr:hover {
+  background: var(--light-bg);
+}
+
+.tabla-cuentas tr:last-child td {
+  border-bottom: none;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.loading-state h3 {
+  margin: 1rem 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.loading-state p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 2px dashed var(--border-color);
+}
+
+.empty-state .empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.empty-state h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.6;
+}
+
+/* ===== NOTIFICACIONES ===== */
+.notification {
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+  border: 2px solid;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  color: #065F46;
+  border-color: #10B981;
+}
+
+.notification.success::before {
+  content: "✅";
+  font-size: 1.25rem;
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  color: #991B1B;
+  border-color: #EF4444;
+}
+
+.notification.error::before {
+  content: "❌";
+  font-size: 1.25rem;
+}
+
+.notification.warning {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: #92400E;
+  border-color: #F59E0B;
+}
+
+.notification.warning::before {
+  content: "⚠️";
+  font-size: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .cuentas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  .filters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cuenta-management {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    padding: 1.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .view-switcher {
+    flex-direction: column;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .dashboard-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .dashboard-actions .btn {
+    flex: 1;
+  }
+  
+  .cuentas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters-actions {
+    flex-direction: column;
+  }
+  
+  .cuenta-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .cuenta-actions {
+    flex-direction: column;
+  }
+  
+  .tabla-cuentas {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 1rem;
+  }
+  
+  .management-header,
+  .filters-section,
+  .dashboard-header {
+    padding: 1rem;
+  }
+  
+  .cuenta-card {
+    margin-bottom: 1rem;
+  }
+  
+  .saldo-amount {
+    font-size: 1.8rem;
+  }
+  
+  .cuenta-numero {
+    font-size: 1.2rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+}
+
+.cuenta-card {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.cuenta-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cuenta-card:hover::after {
+  opacity: 1;
+}
+
+/* Estilos mejorados para botones de cuentas */
+.cuenta-management .management-header .btn-primary,
+.page-header .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.cuenta-management .management-header .btn-primary:hover,
+.page-header .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.cuenta-card .btn-primary,
+.cuenta-details .btn-primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(79, 172, 254, 0.3);
+}
+
+.cuenta-card .btn-primary:hover,
+.cuenta-details .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5);
+}
+
+.cuenta-card .btn-outline-primary,
+.cuenta-details .btn-outline-primary {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border: none;
+  color: #2d3748;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(168, 237, 234, 0.3);
+}
+
+.cuenta-card .btn-outline-primary:hover,
+.cuenta-details .btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(168, 237, 234, 0.5);
+  color: #1a202c;
+}
+
+.cuenta-card .btn-outline-secondary,
+.cuenta-details .btn-outline-secondary {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+}
+
+.cuenta-card .btn-outline-secondary:hover,
+.cuenta-details .btn-outline-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(250, 112, 154, 0.5);
+}
+
+.cuenta-form .btn-primary,
+.deposito-form .btn-primary {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+}
+
+.cuenta-form .btn-primary:hover,
+.deposito-form .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.6);
+}
+
+.cuenta-form .btn-secondary,
+.deposito-form .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+}
+
+.cuenta-form .btn-secondary:hover,
+.deposito-form .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA FORMULARIO DE CUENTA ===== */
+.cuenta-form-modal {
+  max-width: 600px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  background: white !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  overflow: hidden !important;
+}
+
+.cuenta-form-modal .modal-header {
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-blue-dark) 100%) !important;
+  color: white !important;
+  padding: 2rem !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.cuenta-form-modal .modal-header::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 200px !important;
+  height: 200px !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%) !important;
+  transform: translate(30%, -30%) !important;
+}
+
+.cuenta-form-modal .modal-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 0.5rem 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cuenta-form-modal .modal-subtitle {
+  opacity: 0.9 !important;
+  margin: 0 !important;
+  font-size: 1rem !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cuenta-form-modal .modal-body {
+  padding: 2.5rem !important;
+}
+
+.cuenta-form-modal .form-group {
+  margin-bottom: 1.5rem !important;
+}
+
+.cuenta-form-modal .form-label {
+  color: var(--cuenta-blue) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.cuenta-form-modal .form-select {
+  width: 100% !important;
+  padding: 1rem !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 1rem !important;
+  font-size: 1rem !important;
+  background: white !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .form-select:focus {
+  outline: none !important;
+  border-color: var(--cuenta-blue) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+.cuenta-form-modal .form-select:disabled {
+  background: #f3f4f6 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+.cuenta-form-modal .checkbox-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 1rem !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  border: 2px solid rgba(59, 130, 246, 0.2) !important;
+  border-radius: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.cuenta-form-modal .checkbox-container:hover {
+  border-color: var(--cuenta-blue) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
+.cuenta-form-modal .form-checkbox {
+  width: 20px !important;
+  height: 20px !important;
+  accent-color: var(--cuenta-blue) !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .checkbox-label {
+  font-weight: 600 !important;
+  color: var(--cuenta-blue) !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .modal-footer {
+  padding: 2rem !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: #f8fafc !important;
+  display: flex !important;
+  gap: 1.5rem !important;
+  justify-content: flex-end !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button {
+  padding: 1rem 2rem !important;
+  border-radius: 1rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  min-width: 150px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.primary {
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-blue-dark) 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.primary:hover:not(:disabled) {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.secondary {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  color: var(--cuenta-blue) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.secondary:hover:not(:disabled) {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(148, 163, 184, 0.5) !important;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+}
+
+.cuenta-form-modal .alert {
+  padding: 1.25rem !important;
+  border-radius: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+}
+
+.cuenta-form-modal .alert.info {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border: 2px solid rgba(59, 130, 246, 0.3) !important;
+  color: #1e40af !important;
+}
+
+.cuenta-form-modal .alert-icon {
+  font-size: 1.25rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Responsividad para el formulario de cuenta */
+@media (max-width: 768px) {
+  .cuenta-form-modal {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .cuenta-form-modal .modal-header {
+    padding: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-body {
+    padding: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-footer {
+    padding: 1.5rem !important;
+    flex-direction: column !important;
+  }
+  
+  .cuenta-form-modal .modal-footer .form-button {
+    width: 100% !important;
+  }
+}

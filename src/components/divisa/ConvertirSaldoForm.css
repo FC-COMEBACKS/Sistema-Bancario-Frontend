@@ -1,0 +1,240 @@
+.convertir-saldo-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card-header h2 {
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.text-muted {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.cuenta-info {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f0f9ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.25rem;
+}
+
+.cuenta-info small {
+    color: #1e40af;
+    font-weight: 500;
+}
+
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.submit-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #047857, #065f46);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.conversion-result {
+    margin-top: 2rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border: 1px solid #059669;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.result-header {
+    background: #059669;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.result-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.result-content {
+    padding: 1.5rem;
+}
+
+.account-info {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.5rem;
+}
+
+.account-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-detail .label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.account-detail .value {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.875rem;
+}
+
+.amount-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.original-amount,
+.converted-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.original-amount .amount {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.converted-amount .amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.currency {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.equals {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #059669;
+}
+
+.exchange-rate {
+    text-align: center;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.exchange-rate small {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.disclaimer {
+    text-align: center;
+    padding: 0.75rem;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 0.5rem;
+}
+
+.disclaimer small {
+    color: #92400e;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+
+@media (max-width: 640px) {
+    .convertir-saldo-form {
+        padding: 1rem;
+    }
+    
+    .amount-display {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .account-detail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .original-amount .amount,
+    .converted-amount .amount {
+        font-size: 1.125rem;
+    }
+}
