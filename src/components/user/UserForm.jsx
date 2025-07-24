@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card } from '../ui';
+import '../../pages/user/userPage.css';
 
 const UserForm = ({ user, onSubmit, onCancel, isAdmin = false }) => {
     const [formData, setFormData] = useState({

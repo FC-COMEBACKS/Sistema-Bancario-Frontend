@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Pagination, Card } from '../ui';
+import { Table, Button, Pagination, Card, Modal } from '../ui';
 import DeleteButton from '../DeleteButton';
 import EditButton from '../EditButton';
 import { useUser } from '../../shared/hooks';
+import '../movimiento/MovimientoModals.css';
 
 const UserList = ({ onEdit }) => {
     const { users, pagination, loading, error, fetchUsers, deleteUser } = useUser();
@@ -14,9 +15,15 @@ const UserList = ({ onEdit }) => {
         page: 1,
         limit: 10
     });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
 
     const getUserId = (user) => {
         return user.uid || user._id || user.id;
+    };
+
+    const handleUpdateFilters = () => {
+        fetchUsers(filters);
     };
 
     const loadUsers = useCallback(() => {
@@ -51,26 +58,39 @@ const UserList = ({ onEdit }) => {
         });
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = (id) => {
         if (!id) {
             alert('ID de usuario no válido');
             return;
         }
         
-        if (window.confirm('¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
-            try {
-                const success = await deleteUser(id);
-                
-                if (success) {
-                    loadUsers();
-                    alert('Usuario eliminado correctamente');
-                } else {
-                    alert('Error al eliminar el usuario. Por favor, inténtelo de nuevo.');
-                }
-            } catch (error) {
-                alert('Error inesperado al eliminar el usuario: ' + (error.message || 'Error desconocido'));
+        setUserToDelete(id);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteUser = async () => {
+        if (!userToDelete) return;
+        
+        try {
+            const success = await deleteUser(userToDelete);
+            
+            if (success) {
+                loadUsers();
+                alert('Usuario eliminado correctamente');
+            } else {
+                alert('Error al eliminar el usuario. Por favor, inténtelo de nuevo.');
             }
+        } catch (error) {
+            alert('Error inesperado al eliminar el usuario: ' + (error.message || 'Error desconocido'));
         }
+        
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+    };
+
+    const cancelDeleteUser = () => {
+        setShowDeleteModal(false);
+        setUserToDelete(null);
     };
 
     if (error) {
@@ -142,9 +162,15 @@ const UserList = ({ onEdit }) => {
                 <div className="filters-actions">
                     <button 
                         className="actualizar-btn"
-                        onClick={loadUsers}
+                        onClick={handleUpdateFilters}
                     >
                         Actualizar
+                    </button>
+                    <button 
+                        className="limpiar-btn"
+                        onClick={handleClearFilters}
+                    >
+                        Limpiar Filtros
                     </button>
                 </div>
             </div>
@@ -229,6 +255,48 @@ const UserList = ({ onEdit }) => {
                     </div>
                 )}
             </div>
+            
+            {/* Modal de confirmación personalizado */}
+            <Modal 
+                isOpen={showDeleteModal} 
+                onClose={cancelDeleteUser}
+                title="Confirmar eliminación"
+                className="delete-user-modal"
+            >
+                <div className="delete-confirmation-modal">
+                    <div className="delete-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                            <path d="M3 6h18"></path>
+                            <path d="m19 6-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path>
+                            <path d="m8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div className="delete-content">
+                        <h3>¿Está seguro de que desea eliminar este usuario?</h3>
+                        <p>Esta acción no se puede deshacer. El usuario y todos sus datos asociados serán eliminados permanentemente.</p>
+                    </div>
+                    <div className="modal-footer">
+                        <Button
+                            type="button"
+                            className="form-button secondary"
+                            onClick={cancelDeleteUser}
+                            disabled={loading}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="button"
+                            className="form-button danger"
+                            onClick={confirmDeleteUser}
+                            disabled={loading}
+                        >
+                            {loading ? 'Eliminando...' : 'Eliminar Usuario'}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

@@ -3,11 +3,10 @@ import { Input, Button, Select, Modal } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import { validateTransferAmount } from '../../shared/validators';
 import { useCuenta } from '../../shared/hooks/useCuenta';
+import '../../pages/movimiento/movimientoPage.css';
+import './MovimientoModals.css';
 
-
-
-
-const TransferForm = ({ isOpen, onClose, onSuccess }) => {
+const TransferForm = ({ isOpen, onClose, onSuccess, isStandalone = false }) => {
     const [formData, setFormData] = useState({
         cuentaOrigen: '',
         cuentaDestino: '',
@@ -15,40 +14,64 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         descripcion: ''
     });
     const [errors, setErrors] = useState({});
+    const [tipoTransferencia, setTipoTransferencia] = useState('externa');
+    
     const {
         cuentas: cuentasUsuario,
         cuentasAgregadas,
-        fetchCuentaByUsuario,
-        fetchCuentasAgregadas
+        fetchCuentasDelUsuario,
+        fetchCuentasAgregadas,
+        loading: cuentasLoading
     } = useCuenta();
-    const cuentasAgregadasOptions = cuentasAgregadas.map(cuenta => ({
-        value: cuenta.numeroCuenta,
-        label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Sin nombre'}`
-    }));
+    const cuentasAgregadasOptions = cuentasAgregadas && Array.isArray(cuentasAgregadas) 
+        ? cuentasAgregadas.map(cuenta => ({
+            value: cuenta.numeroCuenta,
+            label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Sin nombre'}`
+        }))
+        : [];
 
-    const noCuentasPropias = cuentasUsuario.length === 0;
-    const noCuentasAgregadas = cuentasAgregadas.length === 0;
+    const noCuentasPropias = !cuentasUsuario || !Array.isArray(cuentasUsuario) || cuentasUsuario.length === 0;
+    const noCuentasAgregadas = !cuentasAgregadas || !Array.isArray(cuentasAgregadas) || cuentasAgregadas.length === 0;
 
     const { handleTransferencia, loading, error, success, clearMessages } = useMovimiento();
 
-    const cuentasOptions = cuentasUsuario.map(cuenta => ({
-        value: cuenta.numeroCuenta,
-        label: `${cuenta.numeroCuenta} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
-    }));
+    const cuentasOptions = cuentasUsuario && Array.isArray(cuentasUsuario) 
+        ? cuentasUsuario.map(cuenta => {
+            const numeroCuenta = cuenta.numeroCuenta || cuenta.numero || 'Sin número';
+            const saldo = cuenta.saldo || 0;
+            return {
+                value: numeroCuenta,
+                label: `${numeroCuenta} - Saldo: Q${saldo.toLocaleString()}`
+            };
+        })
+        : [];
+
+    const cuentasDestinoOptions = cuentasUsuario && Array.isArray(cuentasUsuario)
+        ? cuentasUsuario
+            .filter(cuenta => {
+                const numeroCuenta = cuenta.numeroCuenta || cuenta.numero;
+                return numeroCuenta !== formData.cuentaOrigen;
+            })
+            .map(cuenta => {
+                const numeroCuenta = cuenta.numeroCuenta || cuenta.numero || 'Sin número';
+                const tipo = cuenta.tipo || 'Cuenta';
+                const saldo = cuenta.saldo || 0;
+                return {
+                    value: numeroCuenta,
+                    label: `${tipo} - ${numeroCuenta} (Saldo: Q${saldo.toLocaleString()})`
+                };
+            })
+        : [];
+
+    const tieneMultiplesCuentas = cuentasUsuario && Array.isArray(cuentasUsuario) && cuentasUsuario.length >= 2;
 
    
     useEffect(() => {
         if (!isOpen) return;
-        const userDetails = localStorage.getItem('user');
-        if (!userDetails) return;
-        const user = JSON.parse(userDetails);
-        const userId = user.uid || user._id || user.id;
-        if (userId) {
-            fetchCuentaByUsuario(userId);
-            fetchCuentasAgregadas();
-        }
-    }, [isOpen, fetchCuentaByUsuario, fetchCuentasAgregadas]);
-
+        
+        fetchCuentasDelUsuario();
+        fetchCuentasAgregadas();
+    }, [isOpen, fetchCuentasDelUsuario, fetchCuentasAgregadas]);
 
     useEffect(() => {
         if (success) {
@@ -59,9 +82,6 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         }
     }, [success, onSuccess, onClose, clearMessages]);
 
-    useEffect(() => {
-    }, [cuentasUsuario, cuentasOptions]);
-
     const resetForm = () => {
         setFormData({
             cuentaOrigen: '',
@@ -70,6 +90,9 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
             descripcion: ''
         });
         setErrors({});
+        if (!tieneMultiplesCuentas) {
+            setTipoTransferencia('externa');
+        }
     };
 
     const handleInputChange = (name, value) => {
@@ -86,6 +109,20 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         }
     };
 
+    const handleTipoTransferenciaChange = (tipo) => {
+        setTipoTransferencia(tipo);
+        setFormData(prev => ({
+            ...prev,
+            cuentaDestino: ''
+        }));
+        if (errors.cuentaDestino) {
+            setErrors(prev => ({
+                ...prev,
+                cuentaDestino: null
+            }));
+        }
+    };
+
     const validateForm = () => {
         const newErrors = {};
 
@@ -94,15 +131,23 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
         }
 
         if (!formData.cuentaDestino) {
-            newErrors.cuentaDestino = 'Ingresa el número de cuenta destino';
+            if (tipoTransferencia === 'propia') {
+                newErrors.cuentaDestino = 'Selecciona una cuenta destino';
+            } else {
+                newErrors.cuentaDestino = 'Ingresa el número de cuenta destino';
+            }
         }
 
         if (formData.cuentaOrigen === formData.cuentaDestino) {
             newErrors.cuentaDestino = 'La cuenta destino debe ser diferente a la origen';
         }
 
-
-        const cuentaOrigen = cuentasUsuario.find(c => c.numeroCuenta === formData.cuentaOrigen);
+        const cuentaOrigen = cuentasUsuario && Array.isArray(cuentasUsuario) 
+            ? cuentasUsuario.find(c => {
+                const numeroCuenta = c.numeroCuenta || c.numero;
+                return numeroCuenta === formData.cuentaOrigen;
+            })
+            : null;
         const montoValidation = validateTransferAmount(
             formData.monto,
             cuentaOrigen?.saldo,
@@ -138,117 +183,214 @@ const TransferForm = ({ isOpen, onClose, onSuccess }) => {
 
 
 
-    return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Transferencia">
-            <form onSubmit={handleSubmit} className="space-y-4">
+    const formContent = (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Selector de tipo de transferencia */}
+            {tieneMultiplesCuentas && (
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cuenta de origen
+                        Tipo de transferencia
                     </label>
-                    <Select
-                        value={formData.cuentaOrigen}
-                        onChange={e => handleInputChange('cuentaOrigen', e.target.value)}
-                        options={[
-                            { value: '', label: 'Selecciona una cuenta' },
-                            ...cuentasOptions
-                        ]}
-                        error={errors.cuentaOrigen}
-                        disabled={loading || noCuentasPropias}
-                    />
-                    {noCuentasPropias && (
-                        <p className="text-xs text-red-500 mt-1">No tienes cuentas propias registradas. Solicita la creación de una cuenta.</p>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cuenta destino
-                    </label>
-                    {noCuentasAgregadas ? (
-                        <Input
-                            type="text"
-                            value={formData.cuentaDestino}
-                            onChange={e => handleInputChange('cuentaDestino', e.target.value)}
-                            placeholder="Ingresa el número de cuenta destino"
-                            error={errors.cuentaDestino}
-                            disabled={loading}
-                        />
-                    ) : (
-                        <Select
-                            value={formData.cuentaDestino}
-                            onChange={e => handleInputChange('cuentaDestino', e.target.value)}
-                            options={[
-                                { value: '', label: 'Selecciona una cuenta agregada' },
-                                ...cuentasAgregadasOptions
-                            ]}
-                            error={errors.cuentaDestino}
-                            disabled={loading}
-                        />
-                    )}
-                    {noCuentasAgregadas && (
-                        <p className="text-xs text-blue-500 mt-1">No tienes cuentas agregadas. Puedes ingresar el número manualmente o agregar una desde "Mis Cuentas".</p>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Monto
-                    </label>
-                    <Input
-                        type="number"
-                        value={formData.monto}
-                        onChange={(e) => handleInputChange('monto', e.target.value)}
-                        placeholder="0.00"
-                        step="0.01"
-                        min="0.01"
-                        max="2000"
-                        error={errors.monto}
-                        disabled={loading}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                        Límite máximo por transacción: Q2,000
-                    </p>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descripción (opcional)
-                    </label>
-                    <Input
-                        type="text"
-                        value={formData.descripcion}
-                        onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                        placeholder="Motivo de la transferencia"
-                        disabled={loading}
-                    />
-                </div>
-
-                {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <p className="text-red-600 text-sm">{error}</p>
+                    <div className="flex gap-2 mb-3" style={{ zIndex: 10, position: 'relative' }}>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleTipoTransferenciaChange('propia');
+                            }}
+                            style={{ 
+                                border: 'none',
+                                outline: 'none',
+                                userSelect: 'none',
+                                WebkitUserSelect: 'none',
+                                MozUserSelect: 'none',
+                                msUserSelect: 'none'
+                            }}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                                tipoTransferencia === 'propia'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                        >
+                            Entre mis cuentas
+                        </button>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleTipoTransferenciaChange('externa');
+                            }}
+                            style={{ 
+                                border: 'none',
+                                outline: 'none',
+                                userSelect: 'none',
+                                WebkitUserSelect: 'none',
+                                MozUserSelect: 'none',
+                                msUserSelect: 'none'
+                            }}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                                tipoTransferencia === 'externa'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                        >
+                            A cuenta externa
+                        </button>
                     </div>
-                )}
-
-                <div className="flex justify-end space-x-3 pt-4">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={handleClose}
-                        disabled={loading}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="submit"
-                        variant="primary"
-                        {...(loading ? { loading: true } : {})}
-                        disabled={loading || noCuentasPropias}
-                    >
-                        Transferir
-                    </Button>
                 </div>
-            </form>
-        </Modal>
+            )}
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cuenta de origen
+                </label>
+                <Select
+                    name="cuentaOrigen"
+                    value={formData.cuentaOrigen}
+                    onChange={e => handleInputChange('cuentaOrigen', e.target.value)}
+                    options={[
+                        { value: '', label: 'Selecciona una cuenta' },
+                        ...cuentasOptions
+                    ]}
+                    error={errors.cuentaOrigen}
+                    disabled={loading || cuentasLoading || noCuentasPropias}
+                />
+                {noCuentasPropias && (
+                    <p className="text-xs text-red-500 mt-1">No tienes cuentas propias registradas. Solicita la creación de una cuenta.</p>
+                )}
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cuenta destino
+                </label>
+                {tipoTransferencia === 'propia' ? (
+                    <Select
+                        name="cuentaDestino"
+                        value={formData.cuentaDestino}
+                        onChange={e => handleInputChange('cuentaDestino', e.target.value)}
+                        options={[
+                            { value: '', label: 'Selecciona cuenta destino' },
+                            ...cuentasDestinoOptions
+                        ]}
+                        error={errors.cuentaDestino}
+                        disabled={loading || cuentasLoading || cuentasDestinoOptions.length === 0}
+                    />
+                ) : (
+                    <>
+                        {noCuentasAgregadas ? (
+                            <Input
+                                type="text"
+                                value={formData.cuentaDestino}
+                                onChange={e => handleInputChange('cuentaDestino', e.target.value)}
+                                placeholder="Ingresa el número de cuenta destino"
+                                error={errors.cuentaDestino}
+                                disabled={loading || cuentasLoading}
+                            />
+                        ) : (
+                            <Select
+                                name="cuentaDestino"
+                                value={formData.cuentaDestino}
+                                onChange={e => handleInputChange('cuentaDestino', e.target.value)}
+                                options={[
+                                    { value: '', label: 'Selecciona una cuenta agregada' },
+                                    ...cuentasAgregadasOptions
+                                ]}
+                                error={errors.cuentaDestino}
+                                disabled={loading || cuentasLoading}
+                            />
+                        )}
+                        {noCuentasAgregadas && (
+                            <p className="text-xs text-blue-500 mt-1">No tienes cuentas agregadas. Puedes ingresar el número manualmente o agregar una desde "Mis Cuentas".</p>
+                        )}
+                    </>
+                )}
+                
+                {tipoTransferencia === 'propia' && cuentasDestinoOptions.length === 0 && (
+                    <p className="text-xs text-orange-500 mt-1">
+                        Necesitas al menos 2 cuentas para transferir entre cuentas propias.
+                    </p>
+                )}
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Monto
+                </label>
+                <Input
+                    type="number"
+                    value={formData.monto}
+                    onChange={(e) => handleInputChange('monto', e.target.value)}
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0.01"
+                    max="2000"
+                    error={errors.monto}
+                    disabled={loading}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                    Límite máximo por transacción: Q2,000
+                </p>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Descripción (opcional)
+                </label>
+                <Input
+                    type="text"
+                    value={formData.descripcion}
+                    onChange={(e) => handleInputChange('descripcion', e.target.value)}
+                    placeholder="Motivo de la transferencia"
+                    disabled={loading}
+                />
+            </div>
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <p className="text-red-600 text-sm">{error}</p>
+                </div>
+            )}
+
+            <div className="modal-footer">
+                <Button
+                    type="button"
+                    className="form-button secondary"
+                    onClick={handleClose}
+                    disabled={loading}
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    type="submit"
+                    className="form-button primary"
+                    {...(loading ? { loading: true } : {})}
+                    disabled={loading || noCuentasPropias}
+                >
+                    Transferir
+                </Button>
+            </div>
+        </form>
+    );
+
+    if (isStandalone) {
+        return (
+            <div className="transfer-form-standalone">
+                {formContent}
+            </div>
+        );
+    }
+
+    return (
+        <>
+            {isOpen && (
+                <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Transferencia">
+                    {formContent}
+                </Modal>
+            )}
+        </>
     );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button } from '../ui';
 import { EditButton, DeleteButton } from '../';
+import '../movimiento/MovimientoModals.css';
 
 const ProductoTable = ({ 
     productos = [], 
@@ -63,8 +64,7 @@ const ProductoTable = ({
                     <EditButton onClick={() => onEdit(producto)} />
                     <DeleteButton onClick={() => onDelete(producto.id || producto.pid)} />
                     <Button
-                        variant={producto.disponible ? "outline" : "primary"}
-                        size="sm"
+                        className={producto.disponible ? "btn-warning" : "btn-success"}
                         onClick={() => onToggleEstado(producto.id || producto.pid)}
                     >
                         {producto.disponible ? 'Desactivar' : 'Activar'}

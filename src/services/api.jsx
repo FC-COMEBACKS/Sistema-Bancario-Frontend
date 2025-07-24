@@ -237,6 +237,41 @@ export const getCuentas = async (filters = {}) => {
     }
 };
 
+export const getCuentasUsuarioAutenticado = async () => {
+    try {
+        
+        try {
+            const response = await api.get('/cuentas/mis-cuentas');
+            return response;
+        } catch (err1) {
+            console.log('Endpoint /cuentas/mis-cuentas no encontrado, probando alternativas...');
+            
+            try {
+                const response = await api.get('/mis-cuentas');
+                return response;
+            } catch (err2) {
+                console.log('Endpoint /mis-cuentas no encontrado, probando con /cuentas...');
+
+                try {
+                    const response = await api.get('/cuentas');
+                    return response;
+                } catch (err3) {
+                    console.error('Todos los endpoints de cuentas fallaron:', err1, err2, err3);
+                    return {
+                        error: true,
+                        err: err3
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
 export const crearCuenta = async (cuentaData) => {
     try {
         const response = await api.post('/cuentas/crearCuenta', cuentaData);
@@ -309,6 +344,34 @@ export const getCuentasByUsuario = async (uid) => {
     try {
         const response = await api.get(`/cuentas/cuentasUsuario/${uid}`);
         return response;
+    } catch (err) {
+        return {
+            error: true,
+            err
+        }
+    }
+};
+
+export const getMisCuentas = async () => {
+    try {
+        let response;
+    
+        try {
+            response = await api.get('/cuentas/mis-cuentas');
+            return response;
+        } catch (err1) {
+
+            try {
+                response = await api.get('/cuentas');
+                return response;
+            } catch (err2) {
+                console.error('Error en ambos endpoints de cuentas:', err1, err2);
+                return {
+                    error: true,
+                    err: err2
+                }
+            }
+        }
     } catch (err) {
         return {
             error: true,
@@ -419,9 +482,13 @@ export const realizarCredito = async (creditoData) => {
 };
 
 export const comprarProducto = async (compraData) => {
+    console.log('API - Enviando datos de compra:', compraData);
     try {
-        return await api.post('/movimientos/realizar-compra', compraData);
+        const response = await api.post('/movimientos/realizar-compra', compraData);
+        console.log('API - Respuesta exitosa:', response);
+        return response;
     } catch (err) {
+        console.error('API - Error en compra:', err.response?.data || err.message);
         return {
             error: true,
             err

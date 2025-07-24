@@ -5,6 +5,7 @@ import Input from '../ui/Input';
 import Modal from '../ui/Modal';
 import { useDivisasManagement } from '../../shared/hooks/useDivisasManagement';
 import './DivisasManagement.css';
+import '../movimiento/MovimientoModals.css';
 
 export const DivisasManagement = () => {
     const [showModal, setShowModal] = useState(false);

@@ -569,3 +569,280 @@
   font-weight: 600;
   color: #374151;
 }
+
+/* ===== ESTILOS MEJORADOS PARA BOTONES DEL CLIENTE ===== */
+/* Botones de acciones rápidas del cliente */
+.cliente-dashboard .btn-primary,
+.cliente-actions .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+}
+
+.cliente-dashboard .btn-primary::before,
+.cliente-actions .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.cliente-dashboard .btn-primary:hover,
+.cliente-actions .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+.cliente-dashboard .btn-primary:hover::before,
+.cliente-actions .btn-primary:hover::before {
+  left: 100%;
+}
+
+/* Botón de transferir */
+.transfer-button {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+}
+
+.transfer-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6) !important;
+}
+
+/* Botón de cambio de divisa */
+.currency-button {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4) !important;
+}
+
+.currency-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(250, 112, 154, 0.6) !important;
+}
+
+/* Botón de mi perfil */
+.profile-button {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  border: none !important;
+  color: #2d3748 !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4) !important;
+}
+
+.profile-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(168, 237, 234, 0.6) !important;
+  color: #1a202c !important;
+}
+
+/* Botones secundarios del cliente */
+.cliente-dashboard .btn-secondary,
+.cliente-actions .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(108, 117, 125, 0.3);
+}
+
+.cliente-dashboard .btn-secondary:hover,
+.cliente-actions .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.5);
+}
+
+/* Botones outline del cliente */
+.cliente-dashboard .btn-outline-primary,
+.cliente-actions .btn-outline-primary {
+  background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(86, 171, 47, 0.3);
+}
+
+.cliente-dashboard .btn-outline-primary:hover,
+.cliente-actions .btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 171, 47, 0.5);
+}
+
+/* Contenedor de acciones del cliente */
+.quick-actions,
+.cliente-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive design para botones del cliente */
+@media (max-width: 768px) {
+  .quick-actions,
+  .cliente-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cliente-dashboard .btn-primary,
+  .cliente-actions .btn-primary,
+  .transfer-button,
+  .currency-button,
+  .profile-button {
+    width: 100% !important;
+    max-width: 300px !important;
+    margin: 8px 0 !important;
+  }
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA BOTONES DEL CLIENTE HOME ===== */
+.quick-action-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 8px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 140px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+}
+
+.quick-action-button:nth-child(1) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+}
+
+.quick-action-button:nth-child(2) {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4) !important;
+}
+
+.quick-action-button:nth-child(3) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4) !important;
+  color: #2d3748 !important;
+}
+
+.quick-action-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.quick-action-button:hover {
+  transform: translateY(-3px) !important;
+}
+
+.quick-action-button:nth-child(1):hover {
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6) !important;
+}
+
+.quick-action-button:nth-child(2):hover {
+  box-shadow: 0 8px 25px rgba(250, 112, 154, 0.6) !important;
+}
+
+.quick-action-button:nth-child(3):hover {
+  box-shadow: 0 8px 25px rgba(168, 237, 234, 0.6) !important;
+  color: #1a202c !important;
+}
+
+.quick-action-button:hover::before {
+  left: 100% !important;
+}
+
+.action-icon {
+  font-size: 24px !important;
+  margin-bottom: 4px !important;
+}
+
+.balance-action {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  cursor: pointer !important;
+}
+
+.balance-action:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+}
+
+.see-all-button {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 3px 12px rgba(79, 172, 254, 0.3) !important;
+  cursor: pointer !important;
+}
+
+.see-all-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5) !important;
+}

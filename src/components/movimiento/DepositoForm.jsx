@@ -3,8 +3,10 @@ import { Input, Button, Select, Modal } from '../ui';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import { useCuenta } from '../../shared/hooks/useCuenta';
 import { validateAmount } from '../../shared/validators';
+import '../../pages/movimiento/movimientoPage.css';
+import './MovimientoModals.css';
 
-const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
+const DepositoForm = ({ isOpen, onClose, onSuccess, isStandalone = false }) => {
     const [formData, setFormData] = useState({
         cuentaDestinoId: '',
         monto: '',
@@ -13,16 +15,16 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
     const [errors, setErrors] = useState({});
 
     const { handleDeposito, loading, error, success, clearMessages } = useMovimiento();
-    const { fetchCuentas, cuentas } = useCuenta();
+    const { fetchCuentasDelUsuario, cuentas } = useCuenta();
     useEffect(() => {
         const loadCuentas = async () => {
-            await fetchCuentas();
+            await fetchCuentasDelUsuario();
         };
 
         if (isOpen) {
             loadCuentas();
         }
-    }, [isOpen, fetchCuentas]);
+    }, [isOpen, fetchCuentasDelUsuario]);
 
     useEffect(() => {
         if (success) {
@@ -103,79 +105,92 @@ const DepositoForm = ({ isOpen, onClose, onSuccess }) => {
         label: `${cuenta.numeroCuenta} - ${cuenta.usuario?.nombre || 'Usuario'} - Saldo: Q${cuenta.saldo?.toLocaleString() || '0'}`
     }));
 
+    const formContent = (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cuenta destino
+                </label>
+                <Select
+                    value={formData.cuentaDestinoId}
+                    onChange={e => handleInputChange('cuentaDestinoId', e.target.value)}
+                    options={[
+                        { value: '', label: 'Selecciona una cuenta' },
+                        ...cuentasOptions
+                    ]}
+                    error={errors.cuentaDestinoId}
+                    disabled={loading}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Monto
+                </label>
+                <Input
+                    type="number"
+                    value={formData.monto}
+                    onChange={(e) => handleInputChange('monto', e.target.value)}
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0.01"
+                    error={errors.monto}
+                    disabled={loading}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Descripción
+                </label>
+                <Input
+                    type="text"
+                    value={formData.descripcion}
+                    onChange={(e) => handleInputChange('descripcion', e.target.value)}
+                    placeholder="Motivo del depósito"
+                    error={errors.descripcion}
+                    disabled={loading}
+                />
+            </div>
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <p className="text-red-600 text-sm">{error}</p>
+                </div>
+            )}
+
+            <div className="modal-footer">
+                <Button
+                    type="button"
+                    className="form-button secondary"
+                    onClick={handleClose}
+                    disabled={loading}
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    type="submit"
+                    className="form-button primary"
+                    loading={loading}
+                >
+                    Depositar
+                </Button>
+            </div>
+        </form>
+    );
+
+    // Si es standalone (página independiente), renderizar sin modal
+    if (isStandalone) {
+        return (
+            <div className="transfer-form-standalone">
+                {formContent}
+            </div>
+        );
+    }
+
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Realizar Depósito">
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cuenta destino
-                    </label>
-                    <Select
-                        value={formData.cuentaDestinoId}
-                        onChange={e => handleInputChange('cuentaDestinoId', e.target.value)}
-                        options={[
-                            { value: '', label: 'Selecciona una cuenta' },
-                            ...cuentasOptions
-                        ]}
-                        error={errors.cuentaDestinoId}
-                        disabled={loading}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Monto
-                    </label>
-                    <Input
-                        type="number"
-                        value={formData.monto}
-                        onChange={(e) => handleInputChange('monto', e.target.value)}
-                        placeholder="0.00"
-                        step="0.01"
-                        min="0.01"
-                        error={errors.monto}
-                        disabled={loading}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descripción
-                    </label>
-                    <Input
-                        type="text"
-                        value={formData.descripcion}
-                        onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                        placeholder="Motivo del depósito"
-                        error={errors.descripcion}
-                        disabled={loading}
-                    />
-                </div>
-
-                {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <p className="text-red-600 text-sm">{error}</p>
-                    </div>
-                )}
-
-                <div className="flex justify-end space-x-3 pt-4">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={handleClose}
-                        disabled={loading}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        type="submit"
-                        variant="primary"
-                        loading={loading}
-                    >
-                        Depositar
-                    </Button>
-                </div>
-            </form>
+            {formContent}
         </Modal>
     );
 };

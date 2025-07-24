@@ -6,6 +6,7 @@ import { useFavorito } from '../../shared/hooks/useFavorito';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import './Favoritos.css';
+import '../movimiento/MovimientoModals.css';
 
 export const FavoritosManagement = () => {
     const [showForm, setShowForm] = useState(false);

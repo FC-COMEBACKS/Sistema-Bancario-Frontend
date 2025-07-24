@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMovimiento } from '../../shared/hooks/useMovimiento';
 import MovimientoFilter from './MovimientoFilter';
 import MovimientosTable from './MovimientosTable';
@@ -7,8 +8,10 @@ import TransferForm from './TransferForm';
 import DepositoForm from './DepositoForm';
 import RevertirForm from './RevertirForm';
 import CreditoForm from './CreditoForm';
+import '../../pages/movimiento/movimientoPage.css';
 
 const MovimientosManagement = () => {
+    const navigate = useNavigate();
     const [filters, setFilters] = useState({});
     const [refreshMovimientos, setRefreshMovimientos] = useState(0);
     const [modals, setModals] = useState({
@@ -106,19 +109,19 @@ const MovimientosManagement = () => {
                             <>
                                 <button
                                     className="action-button secondary"
-                                    onClick={() => openModal('deposit')}
+                                    onClick={() => navigate('/depositos')}
                                 >
                                     💰 Nuevo Depósito
                                 </button>
                                 <button
                                     className="action-button secondary"
-                                    onClick={() => openModal('credito')}
+                                    onClick={() => navigate('/creditos')}
                                 >
                                     💳 Nuevo Crédito
                                 </button>
                                 <button
                                     className="action-button primary"
-                                    onClick={() => openModal('transfer')}
+                                    onClick={() => navigate('/transferencias')}
                                 >
                                     🔄 Nueva Transferencia
                                 </button>
@@ -127,7 +130,7 @@ const MovimientosManagement = () => {
                         {!isAdmin && (
                             <button
                                 className="action-button primary"
-                                onClick={() => openModal('transfer')}
+                                onClick={() => navigate('/transferencias')}
                             >
                                 🔄 Nueva Transferencia
                             </button>

@@ -1,8 +1,38 @@
+.compra-form {
+    padding: 0;
+}
+
+.producto-info {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.producto-info h4 {
+    color: #1e40af;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.producto-info p {
+    color: #64748b;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
 .precio-info {
     display: flex;
     flex-direction: column;
     gap: 4px;
     margin-bottom: 16px;
+}
+
+.precio-info span {
+    font-weight: 600;
+    color: #1e40af;
 }
 
 .stock-info {
@@ -26,4 +56,18 @@
     border-radius: 4px;
     padding: 8px;
     margin-bottom: 16px;
+}
+
+.total-compra {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.total-compra strong {
+    color: #1e40af;
+    font-size: 1.125rem;
 }

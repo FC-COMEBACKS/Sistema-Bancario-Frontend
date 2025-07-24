@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { validatePassword } from '../../shared/validators';
 import { Button, Card } from '../ui';
 import { useUserDetails } from '../../shared/hooks';
+import '../../pages/settings/settingsPage.css';
 
-const ProfileForm = ({ onSuccess, initialData }) => {
+const ProfileForm = ({ onSuccess, initialData, initialTab = 'profile', showProfileTab = true }) => {
     const { loading, error, updateCurrentUser, changePassword } = useUserDetails();
-    const [activeTab, setActiveTab] = useState('profile');
+    const [activeTab, setActiveTab] = useState(initialTab);
     
     const [profileData, setProfileData] = useState({
         nombre: '',
@@ -156,30 +157,32 @@ const ProfileForm = ({ onSuccess, initialData }) => {
 
     return (
         <Card>
-            <ul className="nav nav-tabs mb-4">
-                <li className="nav-item">
-                    <button 
-                        className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`} 
-                        onClick={() => setActiveTab('profile')}
-                    >
-                        Información Personal
-                    </button>
-                </li>
-                <li className="nav-item">
-                    <button 
-                        className={`nav-link ${activeTab === 'password' ? 'active' : ''}`} 
-                        onClick={() => setActiveTab('password')}
-                    >
-                        Cambiar Contraseña
-                    </button>
-                </li>
-            </ul>
+            {showProfileTab && (
+                <ul className="nav nav-tabs mb-4">
+                    <li className="nav-item">
+                        <button 
+                            className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`} 
+                            onClick={() => setActiveTab('profile')}
+                        >
+                            Información Personal
+                        </button>
+                    </li>
+                    <li className="nav-item">
+                        <button 
+                            className={`nav-link ${activeTab === 'password' ? 'active' : ''}`} 
+                            onClick={() => setActiveTab('password')}
+                        >
+                            Cambiar Contraseña
+                        </button>
+                    </li>
+                </ul>
+            )}
             
             {error && <div className="alert alert-danger mb-3">{error}</div>}
             {formErrors.general && <div className="alert alert-danger mb-3">{formErrors.general}</div>}
             {successMessage && <div className="alert alert-success mb-3">{successMessage}</div>}
             
-            {activeTab === 'profile' && (
+            {showProfileTab && activeTab === 'profile' && (
                 <form onSubmit={handleProfileSubmit}>
                     <div className="row g-3">
                         <div className="col-md-6">
@@ -267,7 +270,7 @@ const ProfileForm = ({ onSuccess, initialData }) => {
                 </form>
             )}
             
-            {activeTab === 'password' && (
+            {(activeTab === 'password' || !showProfileTab) && (
                 <form onSubmit={handlePasswordSubmit}>
                     <div className="row g-3">
                         <div className="col-md-12">

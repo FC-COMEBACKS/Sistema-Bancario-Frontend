@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './ui/Button.jsx';
+import './movimiento/MovimientoModals.css';
 
 const EditButton = ({
   onClick,
@@ -10,11 +11,9 @@ const EditButton = ({
 }) => {
   return (
     <Button
-      variant="outline"
-      size="sm"
       onClick={onClick}
       disabled={disabled}
-      className={`text-blue-600 hover:bg-blue-50 ${className}`}
+      className={`btn-edit ${className}`}
       {...props}
     >
       <svg

@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './miPerfil.css';
 import { Loader } from '../../components';
 import { useUserDetails } from '../../shared/hooks';
+import ProfileForm from '../../components/user/ProfileForm';
 
 const UserMiPerfilPage = () => {
+  const location = useLocation();
+  const isChangePasswordPage = location.pathname === '/cambiar-password';
+  
   const { loading, error, userProfile, fetchCurrentUser } = useUserDetails();
   const userStored = localStorage.getItem('user');
   const user = userStored ? JSON.parse(userStored) : null;
@@ -60,11 +65,35 @@ const UserMiPerfilPage = () => {
     );
   }
   
+  if (isChangePasswordPage) {
+    return (
+      <div className="mi-perfil-page">
+        <header className="mi-perfil-header">
+          <h1>🔑 CAMBIAR CONTRASEÑA</h1>
+          <button className="btn-salir" onClick={() => window.history.back()}>Volver</button>
+        </header>
+        <div className="mi-perfil-container change-password-layout">
+          <main className="mi-perfil-main">
+            <div className="content-header">
+              <h2>🔐 Actualizar Contraseña</h2>
+              <p>Por tu seguridad, asegúrate de usar una contraseña fuerte</p>
+            </div>
+            <ProfileForm 
+              initialData={displayUserData}
+              initialTab="password"
+              showProfileTab={false}
+              onSuccess={() => window.history.back()}
+            />
+          </main>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="mi-perfil-page">
       <header className="mi-perfil-header">
         <h1>MI PERFIL</h1>
-        <button className="btn-salir">SALIR</button>
       </header>
 
       <div className="mi-perfil-container">

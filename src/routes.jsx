@@ -66,6 +66,14 @@ export const routes = [
     element: <ProtectedRoute element={<MovimientoPage />} />
   },
   {
+    path: '/depositos',
+    element: <ProtectedRoute element={<MovimientoPage />} />
+  },
+  {
+    path: '/creditos',
+    element: <ProtectedRoute element={<MovimientoPage />} />
+  },
+  {
     path: '/producto',
     element: <ProtectedRoute element={<ProductoServicioPage />} adminOnly={true} />
   },

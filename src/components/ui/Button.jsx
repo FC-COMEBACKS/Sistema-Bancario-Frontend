@@ -1,46 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../movimiento/MovimientoModals.css';
 
 const Button = ({
   children,
   onClick,
   type = 'button',
   variant = 'primary',
-  size = 'md',
   fullWidth = false,
   disabled = false,
   className = '',
   loading = false,
   ...props
 }) => {
-  const baseClasses = 'font-medium rounded transition duration-200 focus:outline-none flex items-center justify-center';
+  const hasSpecificClass = className && (
+    className.includes('btn-view') || 
+    className.includes('btn-edit') || 
+    className.includes('btn-delete') ||
+    className.includes('btn-primary') ||
+    className.includes('btn-secondary') ||
+    className.includes('btn-success') ||
+    className.includes('btn-warning') ||
+    className.includes('btn-danger') ||
+    className.includes('form-button')
+  );
   
-  const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    success: 'bg-green-600 text-white hover:bg-green-700',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
-    outline: 'bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-50'
-  };
+  let buttonClasses;
   
-  const sizeClasses = {
-    sm: 'py-1 px-3 text-sm',
-    md: 'py-2 px-4 text-base',
-    lg: 'py-3 px-6 text-lg'
-  };
-  
-  const widthClass = fullWidth ? 'w-full' : '';
-  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
-  
-  const buttonClasses = `
-    ${baseClasses}
-    ${variantClasses[variant] || variantClasses.primary}
-    ${sizeClasses[size] || sizeClasses.md}
-    ${widthClass}
-    ${disabledClass}
-    ${className}
-  `;
-
+  if (hasSpecificClass) {
+    buttonClasses = `
+      ${className}
+      ${fullWidth ? 'w-full' : ''}
+    `.trim().replace(/\s+/g, ' ');
+  } else {
+    const baseClasses = 'form-button';
+    
+    const variantClasses = {
+      primary: 'primary',
+      secondary: 'secondary',
+      success: 'primary',
+      danger: 'btn-danger',
+      outline: 'btn-secondary'
+    };
+    
+    buttonClasses = `
+      ${baseClasses}
+      ${variantClasses[variant] || variantClasses.primary}
+      ${fullWidth ? 'w-full' : ''}
+      ${className}
+    `.trim().replace(/\s+/g, ' ');
+  }
 
   const { loading: _loading, ...restProps } = props;
 

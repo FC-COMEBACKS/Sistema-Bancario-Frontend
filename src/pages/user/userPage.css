@@ -291,3 +291,199 @@
     gap: 0.25rem;
   }
 }
+
+/* ===== ESTILOS MEJORADOS PARA BOTONES DE USUARIOS ===== */
+.actualizar-btn,
+.user-page .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+}
+
+.actualizar-btn:hover,
+.user-page .btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+}
+
+.limpiar-btn,
+.user-page .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  margin-right: 10px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4) !important;
+}
+
+.limpiar-btn:hover,
+.user-page .btn-secondary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6) !important;
+}
+
+.nuevo-usuario-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+}
+
+.nuevo-usuario-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6) !important;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+}
+
+/* Botones de acciones en la tabla */
+.action-buttons .btn,
+.users-table .btn {
+  margin: 2px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+.action-buttons .btn-outline-primary,
+.users-table .btn-outline-primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.action-buttons .btn-outline-secondary,
+.users-table .btn-outline-secondary {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.action-buttons .btn-outline-danger,
+.users-table .btn-outline-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* Modal de confirmación de eliminación */
+.delete-confirmation-modal {
+  text-align: center;
+  padding: 1rem;
+}
+
+.delete-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-radius: 50%;
+  margin: 0 auto 1.5rem auto;
+  color: #dc2626;
+}
+
+.delete-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.delete-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+}
+
+.delete-content p {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 2rem 0;
+}
+
+.delete-confirmation-modal .modal-footer {
+  display: flex !important;
+  gap: 1rem;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 2rem;
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.delete-confirmation-modal .form-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.delete-confirmation-modal .form-button.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.delete-confirmation-modal .form-button.secondary:hover {
+  background: #e5e7eb;
+}
+
+.delete-confirmation-modal .form-button.danger {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+}
+
+.delete-confirmation-modal .form-button.danger:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.delete-confirmation-modal .form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ESTILOS FORZADOS PARA CENTRAR BOTONES DEL MODAL DE ELIMINACIÓN */
+.delete-user-modal .modal-footer,
+.delete-confirmation-modal .modal-footer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 2rem auto 0 auto !important;
+  padding: 1.5rem 0 0 0 !important;
+}
+
+.delete-user-modal .form-button,
+.delete-confirmation-modal .form-button {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin: 0 0.5rem !important;
+}

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Modal, Input, Button } from '../ui';
+import React, { useState, useEffect } from 'react';
+import { Modal, Input, Button, Select } from '../ui';
+import { useCuenta } from '../../shared/hooks/useCuenta';
 import './CompraForm.css';
+import '../movimiento/MovimientoModals.css';
 
 const CompraForm = ({ 
     isOpen, 
@@ -9,11 +11,54 @@ const CompraForm = ({
     producto = null,
     loading = false 
 }) => {
+    const { fetchCuentasDelUsuario, cuentas, loading: cuentasLoading } = useCuenta();
+    
     const [formData, setFormData] = useState({
-        cantidad: 1
+        cantidad: 1,
+        cuentaId: ''
     });
 
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        if (isOpen) {
+            console.log('CompraForm: Modal abierto, obteniendo cuentas...');
+            fetchCuentasDelUsuario();
+        }
+    }, [isOpen, fetchCuentasDelUsuario]);
+
+    useEffect(() => {
+        console.log('CompraForm: Cuentas actualizadas:', cuentas);
+        console.log('CompraForm: Tipo de cuentas:', typeof cuentas);
+        console.log('CompraForm: Array.isArray(cuentas):', Array.isArray(cuentas));
+        console.log('CompraForm: cuentas.length:', cuentas?.length);
+        
+        if (cuentas && Array.isArray(cuentas) && cuentas.length > 0) {
+            console.log('CompraForm: Primera cuenta completa:', JSON.stringify(cuentas[0], null, 2));
+            if (cuentas.length > 1) {
+                console.log('CompraForm: Segunda cuenta completa:', JSON.stringify(cuentas[1], null, 2));
+            }
+        }
+        
+        if (cuentas && Array.isArray(cuentas) && cuentas.length > 0 && !formData.cuentaId) {
+            const primercuenta = cuentas[0];
+            const cuentaId = primercuenta.cid || primercuenta._id || primercuenta.id;
+            if (cuentaId) {
+                setFormData(prev => ({ ...prev, cuentaId: cuentaId }));
+            }
+        }
+    }, [cuentas, formData.cuentaId]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setFormData({
+                cantidad: 1,
+                cuentaId: ''
+            });
+            setErrors({});
+        }
+    }, [isOpen]);
+
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -25,12 +70,27 @@ const CompraForm = ({
     const validateForm = () => {
         const newErrors = {};
 
+        if (!formData.cuentaId) {
+            newErrors.cuentaId = 'Selecciona una cuenta';
+        }
+
         if (!formData.cantidad || formData.cantidad <= 0) {
             newErrors.cantidad = 'La cantidad debe ser mayor a 0';
         }
 
         if (producto?.stock !== undefined && formData.cantidad > producto.stock) {
             newErrors.cantidad = `Stock insuficiente. Solo hay ${producto.stock} unidades disponibles`;
+        }
+
+        const cuentaSeleccionada = cuentas && Array.isArray(cuentas) ? 
+            cuentas.find(cuenta => {
+                const cuentaId = cuenta.cid || cuenta._id || cuenta.id;
+                return cuentaId === formData.cuentaId;
+            }) : null;
+        const total = calcularTotal();
+        
+        if (cuentaSeleccionada && total > cuentaSeleccionada.saldo) {
+            newErrors.saldo = `Saldo insuficiente. Saldo disponible: $${cuentaSeleccionada.saldo}`;
         }
 
         setErrors(newErrors);
@@ -44,12 +104,20 @@ const CompraForm = ({
             return;
         }
 
+        const cuentaSeleccionada = cuentas && Array.isArray(cuentas) ? 
+            cuentas.find(cuenta => {
+                const cuentaId = cuenta.cid || cuenta._id || cuenta.id;
+                return cuentaId === formData.cuentaId;
+            }) : null;
+
         const submitData = {
             productoId: producto.pid || producto._id,
             cantidad: parseInt(formData.cantidad),
+            numeroCuenta: cuentaSeleccionada?.numeroCuenta,
             descripcion: `Compra de: ${producto.nombre}`
         };
 
+        console.log('Formulario - Enviando datos:', submitData);
         onSubmit(submitData);
     };
 
@@ -80,6 +148,52 @@ const CompraForm = ({
                     </div>
 
                     <form onSubmit={handleSubmit}>
+                        <Select
+                            label="Cuenta para débito *"
+                            name="cuentaId"
+                            value={formData.cuentaId}
+                            onChange={(e) => handleChange('cuentaId', e.target.value)}
+                            options={
+                                cuentas && Array.isArray(cuentas) && cuentas.length > 0 
+                                    ? cuentas.map((cuenta, index) => {
+                                        console.log('CompraForm: Procesando cuenta para option:', cuenta);
+                                        
+                                        const cuentaId = cuenta.cid || cuenta._id || cuenta.id;
+                                        const numeroCuenta = cuenta.numeroCuenta || cuenta.numero || `Cuenta ${index + 1}`;
+                                        const tipo = cuenta.tipo || 'Cuenta';
+                                        const saldo = cuenta.saldo || 0;
+                                        
+                                        if (!cuentaId) {
+                                            console.error('CompraForm: No se encontró ID válido para cuenta:', cuenta);
+                                            return null;
+                                        }
+                                        
+                                        return {
+                                            value: cuentaId,
+                                            label: `${tipo} - ${numeroCuenta} (Saldo: Q${saldo})`
+                                        };
+                                    }).filter(Boolean)
+                                    : []
+                            }
+                            error={errors.cuentaId || errors.saldo}
+                            disabled={loading || cuentasLoading}
+                            placeholder={cuentasLoading ? 'Cargando cuentas...' : 'Selecciona una cuenta'}
+                        />
+
+                        {!cuentasLoading && (!cuentas || !Array.isArray(cuentas) || cuentas.length === 0) && (
+                            <div className="sin-cuentas" style={{
+                                background: '#fef2f2',
+                                border: '1px solid #fecaca',
+                                borderRadius: '4px',
+                                padding: '8px',
+                                marginBottom: '16px'
+                            }}>
+                                <p style={{color: '#dc2626', fontSize: '14px', margin: 0}}>
+                                    No tienes cuentas activas disponibles para realizar la compra.
+                                </p>
+                            </div>
+                        )}
+
                         <Input
                             label="Cantidad *"
                             type="number"
@@ -101,10 +215,10 @@ const CompraForm = ({
                             <strong>Total a pagar: Q{calcularTotal().toFixed(2)}</strong>
                         </div>
 
-                        <div className="form-actions">
+                        <div className="modal-footer">
                             <Button
                                 type="button"
-                                variant="outline"
+                                className="form-button secondary"
                                 onClick={onClose}
                                 disabled={loading}
                             >
@@ -112,11 +226,15 @@ const CompraForm = ({
                             </Button>
                             <Button
                                 type="submit"
-                                variant="primary"
-                                disabled={loading || (producto.stock !== undefined && producto.stock === 0)}
+                                className="form-button primary"
+                                disabled={loading || 
+                                         (producto.stock !== undefined && producto.stock === 0) || 
+                                         (!cuentas || !Array.isArray(cuentas) || cuentas.length === 0) || 
+                                         !formData.cuentaId}
                             >
                                 {loading ? 'Procesando...' : 
-                                 producto.stock === 0 ? 'Sin Stock' : 'Confirmar Compra'}
+                                 producto.stock === 0 ? 'Sin Stock' : 
+                                 (!cuentas || !Array.isArray(cuentas) || cuentas.length === 0) ? 'Sin Cuentas' : 'Confirmar Compra'}
                             </Button>
                         </div>
                     </form>

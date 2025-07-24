@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Button, Loader } from '../ui';
+import { Card, Button, Loader, Modal } from '../ui';
 import UserList from './UserList';
 import UserForm from './UserForm';
 import UserDetails from './UserDetails';
 import { useUser } from '../../shared/hooks';
+import '../../pages/user/userPage.css';
+import '../movimiento/MovimientoModals.css';
 
 const UserManagement = () => {
     const { loading, error, selectedUser, fetchUserById, updateUser, deleteUser, createNewUser } = useUser();
     const [mode, setMode] = useState('list'); 
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [actionMessage, setActionMessage] = useState({ text: '', type: '' });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const loadUserById = useCallback(() => {
         if (selectedUserId && (mode === 'view' || mode === 'edit')) {
@@ -87,18 +90,26 @@ const UserManagement = () => {
 
     const handleDeleteUser = async () => {
         if (!selectedUserId) return;
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteUser = async () => {
+        if (!selectedUserId) return;
         
-        if (window.confirm('¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
-            const success = await deleteUser(selectedUserId);
-            if (success) {
-                setActionMessage({
-                    text: 'Usuario eliminado exitosamente',
-                    type: 'success'
-                });
-                setMode('list');
-                setSelectedUserId(null);
-            }
+        const success = await deleteUser(selectedUserId);
+        if (success) {
+            setActionMessage({
+                text: 'Usuario eliminado exitosamente',
+                type: 'success'
+            });
+            setMode('list');
+            setSelectedUserId(null);
         }
+        setShowDeleteModal(false);
+    };
+
+    const cancelDeleteUser = () => {
+        setShowDeleteModal(false);
     };
 
     const renderHeader = () => {
@@ -217,6 +228,48 @@ const UserManagement = () => {
             {renderHeader()}
             {renderActionMessage()}
             {renderContent()}
+            
+            {/* Modal de confirmación personalizado */}
+            <Modal 
+                isOpen={showDeleteModal} 
+                onClose={cancelDeleteUser}
+                title="Confirmar eliminación"
+                className="delete-user-modal"
+            >
+                <div className="delete-confirmation-modal">
+                    <div className="delete-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                            <path d="M3 6h18"></path>
+                            <path d="m19 6-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path>
+                            <path d="m8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div className="delete-content">
+                        <h3>¿Está seguro de que desea eliminar este usuario?</h3>
+                        <p>Esta acción no se puede deshacer. El usuario y todos sus datos asociados serán eliminados permanentemente.</p>
+                    </div>
+                    <div className="modal-footer">
+                        <Button
+                            type="button"
+                            className="form-button secondary"
+                            onClick={cancelDeleteUser}
+                            disabled={loading}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="button"
+                            className="form-button danger"
+                            onClick={confirmDeleteUser}
+                            disabled={loading}
+                        >
+                            {loading ? 'Eliminando...' : 'Eliminar Usuario'}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

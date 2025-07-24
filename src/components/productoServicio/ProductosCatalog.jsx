@@ -7,6 +7,7 @@ import CompraForm from './CompraForm';
 import ProductoForm from './ProductoForm';
 import EstadisticasProductos from './EstadisticasProductos';
 import { Button, Pagination, Loader, Modal } from '../ui';
+import '../../pages/productoServicio/productoServicioPage.css';
 
 const ProductosCatalog = ({ isAdmin = false }) => {
     const {
@@ -90,8 +91,13 @@ const ProductosCatalog = ({ isAdmin = false }) => {
 
     const handleCompraSubmit = async (compraData) => {
         try {
+            console.log('Datos recibidos del formulario:', compraData);
+            console.log('Producto seleccionado:', selectedProducto);
+            
             clearMessages();
             const success = await handleComprarProducto(compraData);
+            
+            console.log('Resultado de la compra:', success);
             
             if (success) {
                 setShowCompraForm(false);
@@ -107,6 +113,7 @@ const ProductosCatalog = ({ isAdmin = false }) => {
             }
         } catch (error) {
             console.error('Error en la compra:', error);
+            alert(`Error: ${error.message || 'No se pudo completar la compra'}`);
         }
     };
 

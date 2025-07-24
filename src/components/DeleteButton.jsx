@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './ui/Button.jsx';
+import './movimiento/MovimientoModals.css';
 
 const DeleteButton = ({
   onClick,
@@ -10,11 +11,9 @@ const DeleteButton = ({
 }) => {
   return (
     <Button
-      variant="outline"
-      size="sm"
       onClick={onClick}
       disabled={disabled}
-      className={`text-red-600 hover:bg-red-50 ${className}`}
+      className={`btn-delete ${className}`}
       {...props}
     >
       <svg

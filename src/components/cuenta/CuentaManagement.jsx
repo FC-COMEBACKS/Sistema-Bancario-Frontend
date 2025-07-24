@@ -4,6 +4,8 @@ import { useCuenta, useUser } from '../../shared/hooks';
 import CuentasDashboard from './CuentasDashboard';
 import CuentaForm from './CuentaForm';
 import CuentaDetails from './CuentaDetails';
+import '../movimiento/MovimientoModals.css';
+import '../../pages/cuenta/cuentaPage.css';
 
 const CuentaManagement = () => {
     const {
@@ -281,6 +283,7 @@ const CuentaManagement = () => {
                 isOpen={showDeleteModal}
                 onClose={handleCloseDeleteModal}
                 title="Confirmar Eliminación"
+                className="confirmation-modal"
             >
                 <div className="space-y-4">
                     <p className="text-gray-700">

@@ -4,7 +4,9 @@
   --cuenta-green: #10B981;
   --cuenta-green-dark: #059669;
   --cuenta-orange: #F59E0B;
+  --cuenta-orange-dark: #D97706;
   --cuenta-red: #EF4444;
+  --cuenta-red-dark: #DC2626;
   --cuenta-purple: #8B5CF6;
   --cuenta-indigo: #6366F1;
   
@@ -255,6 +257,9 @@
   transition: var(--transition);
   overflow: hidden;
   position: relative;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .cuenta-card::before {
@@ -292,11 +297,13 @@
 }
 
 .cuenta-numero {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 0.5rem 0;
   font-family: 'Monaco', 'Menlo', monospace;
+  word-break: break-all;
+  line-height: 1.4;
 }
 
 .cuenta-propietario {
@@ -335,6 +342,9 @@
 
 .cuenta-body {
   padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .cuenta-saldo {
@@ -352,13 +362,15 @@
 }
 
 .saldo-amount {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
   background: linear-gradient(135deg, var(--cuenta-green), var(--cuenta-green-dark));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.2;
+  word-break: break-word;
 }
 
 .cuenta-stats {
@@ -386,9 +398,11 @@
 }
 
 .stat-value {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   font-family: 'Monaco', 'Menlo', monospace;
+  line-height: 1.3;
+  word-break: break-word;
 }
 
 .stat-value.ingreso {
@@ -451,33 +465,63 @@
 }
 
 .btn-view {
-  background: linear-gradient(135deg, var(--cuenta-blue), var(--cuenta-blue-dark));
-  color: white;
+  background: linear-gradient(135deg, var(--cuenta-blue), var(--cuenta-blue-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
 .btn-view:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
 }
 
 .btn-edit {
-  background: linear-gradient(135deg, var(--cuenta-orange), #D97706);
-  color: white;
+  background: linear-gradient(135deg, var(--cuenta-orange), var(--cuenta-orange-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
 .btn-edit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4) !important;
 }
 
 .btn-delete {
-  background: linear-gradient(135deg, var(--cuenta-red), #DC2626);
-  color: white;
+  background: linear-gradient(135deg, var(--cuenta-red), var(--cuenta-red-dark)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
 .btn-delete:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
 }
 
 /* ===== GRID DE CUENTAS ===== */
@@ -707,7 +751,15 @@
   }
   
   .saldo-amount {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+  }
+  
+  .cuenta-numero {
+    font-size: 1.2rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
   }
 }
 
@@ -770,4 +822,335 @@
 
 .cuenta-card:hover::after {
   opacity: 1;
+}
+
+/* Estilos mejorados para botones de cuentas */
+.cuenta-management .management-header .btn-primary,
+.page-header .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.cuenta-management .management-header .btn-primary:hover,
+.page-header .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.cuenta-card .btn-primary,
+.cuenta-details .btn-primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(79, 172, 254, 0.3);
+}
+
+.cuenta-card .btn-primary:hover,
+.cuenta-details .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5);
+}
+
+.cuenta-card .btn-outline-primary,
+.cuenta-details .btn-outline-primary {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border: none;
+  color: #2d3748;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(168, 237, 234, 0.3);
+}
+
+.cuenta-card .btn-outline-primary:hover,
+.cuenta-details .btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(168, 237, 234, 0.5);
+  color: #1a202c;
+}
+
+.cuenta-card .btn-outline-secondary,
+.cuenta-details .btn-outline-secondary {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+}
+
+.cuenta-card .btn-outline-secondary:hover,
+.cuenta-details .btn-outline-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(250, 112, 154, 0.5);
+}
+
+.cuenta-form .btn-primary,
+.deposito-form .btn-primary {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+}
+
+.cuenta-form .btn-primary:hover,
+.deposito-form .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.6);
+}
+
+.cuenta-form .btn-secondary,
+.deposito-form .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+}
+
+.cuenta-form .btn-secondary:hover,
+.deposito-form .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA FORMULARIO DE CUENTA ===== */
+.cuenta-form-modal {
+  max-width: 600px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  background: white !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  overflow: hidden !important;
+}
+
+.cuenta-form-modal .modal-header {
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-blue-dark) 100%) !important;
+  color: white !important;
+  padding: 2rem !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.cuenta-form-modal .modal-header::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 200px !important;
+  height: 200px !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%) !important;
+  transform: translate(30%, -30%) !important;
+}
+
+.cuenta-form-modal .modal-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 0.5rem 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cuenta-form-modal .modal-subtitle {
+  opacity: 0.9 !important;
+  margin: 0 !important;
+  font-size: 1rem !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cuenta-form-modal .modal-body {
+  padding: 2.5rem !important;
+}
+
+.cuenta-form-modal .form-group {
+  margin-bottom: 1.5rem !important;
+}
+
+.cuenta-form-modal .form-label {
+  color: var(--cuenta-blue) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.cuenta-form-modal .form-select {
+  width: 100% !important;
+  padding: 1rem !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 1rem !important;
+  font-size: 1rem !important;
+  background: white !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .form-select:focus {
+  outline: none !important;
+  border-color: var(--cuenta-blue) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+.cuenta-form-modal .form-select:disabled {
+  background: #f3f4f6 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+.cuenta-form-modal .checkbox-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 1rem !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  border: 2px solid rgba(59, 130, 246, 0.2) !important;
+  border-radius: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.cuenta-form-modal .checkbox-container:hover {
+  border-color: var(--cuenta-blue) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
+.cuenta-form-modal .form-checkbox {
+  width: 20px !important;
+  height: 20px !important;
+  accent-color: var(--cuenta-blue) !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .checkbox-label {
+  font-weight: 600 !important;
+  color: var(--cuenta-blue) !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+}
+
+.cuenta-form-modal .modal-footer {
+  padding: 2rem !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: #f8fafc !important;
+  display: flex !important;
+  gap: 1.5rem !important;
+  justify-content: flex-end !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button {
+  padding: 1rem 2rem !important;
+  border-radius: 1rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  min-width: 150px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.primary {
+  background: linear-gradient(135deg, var(--cuenta-blue) 0%, var(--cuenta-blue-dark) 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.primary:hover:not(:disabled) {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.secondary {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  color: var(--cuenta-blue) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3) !important;
+}
+
+.cuenta-form-modal .modal-footer .form-button.secondary:hover:not(:disabled) {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(148, 163, 184, 0.5) !important;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+}
+
+.cuenta-form-modal .alert {
+  padding: 1.25rem !important;
+  border-radius: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+}
+
+.cuenta-form-modal .alert.info {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border: 2px solid rgba(59, 130, 246, 0.3) !important;
+  color: #1e40af !important;
+}
+
+.cuenta-form-modal .alert-icon {
+  font-size: 1.25rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Responsividad para el formulario de cuenta */
+@media (max-width: 768px) {
+  .cuenta-form-modal {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .cuenta-form-modal .modal-header {
+    padding: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-body {
+    padding: 1.5rem !important;
+  }
+  
+  .cuenta-form-modal .modal-footer {
+    padding: 1.5rem !important;
+    flex-direction: column !important;
+  }
+  
+  .cuenta-form-modal .modal-footer .form-button {
+    width: 100% !important;
+  }
 }

@@ -4,6 +4,8 @@ import ProductoTable from './ProductoTable';
 import ProductoFilters from './ProductoFilters';
 import ProductoForm from './ProductoForm';
 import { Button, Pagination, Loader, Modal } from '../ui';
+import '../movimiento/MovimientoModals.css';
+import '../../pages/productoServicio/productoServicioPage.css';
 
 const ProductosManagement = () => {
     const {
@@ -210,6 +212,7 @@ const ProductosManagement = () => {
                     setProductoToDelete(null);
                 }}
                 title="Confirmar Eliminación"
+                className="confirmation-modal"
             >
                 <div className="delete-confirmation">
                     <p>

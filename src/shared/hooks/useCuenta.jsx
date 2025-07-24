@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
 import { 
     getCuentas as getCuentasRequest,
+    getCuentasUsuarioAutenticado as getCuentasUsuarioAutenticadoRequest,
     crearCuenta as crearCuentaRequest,
     editarCuenta as editarCuentaRequest,
     getDetallesCuenta as getDetallesCuentaRequest,
     getCuentaById as getCuentaByIdRequest,
     getCuentaPorNumero as getCuentaPorNumeroRequest,
     getCuentaByUsuario as getCuentaByUsuarioRequest,
+    getCuentasByUsuario as getCuentasByUsuarioRequest,
+    getMisCuentas as getMisCuentasRequest,
     deleteCuenta as deleteCuentaRequest,
     listarCuentasAgregadas as listarCuentasAgregadasRequest,
     agregarCuentaDeUsuario as agregarCuentaDeUsuarioRequest
@@ -270,6 +273,70 @@ export const useCuenta = () => {
         }
     }, []);
 
+    const fetchCuentasDelUsuario = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            console.log('Obteniendo cuentas del usuario autenticado...');
+            
+            let response = await getMisCuentasRequest();
+            
+            if (response.error) {
+                console.log('Endpoint directo falló, intentando con getCuentas filtrado...');
+                response = await getCuentasRequest({ usuario: 'current' });
+            }
+            
+            if (response.error) {
+                const errorMsg = response.err.response?.data?.msg || 
+                                response.err.response?.data?.error || 
+                                response.err.message ||
+                                'Error al obtener las cuentas del usuario';
+                console.error('Error fetching cuentas del usuario:', errorMsg, response.err);
+                setError(errorMsg);
+                return false;
+            }
+
+            let cuentasArray = [];
+            
+            console.log('Respuesta completa del servidor:', response.data);
+            
+            if (response.data) {
+                if (response.data.cuentas && Array.isArray(response.data.cuentas)) {
+                    cuentasArray = response.data.cuentas;
+                } else if (response.data.data && Array.isArray(response.data.data)) {
+                    cuentasArray = response.data.data;
+                } else if (Array.isArray(response.data)) {
+                    cuentasArray = response.data;
+                } else if (response.data.cuenta) {
+                    const cuenta = response.data.cuenta;
+                    cuentasArray = Array.isArray(cuenta) ? cuenta : [cuenta];
+                }
+            }
+
+            console.log('Cuentas procesadas:', cuentasArray);
+        
+            const cuentasActivas = cuentasArray.filter(cuenta => cuenta.activa !== false);
+            
+            console.log('Cuentas activas filtradas:', cuentasActivas);
+            
+            if (cuentasActivas.length > 0) {
+                setCuentas(cuentasActivas);
+                return true;
+            } else {
+                setCuentas([]);
+                setError('No se encontraron cuentas activas para este usuario');
+                return false;
+            }
+            
+        } catch (error) {
+            console.error('Error al obtener cuentas del usuario autenticado:', error);
+            setError('Error inesperado al obtener las cuentas del usuario');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     const clearError = useCallback(() => {
         setError(null);
     }, []);
@@ -334,6 +401,7 @@ export const useCuenta = () => {
         pagination,
         cuentasAgregadas,
         fetchCuentas,
+        fetchCuentasDelUsuario,
         createCuenta,
         updateCuenta,
         deleteCuenta,

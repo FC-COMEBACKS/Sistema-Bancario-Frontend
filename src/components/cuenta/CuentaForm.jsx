@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Button, Card } from '../ui';
 import { useUser } from '../../shared/hooks';
+import '../movimiento/MovimientoModals.css';
 
 const CuentaForm = ({ cuenta, onSubmit, onCancel, loading = false, isClientView = false }) => {
     const { users, fetchUsers } = useUser();
@@ -43,119 +44,110 @@ const CuentaForm = ({ cuenta, onSubmit, onCancel, loading = false, isClientView 
         }
     };
 
-    const tipoOptions = [
-        { value: '', label: '🔒 Selecciona un tipo de cuenta' },
-        { value: 'AHORROS', label: '💰 Cuenta de Ahorros' },
-        { value: 'CORRIENTE', label: '💳 Cuenta Corriente' },
-        { value: 'NOMINA', label: '💼 Cuenta Nómina' }
-    ];
-
-    const usuarioOptions = [
-        { value: '', label: '👤 Selecciona un usuario' },
-        ...users.map(user => ({
-            value: user.uid || user._id,
-            label: `👤 ${user.nombre} (@${user.username})`
-        }))
-    ];
-
     return (
-        <div className="cuenta-form-container">
-            <div className="form-header">
-                <div className="header-icon">
-                    {cuenta ? '✏️' : '➕'}
-                </div>
-                <h2 className="form-title">
-                    {cuenta ? 'Editar Cuenta Bancaria' : 'Nueva Cuenta Bancaria'}
-                </h2>
-                <p className="form-subtitle">
+        <div className="modal-container cuenta-form-modal">
+            <div className="modal-header">
+                <h3 className="modal-title">
+                    {cuenta ? '✏️ Editar Cuenta Bancaria' : '➕ Nueva Cuenta Bancaria'}
+                </h3>
+                <p className="modal-subtitle">
                     {cuenta ? 'Modifica los datos de la cuenta existente' : 'Completa la información para crear una nueva cuenta'}
                 </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="cuenta-form">
-                {!cuenta && !isClientView && (
+            <div className="modal-body">
+                <form onSubmit={handleSubmit} className="form-grid">
+                    {!cuenta && !isClientView && (
+                        <div className="form-group">
+                            <label className="form-label">
+                                👤 Usuario
+                            </label>
+                            <select
+                                name="usuarioId"
+                                value={form.usuarioId}
+                                onChange={handleChange}
+                                required
+                                className="form-select"
+                            >
+                                <option value="">👤 Selecciona un usuario</option>
+                                {users.map(user => (
+                                    <option 
+                                        key={user.uid || user._id} 
+                                        value={user.uid || user._id}
+                                    >
+                                        👤 {user.nombre} (@{user.username})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
                     <div className="form-group">
                         <label className="form-label">
-                            👤 Usuario
+                            🏦 Tipo de Cuenta
                         </label>
-                        <Select
-                            name="usuarioId"
-                            value={form.usuarioId}
+                        <select
+                            name="tipo"
+                            value={form.tipo}
                             onChange={handleChange}
-                            options={usuarioOptions}
                             required
-                            className="modern-select"
-                        />
-                    </div>
-                )}
-
-                <div className="form-group">
-                    <label className="form-label">
-                        🏦 Tipo de Cuenta
-                    </label>
-                    <Select
-                        name="tipo"
-                        value={form.tipo}
-                        onChange={handleChange}
-                        options={tipoOptions}
-                        required
-                        disabled={isClientView}
-                        className="modern-select"
-                    />
-                </div>
-
-                {cuenta && !isClientView && (
-                    <div className="form-group checkbox-group">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                id="activa"
-                                name="activa"
-                                checked={form.activa}
-                                onChange={handleChange}
-                                className="modern-checkbox"
-                            />
-                            <span className="checkbox-text">
-                                ✅ Cuenta activa y operativa
-                            </span>
-                        </label>
-                    </div>
-                )}
-
-                {isClientView && (
-                    <div className="info-notice">
-                        <div className="notice-icon">ℹ️</div>
-                        <div className="notice-content">
-                            <strong>Información:</strong> Solo puedes visualizar los detalles de tu cuenta. 
-                            Para realizar cambios, contacta con el soporte técnico del banco.
-                        </div>
-                    </div>
-                )}
-
-                <div className="form-actions">
-                    <button
-                        type="submit"
-                        disabled={loading || isClientView}
-                        className="btn-primary"
-                    >
-                        <span className="btn-icon">
-                            {loading ? '⏳' : cuenta ? '💾' : '➕'}
-                        </span>
-                        {loading ? 'Guardando...' : cuenta ? 'Actualizar Cuenta' : 'Crear Cuenta'}
-                    </button>
-                    
-                    {onCancel && (
-                        <button
-                            type="button"
-                            onClick={onCancel}
-                            className="btn-secondary"
+                            disabled={isClientView}
+                            className="form-select"
                         >
-                            <span className="btn-icon">↩️</span>
-                            Cancelar
-                        </button>
+                            <option value="">🔒 Selecciona un tipo de cuenta</option>
+                            <option value="AHORROS">💰 Cuenta de Ahorros</option>
+                            <option value="CORRIENTE">💳 Cuenta Corriente</option>
+                            <option value="NOMINA">💼 Cuenta Nómina</option>
+                        </select>
+                    </div>
+
+                    {cuenta && !isClientView && (
+                        <div className="form-group">
+                            <label className="checkbox-container">
+                                <input
+                                    type="checkbox"
+                                    id="activa"
+                                    name="activa"
+                                    checked={form.activa}
+                                    onChange={handleChange}
+                                    className="form-checkbox"
+                                />
+                                <span className="checkbox-label">✅ Cuenta activa y operativa</span>
+                            </label>
+                        </div>
                     )}
-                </div>
-            </form>
+
+                    {isClientView && (
+                        <div className="alert info">
+                            <div className="alert-icon">ℹ️</div>
+                            <div>
+                                <strong>Información:</strong> Solo puedes visualizar los detalles de tu cuenta. 
+                                Para realizar cambios, contacta con el soporte técnico del banco.
+                            </div>
+                        </div>
+                    )}
+                </form>
+            </div>
+
+            <div className="modal-footer">
+                <Button
+                    type="button"
+                    onClick={onCancel}
+                    variant="outline"
+                    className="form-button secondary"
+                >
+                    ↩️ Cancelar
+                </Button>
+                <Button
+                    type="submit"
+                    onClick={handleSubmit}
+                    disabled={loading || isClientView}
+                    variant="primary"
+                    className="form-button primary"
+                >
+                    {loading ? '⏳ Guardando...' : cuenta ? '💾 Actualizar Cuenta' : '➕ Crear Cuenta'}
+                </Button>
+            </div>
         </div>
     );
 };

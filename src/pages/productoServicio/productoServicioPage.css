@@ -1199,6 +1199,147 @@
   }
 }
 
+/* Estilos mejorados para botones */
+.productos-management .management-header .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.productos-management .management-header .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Botones del catálogo del cliente */
+.productos-catalog .catalog-header .btn-primary,
+.productos-catalog .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.productos-catalog .catalog-header .btn-primary:hover,
+.productos-catalog .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.producto-card .btn-primary,
+.producto-card .btn-outline-primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(79, 172, 254, 0.3);
+}
+
+.producto-card .btn-primary:hover,
+.producto-card .btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(79, 172, 254, 0.5);
+}
+
+/* Botón de comprar - cliente */
+.producto-card .comprar-btn,
+.compra-form .btn-success {
+  background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(86, 171, 47, 0.3);
+}
+
+.producto-card .comprar-btn:hover,
+.compra-form .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 171, 47, 0.5);
+}
+
+/* Botón de ver detalles - cliente */
+.producto-card .detalles-btn {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+}
+
+.producto-card .detalles-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(250, 112, 154, 0.5);
+}
+
+.producto-card .btn-outline-secondary {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+}
+
+.producto-card .btn-outline-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(250, 112, 154, 0.5);
+}
+
+/* Botones del modal de confirmación */
+.modal-actions .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+}
+
+.modal-actions .btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(108, 117, 125, 0.5);
+}
+
+.modal-actions .btn-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+}
+
+.modal-actions .btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.5);
+}
+
 @media (max-width: 480px) {
   .page-header {
     padding: 20px 15px;

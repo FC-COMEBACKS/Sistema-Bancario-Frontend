@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Button, Input, Select, Loader } from '../ui';
-import CuentaTable from './CuentaTable';
 import CuentaCard from './CuentaCard';
 
 const CuentasDashboard = ({
     cuentas,
     loading,
     error,
-    pagination,
     fetchCuentas,
     users,
     fetchUsers,
@@ -22,8 +20,6 @@ const CuentasDashboard = ({
         numeroCuenta: '',
         activa: ''
     });
-    
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' o 'table'
 
     useEffect(() => {
         if (typeof fetchCuentas === 'function') fetchCuentas();
@@ -114,33 +110,6 @@ const CuentasDashboard = ({
 
     return (
         <div className="cuentas-dashboard">
-            <div className="dashboard-header">
-                <div>
-                    <h2 className="dashboard-title">📊 Dashboard de Cuentas</h2>
-                    <p style={{color: 'var(--text-secondary)', margin: '0.5rem 0 0 0'}}>
-                        Gestiona y supervisa todas las cuentas bancarias
-                    </p>
-                </div>
-                <div className="view-toggle">
-                    <button
-                        onClick={() => setViewMode('grid')}
-                        className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                        title="Vista de tarjetas"
-                    >
-                        <span className="view-icon">📱</span>
-                        <span className="view-text">Tarjetas</span>
-                    </button>
-                    <button
-                        onClick={() => setViewMode('table')}
-                        className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
-                        title="Vista de tabla"
-                    >
-                        <span className="view-icon">�</span>
-                        <span className="view-text">Tabla</span>
-                    </button>
-                </div>
-            </div>
-
             {/* Estadísticas Rápidas */}
             <div className="estadisticas-rapidas" style={{
                 display: 'grid',
@@ -275,30 +244,17 @@ const CuentasDashboard = ({
                     <p>Intenta ajustar los criterios de búsqueda.</p>
                 </div>
             ) : (
-                <>
-                    {viewMode === 'grid' ? (
-                        <div className="cuentas-grid">
-                            {filteredCuentas.map((cuenta) => (
-                                <CuentaCard
-                                    key={cuenta.cid || cuenta._id || cuenta.numeroCuenta}
-                                    cuenta={cuenta}
-                                    onEdit={onEdit}
-                                    onDelete={onDelete}
-                                    onViewDetails={onViewDetails}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="tabla-cuentas">
-                            <CuentaTable
-                                cuentas={filteredCuentas}
-                                onEdit={onEdit}
-                                onDelete={onDelete}
-                                onViewDetails={onViewDetails}
-                            />
-                        </div>
-                    )}
-                </>
+                <div className="cuentas-grid">
+                    {filteredCuentas.map((cuenta) => (
+                        <CuentaCard
+                            key={cuenta.cid || cuenta._id || cuenta.numeroCuenta}
+                            cuenta={cuenta}
+                            onEdit={onEdit}
+                            onDelete={onDelete}
+                            onViewDetails={onViewDetails}
+                        />
+                    ))}
+                </div>
             )}
         </div>
     );
