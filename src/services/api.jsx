@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3000/HRB/v1",
+    baseURL: "https://hackerrank-bank.vercel.app/HRB/v1",
     timeout: 10000,
     httpsAgent: false
 })
