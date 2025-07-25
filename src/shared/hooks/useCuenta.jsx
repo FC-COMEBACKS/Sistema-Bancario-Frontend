@@ -1,14 +1,12 @@
 import { useState, useCallback } from 'react';
 import { 
     getCuentas as getCuentasRequest,
-    getCuentasUsuarioAutenticado as getCuentasUsuarioAutenticadoRequest,
     crearCuenta as crearCuentaRequest,
     editarCuenta as editarCuentaRequest,
     getDetallesCuenta as getDetallesCuentaRequest,
     getCuentaById as getCuentaByIdRequest,
     getCuentaPorNumero as getCuentaPorNumeroRequest,
     getCuentaByUsuario as getCuentaByUsuarioRequest,
-    getCuentasByUsuario as getCuentasByUsuarioRequest,
     getMisCuentas as getMisCuentasRequest,
     deleteCuenta as deleteCuentaRequest,
     listarCuentasAgregadas as listarCuentasAgregadasRequest,
